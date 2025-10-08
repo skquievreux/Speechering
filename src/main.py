@@ -143,34 +143,68 @@ class VoiceTranscriberApp:
     def _perform_recording(self):
         """Führt die komplette Aufnahme- und Verarbeitung durch"""
         try:
-            # Audio aufnehmen
-            audio_path = self.audio_recorder.start_recording()  # type: ignore
-            if not audio_path:
-                logger.error("Audio-Aufnahme fehlgeschlagen")
-                return
+            # Prüfe Komprimierungs-Status
+            from .audio_recorder import PYDUB_AVAILABLE
+            if PYDUB_AVAILABLE and config.AUDIO_COMPRESSION_ENABLED:
+                logger.info("Audio-Komprimierung aktiviert - verwende MP3")
+                use_compression = True
+            else:
+                logger.info("Audio-Komprimierung deaktiviert - verwende WAV")
+                use_compression = False
 
-            logger.info(f"Audio aufgezeichnet: {audio_path}")
+            if use_compression:
+                # Verwende neue Komprimierungs-Methode
+                logger.info("Starte Aufnahme mit Komprimierung...")
 
-            # Warten bis Hotkey losgelassen wird
-            while self.is_recording:
-                import time
-                time.sleep(0.01)  # Kurze Pause
+                # Audio aufnehmen und komprimieren
+                audio_data = self.audio_recorder.record_and_compress()  # type: ignore
+                if not audio_data:
+                    logger.error("Audio-Aufnahme + Komprimierung fehlgeschlagen")
+                    return
 
-            # Stoppe Aufnahme und erstelle Datei
-            final_audio_path = self.audio_recorder.stop_recording()  # type: ignore
-            if not final_audio_path:
-                logger.error("Audio-Stopp fehlgeschlagen")
-                return
+                data_size = len(audio_data)
+                logger.info(f"Audio komprimiert: {data_size} bytes ({data_size/1024:.1f} KB)")
 
-            logger.info(f"Audio-Datei erstellt: {final_audio_path}")
+                # Transkribieren mit komprimierten Daten
+                raw_text = self.transcription_service.transcribe_audio_data(audio_data, "audio.mp3")  # type: ignore
+                if not raw_text:
+                    logger.error("Transkription fehlgeschlagen")
+                    return
 
-            # Transkribieren
-            raw_text = self.transcription_service.transcribe(final_audio_path)  # type: ignore
-            if not raw_text:
-                logger.error("Transkription fehlgeschlagen")
-                return
+                logger.info(f"Transkribierter Text (MP3): {raw_text[:50]}...")
 
-            logger.info(f"Transkribierter Text: {raw_text[:50]}...")
+            else:
+                # Fallback: Klassische WAV-Methode
+                logger.info("Verwende klassische WAV-Aufnahme...")
+
+                # Audio aufnehmen
+                audio_path = self.audio_recorder.start_recording()  # type: ignore
+                if not audio_path:
+                    logger.error("Audio-Aufnahme fehlgeschlagen")
+                    return
+
+                logger.info(f"Audio aufgezeichnet: {audio_path}")
+
+                # Warten bis Hotkey losgelassen wird
+                while self.is_recording:
+                    import time
+                    time.sleep(0.01)  # Kurze Pause
+
+                # Stoppe Aufnahme und erstelle Datei
+                final_audio_path = self.audio_recorder.stop_recording()  # type: ignore
+                if not final_audio_path:
+                    logger.error("Audio-Stopp fehlgeschlagen")
+                    return
+
+                logger.info(f"Audio-Datei erstellt: {final_audio_path}")
+
+                # Transkribieren
+                raw_text = self.transcription_service.transcribe(final_audio_path)  # type: ignore
+                if not raw_text:
+                    logger.error("Transkription fehlgeschlagen")
+                    return
+
+                logger.info(f"Transkribierter Text (WAV): {raw_text[:50]}...")
 
             # Text korrigieren
             corrected_text = self.text_processor.process_text(raw_text)  # type: ignore

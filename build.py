@@ -95,6 +95,8 @@ def build_exe():
         "--icon=assets/icon.ico",      # Icon für EXE
         "--name=VoiceTranscriber",     # Name der EXE
         "--add-data=assets;assets",    # Assets einbinden
+        "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
+        # ffmpeg ist bereits im PATH verfügbar - kein Bündeln nötig
     ] + hidden_imports + [
         "main_exe.py"                  # Einstiegspunkt (PyInstaller-optimiert)
     ]

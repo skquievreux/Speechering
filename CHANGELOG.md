@@ -6,6 +6,31 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-10-08
+
+### 🐛 Fixed - Behoben
+
+#### Hotkey-System korrigiert
+- **Problem:** Windows-Hotkey-Kombinationen (`ctrl+alt+s`, `ctrl+shift+f12`) wurden nicht erkannt
+- **Lösung:** F12 als garantierte Standard-Hotkey mit Fallback-Kette
+- **Status:** Hotkey funktioniert zuverlässig
+
+#### Debug-Logging implementiert
+- **Problem:** Keine sichtbaren Logs für MP3-Komprimierung
+- **Lösung:** Detaillierte Logs für Komprimierungs-Status und Datengrößen
+- **Status:** Zeigt Komprimierungs-Details in Echtzeit
+
+#### PyInstaller-Import-Fehler behoben
+- **Problem:** Relative Imports in EXE funktionierten nicht
+- **Lösung:** `--paths=src` für korrekte Modul-Auflösung
+- **Status:** EXE startet ohne Import-Fehler
+
+### 🔧 Changed - Geändert
+
+- **Hotkey-Standard:** F12 (vorher problematische Kombinationen)
+- **Build-System:** Verbesserte PyInstaller-Konfiguration
+- **Logging:** Erweiterte Debug-Informationen
+
 ## [1.2.0] - 2025-10-08
 
 ### 🎉 Added - Erstmals hinzugefügt

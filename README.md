@@ -5,7 +5,7 @@ KI-Unterstützung und optimierter Audio-Verarbeitung.
 
 ## ✨ Features
 
-- 🎤 **Push-to-Talk Aufnahme**: Strg + Windows halten = aufnehmen (empfohlen)
+- 🎤 **Push-to-Talk Aufnahme**: F12 halten = aufnehmen (empfohlen)
 - 🔊 **Audio-Komprimierung**: Automatische MP3-Komprimierung (75% Datenreduktion)
 - ⚡ **Schnelle Transkription**: < 1.2s Gesamtlatenz (vorher ~2.5s)
 - 🤖 **KI-Transkription**: OpenAI Whisper API
@@ -58,17 +58,16 @@ python src/main.py
 ## 🎯 Verwendung
 
 1. **Anwendung starten**: Tray-Icon erscheint
-2. **Aufnehmen**: Strg + Windows gedrückt halten (empfohlen)
-3. **Sprechen**: Während Tasten gehalten werden
+2. **Aufnehmen**: F12 gedrückt halten (empfohlen)
+3. **Sprechen**: Während Taste gehalten wird
 4. **Loslassen**: Verarbeitung startet automatisch (MP3-Komprimierung)
 5. **Text erscheint**: An aktueller Cursor-Position (ohne Anführungszeichen)
 6. **Einstellungen**: Rechtsklick auf Tray-Icon → "Einstellungen"
 
 ### Hotkey-Optionen (Fallback-Reihenfolge):
-- **Strg + Windows** (Standard, empfohlen)
-- **F12** (Fallback)
-- **F11, F10** (weitere Fallbacks)
-- **Strg+Shift+S, Alt+Shift+S** (letzte Optionen)
+- **F12** (Standard, garantiert funktional)
+- **F11, F10** (Fallbacks)
+- **Strg+F12, Alt+F12** (erweiterte Optionen)
 
 ## 🛠️ Entwicklung
 

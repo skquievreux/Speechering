@@ -16,12 +16,17 @@ import pyaudio
 from src.config import config
 
 # Optional: pydub für Audio-Komprimierung
+PYDUB_AVAILABLE = False
 try:
     from pydub import AudioSegment
+
+    # Teste pydub Funktionalität
+    test_segment = AudioSegment.empty()
     PYDUB_AVAILABLE = True
-except ImportError:
+    logging.info("pydub erfolgreich initialisiert - Audio-Komprimierung verfügbar")
+except Exception as e:
+    logging.warning(f"pydub nicht verfügbar oder defekt ({e}) - Audio-Komprimierung deaktiviert")
     PYDUB_AVAILABLE = False
-    logging.warning("pydub nicht verfügbar - Audio-Komprimierung deaktiviert")
 
 logger = logging.getLogger(__name__)
 
