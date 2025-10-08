@@ -5,11 +5,12 @@ Transkribiert Audio-Dateien zu Text mittels OpenAI Whisper API.
 
 import logging
 import time
-import openai
 from pathlib import Path
 from typing import Optional
 
-from .config import config
+from openai import OpenAI
+
+from src.config import config
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ class TranscriptionService:
     """Service für Audio-zu-Text Transkription"""
 
     def __init__(self):
-        openai.api_key = config.OPENAI_API_KEY
+        self.client = OpenAI(api_key=config.OPENAI_API_KEY)
         self.max_retries = 3
         self.retry_delay = 1.0  # Sekunden
 
@@ -33,7 +34,7 @@ class TranscriptionService:
                 start_time = time.time()
 
                 with open(audio_path, 'rb') as audio_file:
-                    transcript = openai.Audio.transcribe(
+                    transcript = self.client.audio.transcriptions.create(
                         model="whisper-1",
                         file=audio_file,
                         language="de",  # Deutsche Sprache priorisieren
@@ -50,17 +51,13 @@ class TranscriptionService:
                     logger.warning("Transkript ist leer oder ungültig")
                     return None
 
-            except openai.APIError as e:
-                logger.warning(f"OpenAI API Fehler (Versuch {attempt + 1}): {e}")
+            except Exception as e:
+                logger.error(f"Fehler bei Transkription (Versuch {attempt + 1}): {e}")
                 if attempt < self.max_retries - 1:
                     time.sleep(self.retry_delay * (2 ** attempt))  # Exponential backoff
                 else:
                     logger.error("Maximale Anzahl von Versuchen erreicht")
                     return None
-
-            except Exception as e:
-                logger.error(f"Unerwarteter Fehler bei Transkription: {e}")
-                return None
 
         return None
 

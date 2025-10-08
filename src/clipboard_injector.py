@@ -5,9 +5,10 @@ Fügt Text direkt an Cursor-Position ein oder verwendet Zwischenablage.
 
 import logging
 import time
-import pyperclip
-import pyautogui
 from typing import Optional
+
+import pyautogui
+import pyperclip
 
 logger = logging.getLogger(__name__)
 

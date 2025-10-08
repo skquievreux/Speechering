@@ -3,21 +3,23 @@ Voice Transcriber - Hauptmodul (Orchestrator)
 Koordiniert alle Komponenten der Anwendung.
 """
 
-import sys
 import logging
+import sys
 import threading
-from typing import Optional, Callable
+import winsound
+from typing import Optional
+
+import keyboard
 import pystray
 from PIL import Image
-import keyboard
-import winsound
 
-from .config import config
-from .hotkey_listener import HotkeyListener
-from .audio_recorder import AudioRecorder
-from .transcription import TranscriptionService
-from .text_processor import TextProcessor
-from .clipboard_injector import ClipboardInjector
+from audio_recorder import AudioRecorder
+from clipboard_injector import ClipboardInjector
+from config import config
+from hotkey_listener import HotkeyListener
+from settings_gui import SettingsGUI
+from text_processor import TextProcessor
+from transcription import TranscriptionService
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +27,15 @@ class VoiceTranscriberApp:
     """Hauptklasse der Voice Transcriber Anwendung"""
 
     def __init__(self):
-        self.tray_icon: Optional[pystray.Icon] = None
-        self.hotkey_listener: Optional[HotkeyListener] = None
-        self.audio_recorder: Optional[AudioRecorder] = None
-        self.transcription_service: Optional[TranscriptionService] = None
-        self.text_processor: Optional[TextProcessor] = None
-        self.clipboard_injector: Optional[ClipboardInjector] = None
+        self.tray_icon = None
+        self.hotkey_listener = None
+        self.audio_recorder = None
+        self.transcription_service = None
+        self.text_processor = None
+        self.clipboard_injector = None
 
         self.is_recording = False
-        self.recording_thread: Optional[threading.Thread] = None
+        self.recording_thread = None
 
     def initialize_components(self):
         """Initialisiert alle Anwendungskomponenten"""
@@ -72,12 +74,18 @@ class VoiceTranscriberApp:
                 icon = Image.new('RGB', (64, 64), color='blue')
 
             # Tray Menü
+            def on_settings(icon, item):
+                self.show_settings()
+
+            def on_quit(icon, item):
+                self.quit_application()
+
             menu = pystray.Menu(
-                pystray.MenuItem("Status: Bereit", lambda: None, enabled=False),
+                pystray.MenuItem("Status: Bereit", lambda icon, item: None, enabled=False),
                 pystray.Menu.SEPARATOR,
-                pystray.MenuItem("Einstellungen", self.show_settings),
+                pystray.MenuItem("Einstellungen", on_settings),
                 pystray.Menu.SEPARATOR,
-                pystray.MenuItem("Beenden", self.quit_application)
+                pystray.MenuItem("Beenden", on_quit)
             )
 
             self.tray_icon = pystray.Icon(
@@ -125,15 +133,28 @@ class VoiceTranscriberApp:
         """Führt die komplette Aufnahme- und Verarbeitung durch"""
         try:
             # Audio aufnehmen
-            audio_path = self.audio_recorder.start_recording()
+            audio_path = self.audio_recorder.start_recording()  # type: ignore
             if not audio_path:
                 logger.error("Audio-Aufnahme fehlgeschlagen")
                 return
 
             logger.info(f"Audio aufgezeichnet: {audio_path}")
 
+            # Warten bis Hotkey losgelassen wird
+            while self.is_recording:
+                import time
+                time.sleep(0.01)  # Kurze Pause
+
+            # Stoppe Aufnahme und erstelle Datei
+            final_audio_path = self.audio_recorder.stop_recording()  # type: ignore
+            if not final_audio_path:
+                logger.error("Audio-Stopp fehlgeschlagen")
+                return
+
+            logger.info(f"Audio-Datei erstellt: {final_audio_path}")
+
             # Transkribieren
-            raw_text = self.transcription_service.transcribe(audio_path)
+            raw_text = self.transcription_service.transcribe(final_audio_path)  # type: ignore
             if not raw_text:
                 logger.error("Transkription fehlgeschlagen")
                 return
@@ -141,7 +162,7 @@ class VoiceTranscriberApp:
             logger.info(f"Transkribierter Text: {raw_text[:50]}...")
 
             # Text korrigieren
-            corrected_text = self.text_processor.process_text(raw_text)
+            corrected_text = self.text_processor.process_text(raw_text)  # type: ignore
             if not corrected_text:
                 logger.warning("Text-Korrektur fehlgeschlagen, verwende Original")
                 corrected_text = raw_text
@@ -149,7 +170,7 @@ class VoiceTranscriberApp:
             logger.info(f"Korrigierter Text: {corrected_text[:50]}...")
 
             # Text einfügen
-            success = self.clipboard_injector.inject_text(corrected_text)
+            success = self.clipboard_injector.inject_text(corrected_text)  # type: ignore
             if success:
                 logger.info("Text erfolgreich eingefügt")
             else:
@@ -159,8 +180,8 @@ class VoiceTranscriberApp:
             logger.error(f"Fehler während der Verarbeitung: {e}")
 
         finally:
-            # Cleanup
-            self.audio_recorder.cleanup()
+            # Cleanup wird bereits in stop_recording gemacht
+            pass
 
     def play_beep(self, frequency: int):
         """Spielt einen Beep-Ton"""
@@ -169,11 +190,61 @@ class VoiceTranscriberApp:
         except Exception as e:
             logger.warning(f"Beep konnte nicht abgespielt werden: {e}")
 
-    def show_settings(self):
-        """Zeigt Einstellungen (noch nicht implementiert)"""
-        logger.info("Einstellungen würden hier geöffnet werden")
+    def show_settings(self, icon=None, item=None):
+        """Zeigt Einstellungen"""
+        try:
+            logger.info("Einstellungs-GUI wird geöffnet")
 
-    def quit_application(self):
+            # Verwende threading um tkinter in separatem Thread zu starten
+            import threading
+            settings_thread = threading.Thread(target=self._open_settings_window, daemon=True)
+            settings_thread.start()
+
+        except Exception as e:
+            logger.error(f"Fehler beim Öffnen der Einstellungen: {e}")
+
+    def _open_settings_window(self):
+        """Öffnet das Einstellungsfenster in separatem Thread"""
+        try:
+            import tkinter as tk
+
+            # Erstelle neues root window für diesen Thread
+            root = tk.Tk()
+            root.title(f"{config.APP_NAME} - Einstellungen")
+            root.geometry("600x500")
+
+            # Icon setzen (falls verfügbar)
+            try:
+                root.iconbitmap("assets/icon.ico")
+            except:
+                pass
+
+            # Erstelle SettingsGUI ohne parent (damit sie das root window verwendet)
+            settings_gui = SettingsGUI()
+            settings_gui.window = root  # Verwende direkt das root window
+            settings_gui._create_widgets()
+            settings_gui._load_current_settings()
+
+            # Starte tkinter mainloop
+            root.mainloop()
+
+        except Exception as e:
+            logger.error(f"Fehler im Einstellungs-Thread: {e}")
+            # Fallback: Zeige einfache MessageBox
+            try:
+                import tkinter as tk
+                from tkinter import messagebox
+
+                root = tk.Tk()
+                root.withdraw()
+                messagebox.showinfo("Einstellungen",
+                    "Einstellungs-GUI konnte nicht geöffnet werden.\n"
+                    "Bitte bearbeiten Sie die .env Datei manuell.")
+                root.destroy()
+            except:
+                logger.error("Auch Fallback-MessageBox fehlgeschlagen")
+
+    def quit_application(self, icon=None, item=None):
         """Beendet die Anwendung"""
         logger.info("Beende Anwendung...")
         self.cleanup()
@@ -205,7 +276,7 @@ class VoiceTranscriberApp:
 
         # Tray Icon starten
         logger.info("Anwendung läuft - Tray Icon verfügbar")
-        self.tray_icon.run()
+        self.tray_icon.run()  # type: ignore
 
 def main():
     """Haupteinstiegspunkt"""

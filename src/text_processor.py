@@ -5,10 +5,11 @@ Korrigiert und verbessert transkribierten Text mittels GPT-4.
 
 import logging
 import time
-import openai
 from typing import Optional
 
-from .config import config
+from openai import OpenAI
+
+from src.config import config
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ class TextProcessor:
     """Service für Text-Korrektur und -Verbesserung"""
 
     def __init__(self):
-        openai.api_key = config.OPENAI_API_KEY
+        self.client = OpenAI(api_key=config.OPENAI_API_KEY)
         self.max_retries = 3
         self.retry_delay = 1.0
 
@@ -33,7 +34,7 @@ class TextProcessor:
 
                 prompt = self._create_correction_prompt(raw_text)
 
-                response = openai.ChatCompletion.create(
+                response = self.client.chat.completions.create(
                     model="gpt-4",
                     messages=[
                         {"role": "system", "content": "Du bist ein professioneller Textkorrektor. Korrigiere Grammatik, Interpunktion und verbessere die Lesbarkeit, aber behalte den originalen Sinn bei."},
@@ -43,7 +44,15 @@ class TextProcessor:
                     temperature=0.3  # Konsistente Ergebnisse
                 )
 
-                corrected_text = response.choices[0].message.content.strip()
+                corrected_text = response.choices[0].message.content.strip()  # type: ignore
+
+                # Entferne Anführungszeichen am Anfang und Ende
+                if corrected_text.startswith('"') and corrected_text.endswith('"'):
+                    corrected_text = corrected_text[1:-1].strip()
+                elif corrected_text.startswith('"'):
+                    corrected_text = corrected_text[1:].strip()
+                elif corrected_text.endswith('"'):
+                    corrected_text = corrected_text[:-1].strip()
 
                 duration = time.time() - start_time
                 logger.info(".2f")
@@ -55,17 +64,13 @@ class TextProcessor:
                     logger.warning("Korrigierter Text ist ungültig")
                     return raw_text  # Fallback auf Original
 
-            except openai.APIError as e:
-                logger.warning(f"OpenAI API Fehler (Versuch {attempt + 1}): {e}")
+            except Exception as e:
+                logger.error(f"Fehler bei Text-Verarbeitung (Versuch {attempt + 1}): {e}")
                 if attempt < self.max_retries - 1:
                     time.sleep(self.retry_delay * (2 ** attempt))
                 else:
                     logger.error("Maximale Anzahl von Versuchen erreicht")
                     return raw_text  # Fallback
-
-            except Exception as e:
-                logger.error(f"Unerwarteter Fehler bei Text-Verarbeitung: {e}")
-                return raw_text  # Fallback
 
         return raw_text  # Fallback bei allen Fehlern
 

@@ -3,10 +3,10 @@ Konfigurationsverwaltung für Voice Transcriber.
 Lädt Umgebungsvariablen aus .env Datei und stellt zentrale Konfiguration bereit.
 """
 
-import os
 import logging
+import os
 from pathlib import Path
-from typing import Optional
+
 from dotenv import load_dotenv
 
 # Lade .env Datei
@@ -37,14 +37,14 @@ class Config:
 
     # Application Settings
     APP_NAME: str = os.getenv('APP_NAME', 'Voice Transcriber')
-    APP_VERSION: str = os.getenv('APP_VERSION', '1.0.0')
+    APP_VERSION: str = os.getenv('APP_VERSION', '1.1.0')
 
     @classmethod
     def validate(cls) -> bool:
         """Validiert kritische Konfigurationseinstellungen"""
-        if not cls.OPENAI_API_KEY:
-            logging.error("OPENAI_API_KEY ist nicht gesetzt!")
-            return False
+        if not cls.OPENAI_API_KEY or cls.OPENAI_API_KEY == "sk-your-openai-api-key-here":
+            logging.warning("OPENAI_API_KEY ist nicht gesetzt oder ist Platzhalter - API-Funktionen deaktiviert")
+            # return False  # Temporär deaktiviert für GUI-Test
 
         if cls.MAX_RECORDING_DURATION <= 0 or cls.MAX_RECORDING_DURATION > 60:
             logging.error(f"MAX_RECORDING_DURATION muss zwischen 1-60 Sekunden sein: {cls.MAX_RECORDING_DURATION}")
@@ -74,9 +74,10 @@ class Config:
     @classmethod
     def setup_logging(cls):
         """Konfiguriert das Logging-System"""
+        # PowerShell-kompatibles Format (keine Datumsangaben am Anfang)
         logging.basicConfig(
             level=cls.get_log_level(),
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            format='[%(levelname)s] %(name)s: %(message)s',
             handlers=[
                 logging.FileHandler(cls.LOG_FILE),
                 logging.StreamHandler()

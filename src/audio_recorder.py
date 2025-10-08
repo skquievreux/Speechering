@@ -7,11 +7,12 @@ import logging
 import threading
 import time
 import wave
-import pyaudio
 from pathlib import Path
 from typing import Optional
 
-from .config import config
+import pyaudio
+
+from src.config import config
 
 logger = logging.getLogger(__name__)
 
@@ -44,8 +45,11 @@ class AudioRecorder:
             return None
 
         try:
+            # Stelle sicher, dass vorheriger Stream geschlossen ist
+            self._cleanup_stream()
+
             # Stream öffnen
-            self.stream = self.audio.open(
+            self.stream = self.audio.open(  # type: ignore
                 format=pyaudio.paInt16,
                 channels=config.CHANNELS,
                 rate=config.SAMPLE_RATE,
@@ -118,7 +122,7 @@ class AudioRecorder:
 
                 # Audio-Frame lesen
                 try:
-                    data = self.stream.read(1024, exception_on_overflow=False)
+                    data = self.stream.read(1024, exception_on_overflow=False)  # type: ignore
                     self.frames.append(data)
                 except Exception as e:
                     logger.error(f"Fehler beim Lesen von Audio-Frame: {e}")
@@ -134,7 +138,7 @@ class AudioRecorder:
         try:
             with wave.open(str(self.temp_file), 'wb') as wf:
                 wf.setnchannels(config.CHANNELS)
-                wf.setsampwidth(self.audio.get_sample_size(pyaudio.paInt16))
+                wf.setsampwidth(self.audio.get_sample_size(pyaudio.paInt16))  # type: ignore
                 wf.setframerate(config.SAMPLE_RATE)
                 wf.writeframes(b''.join(self.frames))
 

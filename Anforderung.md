@@ -3,9 +3,15 @@
 ## Projekt-Übersicht
 
 ### Kurzbeschreibung
-**Voice Transcriber** ist eine Windows Desktop-Anwendung, die gesprochene Sprache über ein Mikrofon aufnimmt, mittels KI transkribiert, den Text automatisch korrigiert und direkt an der aktuellen Cursor-Position einfügt. Die Anwendung läuft unsichtbar im System Tray und wird per Hotkey (Ctrl+Win) gesteuert.
+
+**Voice Transcriber** ist eine Windows Desktop-Anwendung, die gesprochene
+Sprache über ein Mikrofon aufnimmt, mittels KI transkribiert, den Text
+automatisch korrigiert und direkt an der aktuellen Cursor-Position einfügt. Die
+Anwendung läuft unsichtbar im System Tray und wird per Hotkey (Ctrl+Win)
+gesteuert.
 
 ### Hauptfunktionen
+
 - 🎤 **Push-to-Talk Aufnahme**: Ctrl+Win halten = aufnehmen
 - 🤖 **KI-Transkription**: Whisper API von OpenAI
 - ✨ **Text-Korrektur**: GPT-basierte Kontextverbesserung
@@ -15,6 +21,7 @@
 - ⏱️ **30 Sekunden Maximum**: Automatischer Stop nach 30s
 
 ### Zielplattform
+
 - **Betriebssystem**: Windows 10/11
 - **Distribution**: Standalone .exe (keine Installation nötig)
 - **Architektur**: x64
@@ -26,6 +33,7 @@
 ### Funktionale Anforderungen
 
 #### FR-01: Hotkey-Steuerung
+
 - **Beschreibung**: Ctrl+Win gedrückt halten startet Aufnahme
 - **Details**:
   - Hotkey: Strg + Windows-Taste
@@ -34,6 +42,7 @@
   - Global: Funktioniert in allen Anwendungen
 
 #### FR-02: Audio-Aufnahme
+
 - **Beschreibung**: Mikrofon-Audio aufnehmen
 - **Details**:
   - Quelle: Standard-Mikrofon des Systems
@@ -42,6 +51,7 @@
   - Automatischer Stop nach 30s
 
 #### FR-03: Transkription
+
 - **Beschreibung**: Audio zu Text konvertieren
 - **Details**:
   - Engine: OpenAI Whisper API
@@ -49,6 +59,7 @@
   - Online-Verarbeitung (Internet erforderlich)
 
 #### FR-04: Text-Korrektur
+
 - **Beschreibung**: Transkribierten Text verbessern
 - **Details**:
   - Engine: OpenAI GPT-4
@@ -56,6 +67,7 @@
   - Stil: Natürlicher, fließender Text
 
 #### FR-05: Text-Einfügen
+
 - **Beschreibung**: Text an Cursor-Position einfügen
 - **Details**:
   - Primär: Direktes Einfügen via Tastatur-Simulation
@@ -63,6 +75,7 @@
   - Keine manuelle Paste-Aktion nötig
 
 #### FR-06: Akustisches Feedback
+
 - **Beschreibung**: Sound-Signale für Benutzer-Feedback
 - **Details**:
   - Start-Beep: Bei Beginn der Aufnahme
@@ -70,6 +83,7 @@
   - Kein Sound beim Einfügen
 
 #### FR-07: System Tray Integration
+
 - **Beschreibung**: Icon im System Tray
 - **Details**:
   - Always-on: Läuft im Hintergrund
@@ -80,26 +94,31 @@
 ### Nicht-funktionale Anforderungen
 
 #### NFR-01: Performance
+
 - Transkription: < 10 Sekunden für 30s Audio
 - Hotkey-Reaktion: < 100ms
 - CPU-Last im Idle: < 1%
 
 #### NFR-02: Usability
+
 - Keine sichtbaren Fenster während Betrieb
 - Intuitive Bedienung (Push-to-Talk)
 - Klare Status-Anzeigen
 
 #### NFR-03: Sicherheit
+
 - API-Keys verschlüsselt in .env
 - Keine Audio-Aufnahmen persistent gespeichert
 - Temporäre Dateien werden gelöscht
 
 #### NFR-04: Zuverlässigkeit
+
 - Fehlerbehandlung bei Netzwerkproblemen
 - Graceful Degradation (Fallback auf Clipboard)
 - Kein Crash bei fehlendem Mikrofon
 
 #### NFR-05: Wartbarkeit
+
 - Modulare Architektur
 - Klare Trennung der Komponenten
 - Logging für Debugging
@@ -109,29 +128,32 @@
 ## Technologie-Stack
 
 ### Programmiersprache
+
 - **Python 3.11+**
 
 ### Kernbibliotheken
 
-| Bibliothek | Version | Zweck |
-|------------|---------|-------|
-| `pystray` | 0.19.5 | System Tray Icon |
-| `pillow` | 10.0.0 | Icon-Bildverarbeitung |
-| `keyboard` | 0.13.5 | Globale Hotkey-Erkennung |
-| `pyaudio` | 0.2.13 | Mikrofon-Aufnahme |
-| `openai` | 1.3.0 | Whisper + GPT API |
-| `pyperclip` | 1.8.2 | Zwischenablage-Zugriff |
-| `pyautogui` | 0.9.54 | Tastatur-Simulation |
-| `python-dotenv` | 1.0.0 | Umgebungsvariablen |
-| `pyinstaller` | 6.3.0 | EXE-Erstellung |
+| Bibliothek      | Version | Zweck                    |
+| --------------- | ------- | ------------------------ |
+| `pystray`       | 0.19.5  | System Tray Icon         |
+| `pillow`        | 10.0.0  | Icon-Bildverarbeitung    |
+| `keyboard`      | 0.13.5  | Globale Hotkey-Erkennung |
+| `pyaudio`       | 0.2.13  | Mikrofon-Aufnahme        |
+| `openai`        | 1.3.0   | Whisper + GPT API        |
+| `pyperclip`     | 1.8.2   | Zwischenablage-Zugriff   |
+| `pyautogui`     | 0.9.54  | Tastatur-Simulation      |
+| `python-dotenv` | 1.0.0   | Umgebungsvariablen       |
+| `pyinstaller`   | 6.3.0   | EXE-Erstellung           |
 
 ### Standard-Bibliotheken
+
 - `wave`: WAV-Datei Handling
 - `winsound`: Beep-Sounds (Windows)
 - `threading`: Multi-Threading
 - `logging`: Logging-Framework
 
 ### Entwicklungs-Tools
+
 - **IDE**: Visual Studio Code
 - **Versionskontrolle**: Git
 - **Dependency Management**: pip + requirements.txt
@@ -145,6 +167,7 @@
 ### Systemarchitektur
 
 ```
+
 ┌─────────────────────────────────────────────────────────┐
 │                    Windows Desktop                       │
 │  ┌─────────────────────────────────────────────────┐   │
@@ -197,24 +220,27 @@ src/
 ### 1. main.py (Orchestrator)
 
 **Verantwortlichkeiten:**
+
 - System Tray Icon initialisieren
 - Alle Module koordinieren
 - Event Loop verwalten
 - Graceful Shutdown
 
 **Schnittstellen:**
+
 ```python
 def main():
     """Startet die Anwendung"""
-    
+
 def setup_tray_icon():
     """Erstellt System Tray Icon"""
-    
+
 def on_exit():
     """Cleanup beim Beenden"""
 ```
 
 **Threading:**
+
 - Main Thread: System Tray (pystray)
 - Worker Thread: Hotkey Listener
 - Worker Thread: Audio Processing
@@ -224,23 +250,26 @@ def on_exit():
 ### 2. hotkey_listener.py
 
 **Verantwortlichkeiten:**
+
 - Globale Hotkey-Registrierung
 - Drücken/Halten/Loslassen erkennen
 - Callbacks triggern
 
 **Schnittstellen:**
+
 ```python
 def register_hotkey(on_press_callback, on_release_callback):
     """Registriert Ctrl+Win Hotkey"""
-    
+
 def on_hotkey_press():
     """Callback bei Hotkey-Drücken"""
-    
+
 def on_hotkey_release():
     """Callback bei Hotkey-Loslassen"""
 ```
 
 **Implementation:**
+
 ```python
 import keyboard
 
@@ -254,24 +283,27 @@ def register_hotkey(on_press, on_release):
 ### 3. audio_recorder.py
 
 **Verantwortlichkeiten:**
+
 - Mikrofon-Zugriff
 - Audio-Stream aufnehmen
 - WAV-Datei speichern
 - 30s Timer verwalten
 
 **Schnittstellen:**
+
 ```python
 def start_recording():
     """Startet Aufnahme"""
-    
+
 def stop_recording() -> str:
     """Stoppt Aufnahme, gibt WAV-Pfad zurück"""
-    
+
 def play_beep(frequency: int):
     """Spielt Beep-Sound"""
 ```
 
 **Technische Details:**
+
 - Sample Rate: 16000 Hz
 - Channels: 1 (Mono)
 - Sample Width: 2 Bytes (16-bit)
@@ -283,21 +315,24 @@ def play_beep(frequency: int):
 ### 4. transcription.py
 
 **Verantwortlichkeiten:**
+
 - Whisper API aufrufen
 - Audio-Datei senden
 - Text-Antwort empfangen
 - Fehlerbehandlung
 
 **Schnittstellen:**
+
 ```python
 def transcribe_audio(audio_path: str) -> str:
     """Transkribiert Audio zu Text"""
-    
+
 def _retry_on_failure(func, max_retries=3):
     """Retry-Logik für API-Aufrufe"""
 ```
 
 **API-Aufruf:**
+
 ```python
 import openai
 
@@ -316,20 +351,23 @@ def transcribe_audio(audio_path: str) -> str:
 ### 5. text_processor.py
 
 **Verantwortlichkeiten:**
+
 - GPT-4 für Text-Korrektur nutzen
 - Kontext-basierte Verbesserungen
 - Grammatik & Interpunktion
 
 **Schnittstellen:**
+
 ```python
 def process_text(raw_text: str) -> str:
     """Korrigiert und verbessert Text"""
-    
+
 def _create_correction_prompt(text: str) -> str:
     """Erstellt GPT-Prompt"""
 ```
 
 **GPT-Prompt:**
+
 ```python
 def process_text(raw_text: str) -> str:
     prompt = f"""
@@ -338,10 +376,10 @@ def process_text(raw_text: str) -> str:
     - Behalte den originalen Sinn bei
     - Mache den Text flüssig lesbar
     - Keine zusätzlichen Kommentare
-    
+
     Text: {raw_text}
     """
-    
+
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}]
@@ -354,23 +392,26 @@ def process_text(raw_text: str) -> str:
 ### 6. clipboard_injector.py
 
 **Verantwortlichkeiten:**
+
 - Text direkt einfügen (primär)
 - Zwischenablage nutzen (fallback)
 - Tastatur-Simulation
 
 **Schnittstellen:**
+
 ```python
 def inject_text(text: str):
     """Fügt Text an Cursor-Position ein"""
-    
+
 def _paste_via_keyboard(text: str):
     """Simuliert Ctrl+V"""
-    
+
 def _copy_to_clipboard(text: str):
     """Fallback: Nur in Clipboard"""
 ```
 
 **Implementation:**
+
 ```python
 import pyautogui
 import pyperclip
@@ -391,18 +432,20 @@ def inject_text(text: str):
 ### 7. config.py
 
 **Verantwortlichkeiten:**
+
 - Umgebungsvariablen laden
 - Konfigurationswerte bereitstellen
 - API-Keys verwalten
 
 **Schnittstellen:**
+
 ```python
 def load_config():
     """Lädt Konfiguration aus .env"""
-    
+
 def get_api_key() -> str:
     """Gibt OpenAI API-Key zurück"""
-    
+
 class Config:
     OPENAI_API_KEY: str
     MAX_RECORDING_DURATION: int
@@ -411,6 +454,7 @@ class Config:
 ```
 
 **.env Format:**
+
 ```env
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxx
 MAX_RECORDING_DURATION=30
@@ -434,27 +478,27 @@ BEEP_FREQUENCY_STOP=800
    └─> START-BEEP 🔔
    └─> Audio Recording startet
    └─> Timer: 30s Countdown
-   
+
 3. User spricht (hält Taste)
    └─> Audio wird aufgenommen
    └─> Visuelles Feedback (Tray Icon blinkt optional)
-   
+
 4. User lässt Taste los ODER 30s erreicht
    └─> STOP-BEEP 🔔
    └─> Audio Recording stoppt
    └─> Temporäre WAV-Datei erstellt
-   
+
 5. Verarbeitung (asynchron)
    └─> Upload zu Whisper API
    └─> Transkription empfangen
    └─> Text an GPT-4 zur Korrektur
    └─> Korrigierter Text empfangen
-   
+
 6. Text-Einfügen
    └─> Text in Zwischenablage
    └─> Ctrl+V simulieren
    └─> Text erscheint an Cursor-Position
-   
+
 7. Cleanup
    └─> Temporäre Audio-Datei löschen
    └─> Zurück zu Schritt 1
@@ -463,6 +507,7 @@ BEEP_FREQUENCY_STOP=800
 ### Fehlerbehandlung
 
 **Kein Mikrofon verfügbar:**
+
 ```
 └─> Zeige Notification
 └─> Log Error
@@ -470,6 +515,7 @@ BEEP_FREQUENCY_STOP=800
 ```
 
 **API-Fehler (Netzwerk):**
+
 ```
 └─> Retry 3x mit Exponential Backoff
 └─> Falls weiterhin Fehler:
@@ -478,6 +524,7 @@ BEEP_FREQUENCY_STOP=800
 ```
 
 **Kein Eingabefeld aktiv:**
+
 ```
 └─> Text nur in Zwischenablage
 └─> Zeige Notification "Text in Zwischenablage"
@@ -585,6 +632,7 @@ pyinstaller \
 ### Distribution
 
 **Finale .exe:**
+
 - Größe: ~60-100 MB
 - Keine Installation nötig
 - Portable: USB-Stick fähig
@@ -595,18 +643,21 @@ pyinstaller \
 ## Sicherheit & Datenschutz
 
 ### API-Key Management
+
 - ✅ Keys in `.env` (nicht in Git)
 - ✅ `.env` im `.gitignore`
 - ✅ Keine Hardcoded Keys
 - ✅ User muss eigenen Key bereitstellen
 
 ### Datenverarbeitung
+
 - ✅ Audio nur temporär gespeichert
 - ✅ Automatische Löschung nach Verarbeitung
 - ✅ Keine Logs von Audio/Text-Inhalten
 - ✅ Keine Telemetrie
 
 ### Netzwerk
+
 - ✅ Nur HTTPS zu OpenAI API
 - ✅ Keine anderen externen Verbindungen
 - ✅ Keine Analytics/Tracking
@@ -618,6 +669,7 @@ pyinstaller \
 ### Unit Tests
 
 **test_audio.py:**
+
 ```python
 def test_microphone_available()
 def test_recording_creates_wav()
@@ -625,6 +677,7 @@ def test_30s_timeout()
 ```
 
 **test_transcription.py:**
+
 ```python
 def test_whisper_api_call()
 def test_retry_on_failure()
@@ -632,6 +685,7 @@ def test_german_language_detection()
 ```
 
 **test_injection.py:**
+
 ```python
 def test_clipboard_copy()
 def test_keyboard_simulation()
@@ -665,14 +719,14 @@ def test_fallback_behavior()
 
 ### Zielwerte
 
-| Metrik | Zielwert | Kritisch bei |
-|--------|----------|--------------|
-| Hotkey Latenz | < 100ms | > 500ms |
-| Start Recording | < 200ms | > 1s |
-| API Response (30s Audio) | < 10s | > 30s |
-| Text Injection | < 100ms | > 500ms |
-| RAM im Idle | < 100 MB | > 500 MB |
-| CPU im Idle | < 1% | > 5% |
+| Metrik                   | Zielwert | Kritisch bei |
+| ------------------------ | -------- | ------------ |
+| Hotkey Latenz            | < 100ms  | > 500ms      |
+| Start Recording          | < 200ms  | > 1s         |
+| API Response (30s Audio) | < 10s    | > 30s        |
+| Text Injection           | < 100ms  | > 500ms      |
+| RAM im Idle              | < 100 MB | > 500 MB     |
+| CPU im Idle              | < 1%     | > 5%         |
 
 ### Optimierungen
 
@@ -784,6 +838,7 @@ desktop.ini
 **Projekt-Lizenz:** MIT (oder nach Wahl)
 
 **Verwendete Libraries:**
+
 - OpenAI API: [Terms of Service](https://openai.com/policies/terms-of-use)
 - pystray: LGPL-3.0
 - keyboard: MIT

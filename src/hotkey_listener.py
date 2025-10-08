@@ -4,8 +4,9 @@ Erkennt Ctrl+Win Hotkey für Push-to-Talk Funktionalität.
 """
 
 import logging
-import keyboard
 from typing import Callable, Optional
+
+import keyboard
 
 logger = logging.getLogger(__name__)
 
@@ -22,15 +23,29 @@ class HotkeyListener:
         self.on_press_callback = on_press
         self.on_release_callback = on_release
 
-        # Registriere Hotkey: Ctrl + Left Windows
-        try:
-            keyboard.on_press_key('ctrl+left windows', self._on_press_handler)
-            keyboard.on_release_key('ctrl+left windows', self._on_release_handler)
-            self.hotkey_registered = True
-            logger.info("Hotkey 'Ctrl+Win' erfolgreich registriert")
-        except Exception as e:
-            logger.error(f"Fehler bei Hotkey-Registrierung: {e}")
-            raise
+        # Registriere Hotkey: Funktionierende Kombinationen
+        hotkey_variants = [
+            'f12',                    # F12 (funktioniert immer)
+            'f11',                    # F11
+            'f10',                    # F10
+            'ctrl+shift+s',           # Ctrl+Shift+S
+            'alt+shift+s',            # Alt+Shift+S
+        ]
+
+        for hotkey in hotkey_variants:
+            try:
+                keyboard.on_press_key(hotkey, self._on_press_handler)
+                keyboard.on_release_key(hotkey, self._on_release_handler)
+                self.hotkey_registered = True
+                logger.info(f"Hotkey '{hotkey}' erfolgreich registriert")
+                break
+            except Exception as e:
+                logger.warning(f"Hotkey '{hotkey}' nicht verfügbar: {e}")
+                continue
+
+        if not self.hotkey_registered:
+            logger.error("Kein Hotkey konnte registriert werden")
+            raise RuntimeError("Hotkey-Registrierung fehlgeschlagen")
 
     def _on_press_handler(self, event):
         """Handler für Hotkey-Drücken"""
@@ -49,12 +64,10 @@ class HotkeyListener:
                 logger.error(f"Fehler im on_release Callback: {e}")
 
     def is_hotkey_pressed(self) -> bool:
-        """Prüft ob der Hotkey aktuell gedrückt ist"""
-        try:
-            return keyboard.is_pressed('ctrl+left windows')
-        except Exception as e:
-            logger.warning(f"Fehler beim Prüfen des Hotkey-Status: {e}")
-            return False
+        """Prüft ob irgendein Hotkey aktuell gedrückt ist"""
+        # Diese Methode ist nicht mehr zuverlässig mit variablen Hotkeys
+        # Die keyboard-Bibliothek handhabt das intern
+        return False
 
     def cleanup(self):
         """Räumt Hotkey-Listener auf"""

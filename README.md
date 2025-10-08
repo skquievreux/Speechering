@@ -1,26 +1,30 @@
-# 🎤 Voice Transcriber
+# 🎤 Voice Transcriber v1.1.0
 
-Eine Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text Transkription mit KI-Unterstützung.
+Eine Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text Transkription mit
+KI-Unterstützung.
 
 ## ✨ Features
 
-- 🎤 **Push-to-Talk Aufnahme**: Ctrl+Win halten = aufnehmen
+- 🎤 **Push-to-Talk Aufnahme**: F12 halten = aufnehmen (empfohlen)
 - 🤖 **KI-Transkription**: OpenAI Whisper API
-- ✨ **Text-Korrektur**: GPT-4 basierte Verbesserung
+- ✨ **Text-Korrektur**: GPT-4 basierte Verbesserung (ohne Anführungszeichen)
 - ⌨️ **Auto-Einfügen**: Text direkt an Cursor-Position
 - 🔔 **Akustisches Feedback**: Start/Stop Beeps
-- 📍 **System Tray**: Unsichtbar im Hintergrund
+- 📍 **System Tray**: Unsichtbar im Hintergrund mit Einstellungs-GUI
 - ⏱️ **30s Limit**: Automatischer Stop nach 30 Sekunden
+- ⚙️ **Einstellungen**: Vollständige GUI über Tray-Menü
 
 ## 🚀 Schnellstart
 
 ### 1. Repository klonen
+
 ```bash
 git clone <repository-url>
 cd voice-transcriber
 ```
 
 ### 2. Virtual Environment erstellen
+
 ```bash
 # Windows CMD/PowerShell
 python -m venv venv
@@ -30,17 +34,20 @@ venv\Scripts\activate
 ```
 
 ### 3. Dependencies installieren
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 4. OpenAI API-Key konfigurieren
+
 ```bash
 # .env Datei bearbeiten
 OPENAI_API_KEY=sk-your-openai-api-key-here
 ```
 
 ### 5. Anwendung starten
+
 ```bash
 python src/main.py
 ```
@@ -48,33 +55,43 @@ python src/main.py
 ## 🎯 Verwendung
 
 1. **Anwendung starten**: Tray-Icon erscheint
-2. **Aufnehmen**: Strg + Windows-Taste gedrückt halten
+2. **Aufnehmen**: F12 gedrückt halten (empfohlen)
 3. **Sprechen**: Während Taste gehalten wird
 4. **Loslassen**: Verarbeitung startet automatisch
-5. **Text erscheint**: An aktueller Cursor-Position
+5. **Text erscheint**: An aktueller Cursor-Position (ohne Anführungszeichen)
+6. **Einstellungen**: Rechtsklick auf Tray-Icon → "Einstellungen"
 
 ## 🛠️ Entwicklung
 
 ### Projekt-Struktur
+
 ```
 voice-transcriber/
 ├── src/                    # Quellcode
-│   ├── main.py            # Hauptanwendung
-│   ├── config.py          # Konfiguration
-│   ├── hotkey_listener.py # Hotkey-Erkennung
-│   ├── audio_recorder.py  # Audio-Aufnahme
-│   ├── transcription.py   # Whisper API
-│   ├── text_processor.py  # GPT Korrektur
-│   └── clipboard_injector.py # Text-Einfügung
+│   ├── __init__.py        # Package-Definition
+│   ├── main.py            # Hauptanwendung + Tray-Icon
+│   ├── config.py          # Konfiguration + Logging
+│   ├── hotkey_listener.py # F12 Hotkey-Erkennung
+│   ├── audio_recorder.py  # Mikrofon-Aufnahme
+│   ├── transcription.py   # OpenAI Whisper API
+│   ├── text_processor.py  # GPT-4 Korrektur
+│   ├── clipboard_injector.py # Text-Einfügung
+│   └── settings_gui.py    # Einstellungs-GUI
 ├── assets/                # Ressourcen
+│   ├── icon.ico          # Tray-Icon
+│   └── icon_generator.py # Icon-Erstellung
 ├── tests/                 # Unit Tests
+│   └── test_config.py    # Konfigurationstests
+├── Documentation/         # Bibliotheks-Dokumentation
 ├── .env                   # Umgebungsvariablen
+├── .gitignore            # Git-Ignorierungen
 ├── requirements.txt       # Dependencies
-├── build.py              # Build-Script
+├── build.py              # PyInstaller Build-Script
 └── README.md
 ```
 
 ### Build für Distribution
+
 ```bash
 # Virtual Environment muss aktiv sein!
 python build.py
@@ -85,6 +102,7 @@ Das erstellt `dist/VoiceTranscriber.exe` - eine standalone Windows-Anwendung.
 ## ⚙️ Konfiguration
 
 ### .env Datei
+
 ```env
 # OpenAI API
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxx
@@ -104,10 +122,11 @@ LOG_LEVEL=INFO
 ```
 
 ### VS Code Setup
+
 ```json
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
-    "python.terminal.activateEnvironment": true
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+  "python.terminal.activateEnvironment": true
 }
 ```
 
@@ -137,22 +156,26 @@ pytest --cov=src tests/
 ## 🐛 Fehlerbehebung
 
 ### "python nicht gefunden"
+
 ```bash
 # Virtual Environment aktivieren
 venv\Scripts\activate
 ```
 
 ### "PyInstaller nicht gefunden"
+
 ```bash
 pip install pyinstaller
 ```
 
 ### "OpenAI API Fehler"
+
 - API-Key in .env prüfen
 - Internetverbindung prüfen
 - API-Limits/Kosten prüfen
 
 ### Mikrofon funktioniert nicht
+
 - Standard-Mikrofon in Windows-Einstellungen prüfen
 - Audio-Geräte neu starten
 
