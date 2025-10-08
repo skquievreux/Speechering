@@ -61,6 +61,47 @@ class TranscriptionService:
 
         return None
 
+    def transcribe_audio_data(self, audio_data: bytes, filename: str = "audio.mp3") -> Optional[str]:
+        """Transkribiert komprimierte Audio-Daten zu Text"""
+        import io
+
+        for attempt in range(self.max_retries):
+            try:
+                logger.info(f"Starte Transkription von Audio-Daten (Versuch {attempt + 1}/{self.max_retries})")
+
+                start_time = time.time()
+
+                # Erstelle file-like Objekt aus bytes
+                audio_file = io.BytesIO(audio_data)
+                audio_file.name = filename  # OpenAI benötigt einen Dateinamen
+
+                transcript = self.client.audio.transcriptions.create(
+                    model="whisper-1",
+                    file=audio_file,
+                    language="de",  # Deutsche Sprache priorisieren
+                    response_format="text"
+                )
+
+                duration = time.time() - start_time
+                logger.info(".2f")
+
+                # Validiere Ergebnis
+                if self._validate_transcript(transcript):
+                    return transcript.strip()
+                else:
+                    logger.warning("Transkript ist leer oder ungültig")
+                    return None
+
+            except Exception as e:
+                logger.error(f"Fehler bei Transkription von Audio-Daten (Versuch {attempt + 1}): {e}")
+                if attempt < self.max_retries - 1:
+                    time.sleep(self.retry_delay * (2 ** attempt))  # Exponential backoff
+                else:
+                    logger.error("Maximale Anzahl von Versuchen erreicht")
+                    return None
+
+        return None
+
     def _validate_audio_file(self, audio_path: str) -> bool:
         """Validiert die Audio-Datei"""
         try:

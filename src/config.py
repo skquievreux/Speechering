@@ -37,7 +37,12 @@ class Config:
 
     # Application Settings
     APP_NAME: str = os.getenv('APP_NAME', 'Voice Transcriber')
-    APP_VERSION: str = os.getenv('APP_VERSION', '1.1.0')
+    APP_VERSION: str = os.getenv('APP_VERSION', '1.2.0')
+
+    # Audio-Komprimierung
+    AUDIO_COMPRESSION_ENABLED: bool = os.getenv('AUDIO_COMPRESSION_ENABLED', 'true').lower() == 'true'
+    AUDIO_COMPRESSION_FORMAT: str = os.getenv('AUDIO_COMPRESSION_FORMAT', 'mp3')
+    AUDIO_COMPRESSION_BITRATE: str = os.getenv('AUDIO_COMPRESSION_BITRATE', '64k')
 
     @classmethod
     def validate(cls) -> bool:

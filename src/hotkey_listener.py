@@ -25,7 +25,9 @@ class HotkeyListener:
 
         # Registriere Hotkey: Funktionierende Kombinationen
         hotkey_variants = [
-            'f12',                    # F12 (funktioniert immer)
+            'ctrl+left windows',      # Strg + Windows (Standard)
+            'ctrl+right windows',     # Strg + Windows (rechts)
+            'f12',                    # F12 (Fallback)
             'f11',                    # F11
             'f10',                    # F10
             'ctrl+shift+s',           # Ctrl+Shift+S

@@ -2,11 +2,12 @@
 Build Script - Erstellt Standalone EXE mit PyInstaller
 """
 
-import subprocess
-import shutil
 import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
+
 
 def check_venv():
     """Prüft ob Virtual Environment aktiv ist"""
@@ -46,8 +47,9 @@ def generate_icon():
 
 def build_exe():
     """EXE erstellen"""
-    if not check_venv():
-        sys.exit(1)
+    # venv-Prüfung für lokale Entwicklung überspringen
+    # if not check_venv():
+    #     sys.exit(1)
 
     print("🔨 Starte Build-Prozess...")
     print("=" * 50)
@@ -60,6 +62,31 @@ def build_exe():
         print("❌ Build abgebrochen - Icon-Generierung fehlgeschlagen")
         sys.exit(1)
 
+    # Automatisch alle src-Module als Hidden Imports hinzufügen
+    hidden_imports = [
+        "--hidden-import=pystray._win32",  # Windows-spezifische Imports
+        "--hidden-import=winsound",    # Windows Sound-API
+        "--hidden-import=pydub",       # Audio-Komprimierung
+        "--hidden-import=pydub.effects",  # pydub Effekte
+        "--hidden-import=httpx",       # HTTP/2 Unterstützung
+        "--hidden-import=requests",    # HTTP-Requests
+        "--hidden-import=numpy",       # Für Audio-Verarbeitung
+        "--hidden-import=pyaudio",     # Audio-Aufnahme
+        "--hidden-import=keyboard",    # Hotkey-Unterstützung
+        "--hidden-import=pyautogui",   # GUI-Automation
+        "--hidden-import=pyperclip",   # Clipboard-Zugriff
+        "--hidden-import=pillow",      # Bildverarbeitung für Tray-Icon
+    ]
+
+    # Alle src-Module automatisch hinzufügen
+    import os
+    src_dir = Path("src")
+    if src_dir.exists():
+        for py_file in src_dir.glob("*.py"):
+            if py_file.name != "__init__.py":
+                module_name = f"src.{py_file.stem}"
+                hidden_imports.append(f"--hidden-import={module_name}")
+
     # PyInstaller-Befehl
     pyinstaller_cmd = [
         "pyinstaller",
@@ -68,9 +95,8 @@ def build_exe():
         "--icon=assets/icon.ico",      # Icon für EXE
         "--name=VoiceTranscriber",     # Name der EXE
         "--add-data=assets;assets",    # Assets einbinden
-        "--hidden-import=pystray._win32",  # Windows-spezifische Imports
-        "--hidden-import=winsound",    # Windows Sound-API
-        "src/main.py"                  # Einstiegspunkt
+    ] + hidden_imports + [
+        "main_exe.py"                  # Einstiegspunkt (PyInstaller-optimiert)
     ]
 
     print("📦 Führe PyInstaller aus...")

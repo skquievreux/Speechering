@@ -13,24 +13,14 @@ import keyboard
 import pystray
 from PIL import Image
 
-try:
-    # Versuche relative Imports (für python -m src)
-    from .audio_recorder import AudioRecorder
-    from .clipboard_injector import ClipboardInjector
-    from .config import config
-    from .hotkey_listener import HotkeyListener
-    from .settings_gui import SettingsGUI
-    from .text_processor import TextProcessor
-    from .transcription import TranscriptionService
-except ImportError:
-    # Fallback für direkte Ausführung oder PyInstaller
-    from audio_recorder import AudioRecorder
-    from clipboard_injector import ClipboardInjector
-    from config import config
-    from hotkey_listener import HotkeyListener
-    from settings_gui import SettingsGUI
-    from text_processor import TextProcessor
-    from transcription import TranscriptionService
+# Absolute Imports für PyInstaller
+from src.audio_recorder import AudioRecorder
+from src.clipboard_injector import ClipboardInjector
+from src.config import config
+from src.hotkey_listener import HotkeyListener
+from src.settings_gui import SettingsGUI
+from src.text_processor import TextProcessor
+from src.transcription import TranscriptionService
 
 logger = logging.getLogger(__name__)
 

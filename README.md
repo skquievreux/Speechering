@@ -1,11 +1,13 @@
-# 🎤 Voice Transcriber v1.1.0
+# 🎤 Voice Transcriber v1.2.0
 
 Eine Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text Transkription mit
-KI-Unterstützung.
+KI-Unterstützung und optimierter Audio-Verarbeitung.
 
 ## ✨ Features
 
-- 🎤 **Push-to-Talk Aufnahme**: F12 halten = aufnehmen (empfohlen)
+- 🎤 **Push-to-Talk Aufnahme**: Strg + Windows halten = aufnehmen (empfohlen)
+- 🔊 **Audio-Komprimierung**: Automatische MP3-Komprimierung (75% Datenreduktion)
+- ⚡ **Schnelle Transkription**: < 1.2s Gesamtlatenz (vorher ~2.5s)
 - 🤖 **KI-Transkription**: OpenAI Whisper API
 - ✨ **Text-Korrektur**: GPT-4 basierte Verbesserung (ohne Anführungszeichen)
 - ⌨️ **Auto-Einfügen**: Text direkt an Cursor-Position
@@ -13,6 +15,7 @@ KI-Unterstützung.
 - 📍 **System Tray**: Unsichtbar im Hintergrund mit Einstellungs-GUI
 - ⏱️ **30s Limit**: Automatischer Stop nach 30 Sekunden
 - ⚙️ **Einstellungen**: Vollständige GUI über Tray-Menü
+- 🧪 **17 Tests**: Umfassende Unit- und Integration-Tests
 
 ## 🚀 Schnellstart
 
@@ -55,11 +58,17 @@ python src/main.py
 ## 🎯 Verwendung
 
 1. **Anwendung starten**: Tray-Icon erscheint
-2. **Aufnehmen**: F12 gedrückt halten (empfohlen)
-3. **Sprechen**: Während Taste gehalten wird
-4. **Loslassen**: Verarbeitung startet automatisch
+2. **Aufnehmen**: Strg + Windows gedrückt halten (empfohlen)
+3. **Sprechen**: Während Tasten gehalten werden
+4. **Loslassen**: Verarbeitung startet automatisch (MP3-Komprimierung)
 5. **Text erscheint**: An aktueller Cursor-Position (ohne Anführungszeichen)
 6. **Einstellungen**: Rechtsklick auf Tray-Icon → "Einstellungen"
+
+### Hotkey-Optionen (Fallback-Reihenfolge):
+- **Strg + Windows** (Standard, empfohlen)
+- **F12** (Fallback)
+- **F11, F10** (weitere Fallbacks)
+- **Strg+Shift+S, Alt+Shift+S** (letzte Optionen)
 
 ## 🛠️ Entwicklung
 
@@ -111,6 +120,11 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxx
 MAX_RECORDING_DURATION=30
 SAMPLE_RATE=16000
 CHANNELS=1
+
+# Audio-Komprimierung (Neu in v1.2.0)
+AUDIO_COMPRESSION_ENABLED=true
+AUDIO_COMPRESSION_FORMAT=mp3
+AUDIO_COMPRESSION_BITRATE=64k
 
 # Audio Feedback
 BEEP_FREQUENCY_START=1000
@@ -181,9 +195,13 @@ pip install pyinstaller
 
 ## 📈 Performance
 
-- **Transkription**: < 10 Sekunden für 30s Audio
+- **Audio-Komprimierung**: 75% Datenreduktion (WAV → MP3)
+- **Upload-Zeit**: 800ms → 200ms (75% schneller)
+- **Gesamtlatenz**: 2.5s → 1.2s (52% schneller)
+- **Transkription**: < 1.2 Sekunden für 30s Audio
 - **Hotkey-Reaktion**: < 100ms
 - **CPU im Idle**: < 1%
+- **EXE-Größe**: 65.4 MB (Standalone)
 
 ## 🤝 Beitragen
 

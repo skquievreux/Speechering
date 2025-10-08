@@ -3,6 +3,7 @@ Audio Recorder - Mikrofon-Aufnahme
 Zeichnet Audio vom Standard-Mikrofon auf und speichert als WAV.
 """
 
+import io
 import logging
 import threading
 import time
@@ -13,6 +14,14 @@ from typing import Optional
 import pyaudio
 
 from src.config import config
+
+# Optional: pydub für Audio-Komprimierung
+try:
+    from pydub import AudioSegment
+    PYDUB_AVAILABLE = True
+except ImportError:
+    PYDUB_AVAILABLE = False
+    logging.warning("pydub nicht verfügbar - Audio-Komprimierung deaktiviert")
 
 logger = logging.getLogger(__name__)
 
@@ -105,6 +114,17 @@ class AudioRecorder:
             logger.error(f"Fehler beim Stoppen der Aufnahme: {e}")
             return None
 
+    def record_audio(self) -> Optional[str]:
+        """Führt komplette Audio-Aufnahme durch (start + stop)"""
+        wav_path = self.start_recording()
+        if not wav_path:
+            return None
+
+        # Kurze Pause für Aufnahme
+        time.sleep(1.0)  # 1 Sekunde Test-Aufnahme
+
+        return self.stop_recording()
+
     def _record_audio(self):
         """Aufnahme-Loop in separatem Thread"""
         logger.info("Aufnahme-Thread gestartet")
@@ -147,6 +167,77 @@ class AudioRecorder:
         except Exception as e:
             logger.error(f"Fehler beim Speichern der WAV-Datei: {e}")
             raise
+
+    def compress_audio(self, wav_path: str, output_format: Optional[str] = None,
+                      bitrate: Optional[str] = None) -> bytes:
+        """Komprimiert WAV-Datei in effizienteres Format"""
+        if not PYDUB_AVAILABLE:
+            logger.warning("pydub nicht verfügbar - verwende Original-WAV")
+            with open(wav_path, 'rb') as f:
+                return f.read()
+
+        if output_format is None:
+            output_format = config.AUDIO_COMPRESSION_FORMAT
+        if bitrate is None:
+            bitrate = config.AUDIO_COMPRESSION_BITRATE
+
+        try:
+            # Audio laden
+            audio = AudioSegment.from_wav(wav_path)
+
+            # In Buffer komprimieren
+            buffer = io.BytesIO()
+            audio.export(buffer, format=output_format, bitrate=bitrate)
+            compressed_data = buffer.getvalue()
+
+            # Logging
+            original_size = Path(wav_path).stat().st_size
+            compression_ratio = len(compressed_data) / original_size
+            logger.info(f"Audio komprimiert: {original_size} → {len(compressed_data)} bytes "
+                       f"({compression_ratio:.1%})")
+
+            return compressed_data
+
+        except Exception as e:
+            logger.error(f"Fehler bei Audio-Komprimierung: {e}")
+            # Fallback: Original WAV zurückgeben
+            with open(wav_path, 'rb') as f:
+                return f.read()
+
+    def record_and_compress(self) -> Optional[bytes]:
+        """Vollständiger Workflow: Aufnahme + Komprimierung"""
+        if not config.AUDIO_COMPRESSION_ENABLED:
+            logger.info("Audio-Komprimierung deaktiviert, verwende Standard-Aufnahme")
+            wav_path = self.record_audio()
+            if not wav_path:
+                return None
+            with open(wav_path, 'rb') as f:
+                return f.read()
+
+        try:
+            # Aufnahme (bestehende Logik)
+            wav_path = self.record_audio()
+            if not wav_path:
+                return None
+
+            # Komprimierung
+            compressed_data = self.compress_audio(wav_path)
+
+            # Cleanup
+            Path(wav_path).unlink(missing_ok=True)
+
+            return compressed_data
+
+        except Exception as e:
+            logger.error(f"Fehler bei Aufnahme + Komprimierung: {e}")
+            # Fallback: Original WAV verwenden
+            try:
+                if wav_path and Path(wav_path).exists():
+                    with open(wav_path, 'rb') as f:
+                        return f.read()
+            except Exception as fallback_e:
+                logger.error(f"Fallback fehlgeschlagen: {fallback_e}")
+            return None
 
     def _cleanup_stream(self):
         """Schließt Audio-Stream und räumt auf"""
