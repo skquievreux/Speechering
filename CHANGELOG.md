@@ -6,6 +6,55 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-10-11
+
+### 🎉 Added - Erstmals hinzugefügt
+
+#### Lokale Sprach-zu-Text Transkription
+
+- **Offline-Transkription**: Integration von `faster-whisper` für lokale Verarbeitung
+  - Keine Abhängigkeit von OpenAI API für Offline-Nutzung
+  - Reduzierte Kosten und verbesserte Privatsphäre
+  - Automatische GPU-Erkennung (CUDA) mit CPU-Fallback
+  - Konfigurierbare Modellgrößen (tiny, base, small, medium, large)
+- **Dual-Mode Architektur**: Nahtlose Umschaltung zwischen lokal und API-Transkription
+  - Automatischer Fallback bei lokalen Fehlern
+  - Konfiguration via `.env` (USE_LOCAL_TRANSCRIPTION, WHISPER_MODEL_SIZE)
+  - GUI-Integration für Benutzereinstellungen
+
+#### Single-Instance-Schutz
+
+- **Anwendungs-Sperre**: Verhindert mehrfache Instanzen der Anwendung
+  - Lock-Datei-Mechanismus im Benutzerverzeichnis
+  - Benutzerfreundliche Warnmeldung bei Doppelstart
+  - Automatisches Cleanup beim Beenden
+
+#### Erweiterte Konfiguration
+
+- **Lokale Transkriptions-Einstellungen**: Neue GUI-Tab für Transkriptionsoptionen
+- **Modell-Auswahl**: Dropdown für Whisper-Modellgrößen
+- **Status-Anzeige**: Live-Informationen über aktiven Transkriptionsmodus
+
+### 🔧 Changed - Geändert
+
+- **Transkriptions-Architektur**: Erweiterte `TranscriptionService` mit lokaler Unterstützung
+- **Konfigurationssystem**: Neue Parameter für lokale Transkription
+- **GUI-Struktur**: Neuer "Transkription"-Tab in Einstellungen
+- **Build-System**: Zusätzliche Dependencies (faster-whisper, torch)
+
+### 📊 Performance-Verbesserungen
+
+- **Offline-Betrieb**: Keine Netzwerk-Latenz bei lokaler Transkription
+- **Kosteneinsparung**: 0$ für lokale Transkription vs. $0.006/min bei API
+- **Privatsphäre**: Audio-Daten bleiben lokal und werden nicht übertragen
+- **Hardware-Optimierung**: GPU-Beschleunigung für schnellere Verarbeitung
+
+### 🛡️ Security - Sicherheit
+
+- **Lokale Datenverarbeitung**: Audio-Dateien werden nur lokal verarbeitet
+- **Keine externen API-Calls**: Optionale Offline-Nutzung ohne Internet
+- **Single-Instance-Schutz**: Verhindert Ressourcen-Konflikte
+
 ## [1.2.1] - 2025-10-08
 
 ### 🐛 Fixed - Behoben

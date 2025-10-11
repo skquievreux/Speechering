@@ -13,24 +13,14 @@ import keyboard
 import pystray
 from PIL import Image
 
-try:
-    # Versuche relative Imports (für python -m src)
-    from .audio_recorder import AudioRecorder
-    from .clipboard_injector import ClipboardInjector
-    from .config import config
-    from .hotkey_listener import HotkeyListener
-    from .settings_gui import SettingsGUI
-    from .text_processor import TextProcessor
-    from .transcription import TranscriptionService
-except ImportError:
-    # Fallback für direkte Ausführung oder PyInstaller
-    from audio_recorder import AudioRecorder
-    from clipboard_injector import ClipboardInjector
-    from config import config
-    from hotkey_listener import HotkeyListener
-    from settings_gui import SettingsGUI
-    from text_processor import TextProcessor
-    from transcription import TranscriptionService
+# Absolute Imports für PyInstaller EXE
+from audio_recorder import AudioRecorder
+from clipboard_injector import ClipboardInjector
+from config import config
+from hotkey_listener import HotkeyListener
+from settings_gui import SettingsGUI
+from text_processor import TextProcessor
+from transcription import TranscriptionService
 
 logger = logging.getLogger(__name__)
 
@@ -144,7 +134,7 @@ class VoiceTranscriberApp:
         """Führt die komplette Aufnahme- und Verarbeitung durch"""
         try:
             # Prüfe Komprimierungs-Status
-            from .audio_recorder import PYDUB_AVAILABLE
+            from audio_recorder import PYDUB_AVAILABLE
             if PYDUB_AVAILABLE and config.AUDIO_COMPRESSION_ENABLED:
                 logger.info("Audio-Komprimierung aktiviert - verwende MP3")
                 use_compression = True

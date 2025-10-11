@@ -40,6 +40,7 @@ class AudioRecorder:
         self.is_recording = False
         self.recording_thread: Optional[threading.Thread] = None
         self.temp_file: Optional[Path] = None
+        self.last_recording_duration = 0.0  # Dauer der letzten Aufnahme in Sekunden
 
         self._init_audio()
 
@@ -47,7 +48,18 @@ class AudioRecorder:
         """Initialisiert PyAudio"""
         try:
             self.audio = pyaudio.PyAudio()
-            logger.info("PyAudio erfolgreich initialisiert")
+
+            # Logge verfügbare Audio-Geräte für Debugging
+            device_count = self.audio.get_device_count()
+            logger.info(f"PyAudio erfolgreich initialisiert - {device_count} Audio-Geräte verfügbar")
+
+            # Zeige Standard-Input-Gerät
+            try:
+                default_input = self.audio.get_default_input_device_info()
+                logger.info(f"Standard-Input-Gerät: {default_input['name']} (Index: {default_input['index']})")
+            except Exception as e:
+                logger.warning(f"Konnte Standard-Input-Gerät nicht ermitteln: {e}")
+
         except Exception as e:
             logger.error(f"Fehler bei PyAudio-Initialisierung: {e}")
             raise
@@ -63,11 +75,13 @@ class AudioRecorder:
             self._cleanup_stream()
 
             # Stream öffnen
+            input_device_index = config.AUDIO_DEVICE_INDEX if config.AUDIO_DEVICE_INDEX >= 0 else None
             self.stream = self.audio.open(  # type: ignore
                 format=pyaudio.paInt16,
                 channels=config.CHANNELS,
                 rate=config.SAMPLE_RATE,
                 input=True,
+                input_device_index=input_device_index,
                 frames_per_buffer=1024
             )
 
@@ -109,6 +123,10 @@ class AudioRecorder:
             # WAV-Datei speichern
             if self.frames and self.temp_file:
                 self._save_wav_file()
+
+                # Berechne Aufnahmedauer
+                self.last_recording_duration = len(self.frames) * 1024 / config.SAMPLE_RATE
+
                 logger.info(f"Audio gespeichert: {self.temp_file}")
                 return str(self.temp_file)
             else:
@@ -210,7 +228,7 @@ class AudioRecorder:
                 return f.read()
 
     def record_and_compress(self) -> Optional[bytes]:
-        """Vollständiger Workflow: Aufnahme + Komprimierung"""
+        """Vollständiger Workflow: Aufnahme + Komprimierung (wartet auf Hotkey-Release)"""
         if not config.AUDIO_COMPRESSION_ENABLED:
             logger.info("Audio-Komprimierung deaktiviert, verwende Standard-Aufnahme")
             wav_path = self.record_audio()
@@ -220,16 +238,37 @@ class AudioRecorder:
                 return f.read()
 
         try:
-            # Aufnahme (bestehende Logik)
-            wav_path = self.record_audio()
+            # Aufnahme starten
+            wav_path = self.start_recording()
             if not wav_path:
                 return None
 
+            logger.info("Aufnahme mit Komprimierung gestartet - warte auf Hotkey-Release...")
+
+            # Warten bis Hotkey losgelassen wird (is_recording = False)
+            while self.is_recording:
+                time.sleep(0.01)  # Kurze Pause
+
+            # Aufnahme stoppen
+            final_wav_path = self.stop_recording()
+            if not final_wav_path:
+                return None
+
+            # Prüfe Mindestdauer (0.1 Sekunden für OpenAI)
+            audio_duration = len(self.frames) * 1024 / config.SAMPLE_RATE
+            if audio_duration < 0.1:
+                logger.warning(".2f")
+                # Cleanup
+                Path(final_wav_path).unlink(missing_ok=True)
+                return None
+
+            logger.info(".2f")
+
             # Komprimierung
-            compressed_data = self.compress_audio(wav_path)
+            compressed_data = self.compress_audio(final_wav_path)
 
             # Cleanup
-            Path(wav_path).unlink(missing_ok=True)
+            Path(final_wav_path).unlink(missing_ok=True)
 
             return compressed_data
 
@@ -237,8 +276,8 @@ class AudioRecorder:
             logger.error(f"Fehler bei Aufnahme + Komprimierung: {e}")
             # Fallback: Original WAV verwenden
             try:
-                if wav_path and Path(wav_path).exists():
-                    with open(wav_path, 'rb') as f:
+                if 'final_wav_path' in locals() and final_wav_path and Path(final_wav_path).exists():
+                    with open(final_wav_path, 'rb') as f:
                         return f.read()
             except Exception as fallback_e:
                 logger.error(f"Fallback fehlgeschlagen: {fallback_e}")

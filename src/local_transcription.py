@@ -1,0 +1,172 @@
+"""
+Lokale Transkriptionsservice - Faster-Whisper Integration
+Transkribiert Audio-Dateien lokal mittels faster-whisper Modell.
+"""
+
+import logging
+import time
+from pathlib import Path
+from typing import Optional
+
+import torch
+from faster_whisper import WhisperModel
+
+from src.config import config
+
+logger = logging.getLogger(__name__)
+
+class LocalTranscriptionService:
+    """Service für lokale Audio-zu-Text Transkription mit faster-whisper"""
+
+    def __init__(self):
+        self.model: Optional[WhisperModel] = None
+        self.model_size = config.WHISPER_MODEL_SIZE
+        self._load_model()
+
+    def _load_model(self):
+        """Lädt das Whisper-Modell"""
+        try:
+            logger.info(f"Lade lokales Whisper-Modell: {self.model_size}")
+
+            # Prüfe GPU-Verfügbarkeit
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            compute_type = "float16" if device == "cuda" else "int8"
+
+            logger.info(f"Verwende Device: {device}, Compute Type: {compute_type}")
+
+            self.model = WhisperModel(
+                self.model_size,
+                device=device,
+                compute_type=compute_type,
+                download_root=str(config.get_temp_dir() / "whisper_models")
+            )
+
+            logger.info(f"Whisper-Modell {self.model_size} erfolgreich geladen")
+
+        except Exception as e:
+            logger.error(f"Fehler beim Laden des Whisper-Modells: {e}")
+            self.model = None
+            raise RuntimeError(f"Whisper-Modell konnte nicht geladen werden: {e}")
+
+    def transcribe(self, audio_path: str) -> Optional[str]:
+        """Transkribiert Audio-Datei zu Text"""
+        if not self._validate_audio_file(audio_path):
+            return None
+
+        if not self.model:
+            logger.error("Whisper-Modell ist nicht verfügbar")
+            return None
+
+        try:
+            logger.info("Starte lokale Transkription")
+
+            start_time = time.time()
+
+            # Transkription durchführen
+            segments, info = self.model.transcribe(
+                audio_path,
+                language="de",  # Deutsche Sprache priorisieren
+                beam_size=5,
+                patience=1.0,
+                vad_filter=True,  # Voice Activity Detection
+                vad_parameters=dict(threshold=0.5, min_speech_duration_ms=250)
+            )
+
+            # Segmente zu Text kombinieren
+            transcript = " ".join([segment.text for segment in segments])
+
+            duration = time.time() - start_time
+            logger.info(".2f")
+
+            # Validiere Ergebnis
+            if self._validate_transcript(transcript):
+                return transcript.strip()
+            else:
+                logger.warning("Transkript ist leer oder ungültig")
+                return None
+
+        except Exception as e:
+            logger.error(f"Fehler bei lokaler Transkription: {e}")
+            return None
+
+    def transcribe_audio_data(self, audio_data: bytes, filename: str = "audio.mp3") -> Optional[str]:
+        """Transkribiert komprimierte Audio-Daten zu Text"""
+        import io
+        import tempfile
+
+        try:
+            # Temporäre Datei erstellen
+            with tempfile.NamedTemporaryFile(suffix=Path(filename).suffix, delete=False) as temp_file:
+                temp_file.write(audio_data)
+                temp_path = temp_file.name
+
+            try:
+                # Transkribiere temporäre Datei
+                result = self.transcribe(temp_path)
+                return result
+            finally:
+                # Temporäre Datei löschen
+                Path(temp_path).unlink(missing_ok=True)
+
+        except Exception as e:
+            logger.error(f"Fehler bei Transkription von Audio-Daten: {e}")
+            return None
+
+    def _validate_audio_file(self, audio_path: str) -> bool:
+        """Validiert die Audio-Datei"""
+        try:
+            path = Path(audio_path)
+
+            if not path.exists():
+                logger.error(f"Audio-Datei existiert nicht: {audio_path}")
+                return False
+
+            if not path.is_file():
+                logger.error(f"Pfad ist keine Datei: {audio_path}")
+                return False
+
+            # Prüfe Dateigröße (max 25MB wie bei API)
+            size_mb = path.stat().st_size / (1024 * 1024)
+            if size_mb > 25:
+                logger.error(f"Audio-Datei zu groß: {size_mb:.1f}MB (max 25MB)")
+                return False
+
+            # Prüfe Dateiendung
+            if path.suffix.lower() not in ['.wav', '.mp3', '.m4a', '.flac', '.ogg']:
+                logger.warning(f"Ungewöhnliche Dateiendung: {path.suffix}")
+
+            logger.info(f"Audio-Datei validiert: {path.name} ({size_mb:.1f}MB)")
+            return True
+
+        except Exception as e:
+            logger.error(f"Fehler bei Audio-Datei-Validierung: {e}")
+            return False
+
+    def _validate_transcript(self, transcript: str) -> bool:
+        """Validiert das Transkriptionsergebnis"""
+        if not transcript:
+            return False
+
+        # Entferne Leerzeichen und prüfe Länge
+        cleaned = transcript.strip()
+        return len(cleaned) > 0
+
+    def get_supported_formats(self) -> list:
+        """Gibt unterstützte Audio-Formate zurück"""
+        return ['wav', 'mp3', 'm4a', 'flac', 'ogg']
+
+    def is_available(self) -> bool:
+        """Prüft, ob der lokale Service verfügbar ist"""
+        return self.model is not None
+
+    def get_model_info(self) -> dict:
+        """Gibt Informationen über das geladene Modell zurück"""
+        if not self.model:
+            return {"available": False}
+
+        return {
+            "available": True,
+            "model_size": self.model_size,
+            "device": "cuda" if torch.cuda.is_available() else "cpu",
+            "compute_type": "float16" if torch.cuda.is_available() else "int8"
+        }
