@@ -21,6 +21,7 @@ try:
     from .clipboard_injector import ClipboardInjector
     from .config import config
     from .hotkey_listener import HotkeyListener
+    from .mouse_integration import MouseWheelIntegration
     from .settings_gui import SettingsGUI
     from .text_processor import TextProcessor
     from .transcription import TranscriptionService
@@ -30,6 +31,7 @@ except ImportError:
     from clipboard_injector import ClipboardInjector
     from config import config
     from hotkey_listener import HotkeyListener
+    from mouse_integration import MouseWheelIntegration
     from settings_gui import SettingsGUI
     from text_processor import TextProcessor
     from transcription import TranscriptionService
@@ -76,6 +78,7 @@ class VoiceTranscriberApp:
     def __init__(self):
         self.tray_icon = None
         self.hotkey_listener = None
+        self.mouse_integration = None
         self.audio_recorder = None
         self.transcription_service = None
         self.text_processor = None
@@ -91,16 +94,26 @@ class VoiceTranscriberApp:
 
             # Komponenten erstellen
             self.hotkey_listener = HotkeyListener()
+            self.mouse_integration = MouseWheelIntegration()
             self.audio_recorder = AudioRecorder()
             self.transcription_service = TranscriptionService()
             self.text_processor = TextProcessor()
             self.clipboard_injector = ClipboardInjector()
 
-            # Hotkey Callbacks registrieren
+            # Hotkey Callbacks registrieren (mit Config für benutzerspezifische Hotkeys)
             self.hotkey_listener.register_callbacks(
                 on_press=self.on_hotkey_press,
-                on_release=self.on_hotkey_release
+                on_release=self.on_hotkey_release,
+                config=config
             )
+
+            # Mouse Wheel Integration starten falls aktiviert
+            if config.is_mouse_wheel_enabled():
+                logger.info("Mittleres Mausrad ist aktiviert - starte AHK-Integration")
+                if not self.mouse_integration.start():
+                    logger.warning("AHK-Integration konnte nicht gestartet werden")
+                else:
+                    logger.info("AHK-Integration erfolgreich gestartet")
 
             logger.info("Alle Komponenten erfolgreich initialisiert")
             return True
@@ -352,6 +365,8 @@ class VoiceTranscriberApp:
             self.audio_recorder.cleanup()
         if self.hotkey_listener:
             self.hotkey_listener.cleanup()
+        if self.mouse_integration:
+            self.mouse_integration.stop()
 
     def run(self):
         """Startet die Anwendung"""

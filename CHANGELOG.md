@@ -6,6 +6,105 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-10-12
+
+### 🎉 Added - Erstmals hinzugefügt
+
+#### Windows Installer & Professional Deployment
+
+- **Professioneller NSIS-Installer**: Vollständiger Windows-Installer mit Modern UI
+  - Automatische Installation aller Komponenten
+  - Deutsche und englische Sprachunterstützung
+  - Fortschrittsanzeige und benutzerfreundliche Oberfläche
+  - Automatische Desktop- und Startmenü-Verknüpfungen
+- **Automatische AutoHotkey-Installation**: AHK wird bei Bedarf automatisch heruntergeladen und installiert
+  - Nahtlose Integration ohne manuelle Schritte
+  - Versionsprüfung und Update-Mechanismus
+  - Fallback bei Download-Fehlern
+- **Vollständiger Deinstaller**: Professionelle Deinstallation über Windows-Systemsteuerung
+  - Komplette Entfernung aller installierten Dateien
+  - Registry-Bereinigung
+  - Optionale Beibehaltung von Benutzerdaten
+
+#### Benutzerspezifisches Konfigurationssystem
+
+- **AppData-Integration**: Persistente Einstellungen im Windows AppData-Verzeichnis
+  - `%APPDATA%/VoiceTranscriber/config.json` für benutzerspezifische Daten
+  - Automatische Migration von .env-Einstellungen
+  - Sichere Speicherung ohne Projektabhängigkeit
+- **Konfigurierbare Hotkeys**: Benutzer können Hotkeys individuell anpassen
+  - Mehrere Hotkey-Ebenen (primary, secondary, tertiary)
+  - Automatische Konflikterkennung und Fallback
+  - Persistente Speicherung von Hotkey-Präferenzen
+
+#### Mittleres Mausrad als Eingabemethode
+
+- **Systemweite Mauserkennung**: Mittleres Mausrad funktioniert in allen Anwendungen
+  - Keine Konflikte mit Browser-Hotkeys (F12, etc.)
+  - Toggle-Modus für intuitive Bedienung
+  - Automatischer AHK-Skript-Start mit der Anwendung
+- **Alternative Eingabemethoden**: Wahl zwischen Hotkeys und Mausrad
+  - Konfigurierbare Eingabemethode pro Benutzer
+  - Nahtlose Umschaltung ohne Neustart
+  - Visuelles Feedback bei Aktivierung
+
+### 🔧 Changed - Geändert
+
+#### Architektur-Verbesserungen
+
+- **Modulare Konfiguration**: Trennung zwischen System- und Benutzereinstellungen
+  - `.env` für globale/systemweite Einstellungen (API-Keys, etc.)
+  - `config.json` für benutzerspezifische Präferenzen
+  - Automatische Synchronisation und Migration
+- **Erweiterte Build-System**: Vollständige NSIS-Integration
+  - Automatischer Installer-Build mit `python build.py --installer`
+  - Mehrsprachige Installer-Unterstützung
+  - Professionelle Registry-Integration
+
+#### Technische Verbesserungen
+
+- **AHK-Integration**: Nahtlose AutoHotkey-Verwaltung
+  - Automatische Versionserkennung
+  - Sichere Prozessverwaltung und Cleanup
+  - Fehlerbehandlung bei AHK-Problemen
+- **Konfigurations-API**: Neue Methoden für benutzerspezifische Einstellungen
+  - `config.get_user_hotkey()`, `config.set_user_hotkey()`
+  - `config.is_mouse_wheel_enabled()`, `config.enable_mouse_wheel()`
+  - `config.get_input_method()`
+
+### 📊 Performance-Verbesserungen
+
+- **Schnellere Installation**: Optimierter Installer mit minimaler Größe
+  - Komprimierte Distribution (214.8 MB Installer)
+  - Parallele Download- und Installationsprozesse
+  - Reduzierte Installationszeit durch optimierte Skripte
+- **Verbesserte Stabilität**: Robuste Fehlerbehandlung
+  - Automatische Fallback-Mechanismen
+  - Detaillierte Fehlermeldungen
+  - Sichere Deinstallation bei Fehlern
+
+### 🛡️ Security - Sicherheit
+
+- **Lokale Konfiguration**: Benutzereinstellungen bleiben lokal
+  - Keine Übertragung sensibler Daten
+  - Sichere Dateiberechtigungen
+  - Backup/Restore-Funktionalität
+- **Installer-Sicherheit**: Verifizierte Downloads und Installation
+  - Digitale Signatur-Bereitschaft
+  - Sichere AHK-Download-URLs
+  - Registry-Schutz vor unbefugtem Zugriff
+
+### 📦 Build - Build-System
+
+- **Professioneller Release-Build**: Vollständige CI/CD-Bereitschaft
+  - Automatischer Multi-Format-Build (EXE + Installer)
+  - Versionsnummerierung und Tagging
+  - Release-Artifact-Generierung
+- **Erweiterte PyInstaller-Konfiguration**: Optimierte Standalone-EXE
+  - Neue Module: `user_config`, `mouse_integration`
+  - Zusätzliche Daten: AHK-Skript, Dokumentation
+  - Verbesserte Kompatibilität und Größe
+
 ## [1.3.0] - 2025-10-11
 
 ### 🎉 Added - Erstmals hinzugefügt

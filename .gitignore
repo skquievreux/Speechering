@@ -30,6 +30,11 @@ wheels/
 *.manifest
 *.spec
 
+# Build artifacts
+release/
+VoiceTranscriber_*.exe
+VoiceTranscriber_*.zip
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
