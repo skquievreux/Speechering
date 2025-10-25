@@ -6,6 +6,58 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-10-25
+
+### 🎉 Added - Erstmals hinzugefügt
+
+#### Zuverlässigkeits-Verbesserungen
+
+- **Hotkey-Debouncing**: Verhindert doppelte Aufnahmen durch zu schnelle Hotkey-Presses
+  - Mindestens 0.5 Sekunden Abstand zwischen Aufnahmen
+  - Automatische Erkennung von Hotkey-Spamming
+- **Mindestaufnahmedauer**: Erzwingt 0.5 Sekunden Mindestdauer für zuverlässige Transkription
+  - Verhindert extrem kurze Aufnahmen (1-8 Frames)
+  - Verbessert Transkriptionsqualität und -genauigkeit
+- **Singleton-Pattern für TranscriptionService**: Lokales Whisper-Modell wird nur einmal geladen
+  - Kein Neuladen bei jeder Transkription
+  - Reduzierte Startzeit und Memory-Verbrauch
+- **Verbessertes Logging und Debugging**: Separate Debug-Datei für Transkriptionsergebnisse
+  - Detaillierte Logs für bessere Fehlerdiagnose
+  - Automatische Debug-Datei-Erstellung im User-Verzeichnis
+
+#### Timing-Optimierungen
+
+- **Thread-Synchronisation**: Verbesserte Koordination zwischen Aufnahme- und Stopp-Threads
+- **Timing-Korrekturen**: Zusätzliche Pausen für zuverlässiges Audio-Stoppen
+- **Korrekte Fehlerbehandlung**: Null-Checks für Service-Instanzen
+
+#### Benutzeroberfläche
+
+- **Persistente Einstellungen**: Settings-GUI speichert Einstellungen korrekt in config.json
+- **Erweiterte Hotkey-Optionen**: Zusätzliche Kombinationen für Browser-Kompatibilität
+- **Warnung für Windows-Taste**: Klare Hinweise zu blockierten OS-Hotkeys
+
+### 🔧 Changed - Geändert
+
+- **Hotkey-System**: Verbesserte Debouncing-Logik und Timing-Kontrolle
+- **TranscriptionService**: Singleton-Implementierung für bessere Performance
+- **Settings-GUI**: Persistente Speicherung aller Einstellungen
+- **Logging**: Unterdrückung störender pkg_resources Warnungen
+
+### 🐛 Fixed - Behoben
+
+- **Doppelte Aufnahmen**: Hotkey-Debouncing verhindert Mehrfachauslösungen
+- **Zu kurze Aufnahmen**: Mindestdauer von 0.5 Sekunden erzwungen
+- **Modell-Neuladung**: Singleton verhindert wiederholtes Laden
+- **Einstellungen-Speicherung**: Korrekte Persistierung in config.json
+- **Timing-Probleme**: Verbesserte Thread-Synchronisation
+
+### 📊 Performance-Verbesserungen
+
+- **Schnellere Transkription**: Kein Modell-Neuladen bei jeder Aufnahme
+- **Zuverlässigere Aufnahmen**: Debouncing und Mindestdauer-Prüfungen
+- **Bessere Stabilität**: Verbesserte Fehlerbehandlung und Thread-Sicherheit
+
 ## [1.4.0] - 2025-10-12
 
 ### 🎉 Added - Erstmals hinzugefügt

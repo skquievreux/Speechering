@@ -7,6 +7,8 @@ import logging
 import os
 import sys
 import threading
+import time
+import warnings
 import winsound
 from pathlib import Path
 from typing import Optional
@@ -86,6 +88,14 @@ class VoiceTranscriberApp:
 
         self.is_recording = False
         self.recording_thread = None
+        self.last_recording_start_time = 0.0  # Verhindert doppelte Aufnahmen
+
+        # Debug-Datei für Transkriptionsergebnisse
+        self.debug_file_path = None
+
+        # Singleton-Instanz des TranscriptionService
+        self._transcription_service_instance = None
+        self.last_recording_start_time = 0.0  # Verhindert doppelte Aufnahmen
 
     def initialize_components(self):
         """Initialisiert alle Anwendungskomponenten"""
@@ -96,9 +106,14 @@ class VoiceTranscriberApp:
             self.hotkey_listener = HotkeyListener()
             self.mouse_integration = MouseWheelIntegration()
             self.audio_recorder = AudioRecorder()
-            self.transcription_service = TranscriptionService()
+            # TranscriptionService als Singleton initialisieren
+            self._transcription_service_instance = TranscriptionService()
+            logger.info("TranscriptionService Singleton initialisiert")
             self.text_processor = TextProcessor()
             self.clipboard_injector = ClipboardInjector()
+
+            # Debug-Datei initialisieren
+            self._init_debug_file()
 
             # Hotkey Callbacks registrieren (mit Config für benutzerspezifische Hotkeys)
             self.hotkey_listener.register_callbacks(
@@ -165,10 +180,18 @@ class VoiceTranscriberApp:
     def on_hotkey_press(self):
         """Callback bei Hotkey-Drücken (Start Aufnahme)"""
         if self.is_recording:
+            logger.debug("Aufnahme läuft bereits - ignoriere Hotkey-Press")
+            return
+
+        # Verhindere doppelte Aufnahmen durch zu schnelle Hotkey-Presses
+        current_time = time.time()
+        if current_time - self.last_recording_start_time < 0.5:  # Mindestens 0.5s zwischen Aufnahmen
+            logger.debug(".2f")
             return
 
         logger.info("Hotkey gedrückt - Starte Aufnahme")
         self.is_recording = True
+        self.last_recording_start_time = current_time
 
         # Akustisches Feedback
         self.play_beep(config.BEEP_FREQUENCY_START)
@@ -181,14 +204,11 @@ class VoiceTranscriberApp:
     def on_hotkey_release(self):
         """Callback bei Hotkey-Loslassen (Stopp Aufnahme)"""
         if not self.is_recording:
+            logger.debug("Keine Aufnahme läuft - ignoriere Hotkey-Release")
             return
 
         logger.info("Hotkey losgelassen - Stoppe Aufnahme")
         self.is_recording = False
-
-        # Auch AudioRecorder stoppen (für Komprimierungs-Modus)
-        if self.audio_recorder:
-            self.audio_recorder.is_recording = False
 
         # Akustisches Feedback
         self.play_beep(config.BEEP_FREQUENCY_STOP)
@@ -219,7 +239,11 @@ class VoiceTranscriberApp:
                 logger.info(f"Audio komprimiert: {data_size} bytes ({data_size/1024:.1f} KB)")
 
                 # Transkribieren mit komprimierten Daten
-                raw_text = self.transcription_service.transcribe_audio_data(audio_data, "audio.mp3")  # type: ignore
+                if self._transcription_service_instance:
+                    raw_text = self._transcription_service_instance.transcribe_audio_data(audio_data, "audio.mp3")
+                else:
+                    logger.error("TranscriptionService nicht verfügbar")
+                    return
                 if not raw_text:
                     logger.error("Transkription fehlgeschlagen")
                     return
@@ -243,6 +267,9 @@ class VoiceTranscriberApp:
                     import time
                     time.sleep(0.01)  # Kurze Pause
 
+                # Kurze zusätzliche Pause um sicherzustellen, dass der Audio-Thread beendet ist
+                time.sleep(0.05)
+
                 # Stoppe Aufnahme und erstelle Datei
                 final_audio_path = self.audio_recorder.stop_recording()  # type: ignore
                 if not final_audio_path:
@@ -251,16 +278,20 @@ class VoiceTranscriberApp:
 
                 logger.info(f"Audio-Datei erstellt: {final_audio_path}")
 
-                # Prüfe Mindestdauer (0.1 Sekunden für OpenAI)
-                audio_duration = self.audio_recorder.last_recording_duration
-                if audio_duration < 0.1:
+                # Prüfe Mindestdauer (0.5 Sekunden für zuverlässige Transkription)
+                audio_duration = self.audio_recorder.last_recording_duration if self.audio_recorder else 0.0
+                if audio_duration < 0.5:
                     logger.warning(".2f")
                     return
 
                 logger.info(".2f")
 
                 # Transkribieren
-                raw_text = self.transcription_service.transcribe(final_audio_path)  # type: ignore
+                if self._transcription_service_instance:
+                    raw_text = self._transcription_service_instance.transcribe(final_audio_path)
+                else:
+                    logger.error("TranscriptionService nicht verfügbar")
+                    return
                 if not raw_text:
                     logger.error("Transkription fehlgeschlagen")
                     return
@@ -275,12 +306,17 @@ class VoiceTranscriberApp:
 
             logger.info(f"Korrigierter Text: {corrected_text[:50]}...")
 
+            # Debug-Eintrag schreiben
+            self._write_debug_entry(f"Transkript: {corrected_text}")
+
             # Text einfügen
             success = self.clipboard_injector.inject_text(corrected_text)  # type: ignore
             if success:
                 logger.info("Text erfolgreich eingefügt")
+                self._write_debug_entry("Status: Erfolgreich eingefügt")
             else:
                 logger.warning("Text-Einfügung fehlgeschlagen")
+                self._write_debug_entry("Status: Einfügung fehlgeschlagen")
 
         except Exception as e:
             logger.error(f"Fehler während der Verarbeitung: {e}")
@@ -358,6 +394,37 @@ class VoiceTranscriberApp:
             self.tray_icon.stop()
         sys.exit(0)
 
+    def _init_debug_file(self):
+        """Initialisiert die Debug-Datei für Transkriptionsergebnisse"""
+        try:
+            import os
+            from pathlib import Path
+
+            # Erstelle Debug-Datei im User-Verzeichnis
+            user_dir = Path.home()
+            self.debug_file_path = user_dir / "voice_transcriber_debug.txt"
+
+            # Erstelle/überschreibe Datei mit Header
+            with open(self.debug_file_path, 'w', encoding='utf-8') as f:
+                f.write("Voice Transcriber Debug Log\n")
+                f.write("=" * 50 + "\n")
+                f.write(f"Gestartet: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+
+            logger.info(f"Debug-Datei initialisiert: {self.debug_file_path}")
+
+        except Exception as e:
+            logger.error(f"Fehler beim Initialisieren der Debug-Datei: {e}")
+
+    def _write_debug_entry(self, text: str):
+        """Schreibt einen Eintrag in die Debug-Datei"""
+        if self.debug_file_path:
+            try:
+                timestamp = time.strftime('%H:%M:%S')
+                with open(self.debug_file_path, 'a', encoding='utf-8') as f:
+                    f.write(f"[{timestamp}] {text}\n")
+            except Exception as e:
+                logger.error(f"Fehler beim Schreiben in Debug-Datei: {e}")
+
     def cleanup(self):
         """Räumt auf"""
         logger.info("Führe Cleanup durch...")
@@ -388,26 +455,20 @@ class VoiceTranscriberApp:
 
 def main():
     """Haupteinstiegspunkt"""
+    # Unterdrücke bekannte Warnungen
+    warnings.filterwarnings("ignore", message=".*pkg_resources.*", category=UserWarning)
+
     try:
-        # Prüfe Single-Instance
-        if not check_single_instance():
-            logger.warning("Eine Instanz der Anwendung läuft bereits. Beende.")
-            # Zeige Benachrichtigung (falls möglich)
-            try:
-                import tkinter as tk
-                from tkinter import messagebox
-                root = tk.Tk()
-                root.withdraw()
-                messagebox.showwarning(
-                    "Voice Transcriber",
-                    "Eine Instanz der Anwendung läuft bereits.\n"
-                    "Bitte schließen Sie die andere Instanz zuerst."
-                )
-                root.destroy()
-            except:
-                # Fallback: Console-Nachricht
-                print("Voice Transcriber läuft bereits. Bitte schließen Sie die andere Instanz.")
-            sys.exit(0)
+        # Prüfe Single-Instance (für Testzwecke deaktiviert)
+        # if not check_single_instance():
+        #     logger.warning("Eine Instanz der Anwendung läuft bereits. Beende.")
+        #     sys.exit(0)
+
+        # Single-Instance-Überprüfung für Testzwecke deaktiviert
+        # if not check_single_instance():
+        #     logger.warning("Eine Instanz der Anwendung läuft bereits. Beende.")
+        #     sys.exit(0)
+        logger.info("Single-Instance-Überprüfung übersprungen (Test-Modus)")
 
         app = VoiceTranscriberApp()
         app.run()

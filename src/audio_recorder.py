@@ -254,9 +254,9 @@ class AudioRecorder:
             if not final_wav_path:
                 return None
 
-            # Prüfe Mindestdauer (0.1 Sekunden für OpenAI)
+            # Prüfe Mindestdauer (0.5 Sekunden für zuverlässige Transkription)
             audio_duration = len(self.frames) * 1024 / config.SAMPLE_RATE
-            if audio_duration < 0.1:
+            if audio_duration < 0.5:
                 logger.warning(".2f")
                 # Cleanup
                 Path(final_wav_path).unlink(missing_ok=True)

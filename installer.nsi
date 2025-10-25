@@ -2,8 +2,8 @@
 ; Erstellt einen professionellen Windows-Installer mit Deinstaller
 
 ; Allgemeine Einstellungen
-Name "Voice Transcriber v1.4.0"
-OutFile "VoiceTranscriber_Installer_v1.4.0.exe"
+Name "Voice Transcriber v1.3.0"
+OutFile "VoiceTranscriber_Installer_v1.3.0.exe"
 Unicode True
 InstallDir "$PROGRAMFILES\Voice Transcriber"
 InstallDirRegKey HKLM "Software\VoiceTranscriber" ""
@@ -36,11 +36,11 @@ LangString DESC_SecApp ${LANG_GERMAN} "Voice Transcriber Anwendung"
 LangString DESC_SecApp ${LANG_ENGLISH} "Voice Transcriber Application"
 
 ; Versionsinformationen
-VIProductVersion "1.4.0.0"
+VIProductVersion "1.3.0.0"
 VIAddVersionKey "ProductName" "Voice Transcriber"
 VIAddVersionKey "CompanyName" "Voice Transcriber Team"
-VIAddVersionKey "FileVersion" "1.4.0.0"
-VIAddVersionKey "ProductVersion" "1.4.0.0"
+VIAddVersionKey "FileVersion" "1.3.0.0"
+VIAddVersionKey "ProductVersion" "1.3.0.0"
 VIAddVersionKey "FileDescription" "Voice Transcriber Installer"
 
 ; Makros für bessere Lesbarkeit
@@ -82,15 +82,15 @@ Section "Voice Transcriber" SecApp
     ; Registry-Einträge für Windows-Programme
     DetailPrint "Registriere Programm..."
     WriteRegStr HKLM "Software\VoiceTranscriber" "" $INSTDIR
-    WriteRegStr HKLM "Software\VoiceTranscriber" "Version" "1.4.0"
+    WriteRegStr HKLM "Software\VoiceTranscriber" "Version" "1.3.0"
     WriteRegStr HKLM "Software\VoiceTranscriber" "InstallDate" "$0"
 
     ; Windows-Programme-Liste
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayName" "Voice Transcriber v1.4.0"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayName" "Voice Transcriber v1.3.0"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "UninstallString" "$INSTDIR\uninstall.exe"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "InstallLocation" "$INSTDIR"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "Publisher" "Voice Transcriber Team"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayVersion" "1.4.0"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayVersion" "1.3.0"
     WriteRegDWord HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "NoModify" 1
     WriteRegDWord HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "NoRepair" 1
 

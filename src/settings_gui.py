@@ -23,6 +23,7 @@ class SettingsGUI:
         self.audio_device_var = tk.StringVar()
         self.transcription_mode_var = tk.StringVar(value="api" if not config.USE_LOCAL_TRANSCRIPTION else "local")
         self.model_size_var = tk.StringVar(value=config.WHISPER_MODEL_SIZE)
+        self.api_key_var = tk.StringVar()
 
         # Audio-Geräte laden
         self.audio_devices = self._get_audio_devices()
@@ -47,6 +48,22 @@ class SettingsGUI:
 
     def _create_widgets(self):
         """Erstellt alle GUI-Elemente"""
+        # Debug-Datei Button oben hinzufügen
+        debug_frame = ttk.Frame(self.window)
+        debug_frame.pack(fill='x', padx=10, pady=5)
+
+        ttk.Button(
+            debug_frame,
+            text="📄 Debug-Datei öffnen",
+            command=self._open_debug_file
+        ).pack(side='left', padx=5)
+
+        ttk.Button(
+            debug_frame,
+            text="🗑️ Debug-Datei löschen",
+            command=self._clear_debug_file
+        ).pack(side='left', padx=5)
+
         notebook = ttk.Notebook(self.window)
         notebook.pack(fill='both', expand=True, padx=10, pady=10)
 
@@ -70,7 +87,12 @@ class SettingsGUI:
         notebook.add(transcription_tab, text="Transkription")
         self._create_transcription_tab(transcription_tab)
 
-        # Tab 5: Über
+        # Tab 5: API-Schlüssel
+        api_tab = ttk.Frame(notebook)
+        notebook.add(api_tab, text="API-Schlüssel")
+        self._create_api_tab(api_tab)
+
+        # Tab 6: Über
         about_tab = ttk.Frame(notebook)
         notebook.add(about_tab, text="Über")
         self._create_about_tab(about_tab)
@@ -115,8 +137,11 @@ class SettingsGUI:
             ("F12 (empfohlen)", "f12"),
             ("F11", "f11"),
             ("F10", "f10"),
-            ("Ctrl + Shift + S", "ctrl+shift+s"),
-            ("Alt + Shift + S", "alt+shift+s"),
+            ("Strg + Umschalt + S", "ctrl+shift+s"),
+            ("Alt + Umschalt + S", "alt+shift+s"),
+            ("Strg + Alt + S", "ctrl+alt+s"),
+            ("Strg + Shift + Space", "ctrl+shift+space"),
+            ("Alt + Shift + Space", "alt+shift+space"),
         ]
 
         for text, value in hotkey_options:
@@ -141,6 +166,12 @@ class SettingsGUI:
             info_frame,
             text="🔄 Änderungen werden nach Neustart wirksam",
             foreground="orange"
+        ).pack(anchor='w')
+
+        ttk.Label(
+            info_frame,
+            text="⚠️ Windows-Taste-Kombinationen werden vom OS blockiert",
+            foreground="red"
         ).pack(anchor='w')
 
     def _create_audio_tab(self, parent):
@@ -196,7 +227,7 @@ class SettingsGUI:
         ttk.Label(mode_frame, text="Transkriptionsmodus:").pack(anchor='w')
 
         # Radio-Buttons für Modus-Auswahl
-        self.transcription_mode_var = tk.StringVar(value="api" if not config.USE_LOCAL_TRANSCRIPTION else "local")
+        self.transcription_mode_var = tk.StringVar(value="local" if config.USE_LOCAL_TRANSCRIPTION else "api")
 
         ttk.Radiobutton(
             mode_frame,
@@ -246,6 +277,60 @@ class SettingsGUI:
 • Bei Problemen mit lokalem Modell wechselt die App automatisch zur API"""
 
         ttk.Label(info_frame, text=info_text, foreground="blue", justify="left").pack(anchor='w')
+
+    def _create_api_tab(self, parent):
+        """Erstellt den API-Schlüssel-Tab"""
+        api_frame = ttk.LabelFrame(parent, text="OpenAI API-Schlüssel", padding=10)
+        api_frame.pack(fill='x', pady=5)
+
+        # Aktueller Status
+        status_frame = ttk.Frame(api_frame)
+        status_frame.pack(fill='x', pady=5)
+
+        has_key = bool(config.OPENAI_API_KEY and config.OPENAI_API_KEY != 'sk-your-openai-api-key-here')
+        status_text = "✅ API-Key gesetzt und verschlüsselt" if has_key else "❌ API-Key nicht gesetzt"
+        status_color = "green" if has_key else "red"
+
+        ttk.Label(status_frame, text=status_text, foreground=status_color).pack(anchor='w')
+
+        # Eingabefeld für API-Key
+        input_frame = ttk.Frame(api_frame)
+        input_frame.pack(fill='x', pady=10)
+
+        ttk.Label(input_frame, text="OpenAI API-Key:").pack(anchor='w', pady=5)
+
+        # Password-Entry für Sicherheit
+        self.api_key_entry = ttk.Entry(input_frame, textvariable=self.api_key_var, show="*")
+        self.api_key_entry.pack(fill='x', pady=5)
+
+        # Checkbox zum Anzeigen/Verstecken
+        self.show_key_var = tk.BooleanVar(value=False)
+        ttk.Checkbutton(
+            input_frame,
+            text="API-Key anzeigen",
+            variable=self.show_key_var,
+            command=self._toggle_api_key_visibility
+        ).pack(anchor='w', pady=5)
+
+        # Info-Text
+        info_frame = ttk.Frame(api_frame)
+        info_frame.pack(fill='x', pady=10)
+
+        info_text = """🔐 Sicherheitshinweise:
+• Der API-Key wird verschlüsselt in Ihrem AppData-Verzeichnis gespeichert
+• Er ist nur auf diesem Computer lesbar
+• Bei Problemen mit der Verschlüsselung wird ein sicherer Fallback verwendet
+
+💡 Den API-Key finden Sie unter: https://platform.openai.com/account/api-keys"""
+
+        ttk.Label(info_frame, text=info_text, foreground="blue", justify="left").pack(anchor='w')
+
+    def _toggle_api_key_visibility(self):
+        """Schaltet die Sichtbarkeit des API-Keys um"""
+        if self.show_key_var.get():
+            self.api_key_entry.config(show="")
+        else:
+            self.api_key_entry.config(show="*")
 
     def _create_about_tab(self, parent):
         """Erstellt den Über-Tab"""
@@ -310,43 +395,84 @@ class SettingsGUI:
 
     def _load_current_settings(self):
         """Lädt aktuelle Einstellungen"""
-        # Hier könnte man gespeicherte Hotkey-Einstellungen laden
-        pass
+        try:
+            from src.user_config import user_config
+
+            # Hotkey laden
+            primary_hotkey = user_config.get_hotkey('primary')
+            if primary_hotkey:
+                self.hotkey_var.set(primary_hotkey)
+
+            # Audio-Gerät laden
+            device_index = user_config.get('audio.device_index', -1)
+            if device_index >= 0 and device_index < len(self.audio_devices):
+                self.audio_device_var.set(self.audio_devices[device_index])
+            else:
+                self.audio_device_var.set("Standard (automatisch)")
+
+            # Transkriptions-Einstellungen laden
+            use_local = user_config.get('transcription.use_local', False)
+            self.transcription_mode_var.set("local" if use_local else "api")
+
+            model_size = user_config.get('transcription.whisper_model_size', 'small')
+            self.model_size_var.set(model_size)
+
+            # API-Key Status (nicht laden, nur Status anzeigen)
+            has_key = bool(config.OPENAI_API_KEY and config.OPENAI_API_KEY != 'sk-your-openai-api-key-here')
+            if has_key:
+                self.api_key_var.set("*** API-Key ist gesetzt ***")
+
+        except Exception as e:
+            logger.error(f"Fehler beim Laden der Einstellungen: {e}")
 
     def _save_settings(self):
         """Speichert die Einstellungen"""
-        selected_hotkey = self.hotkey_var.get()
+        try:
+            from src.user_config import user_config
 
-        # Audio-Gerät speichern
-        selected_device = self.audio_device_var.get()
-        device_index = -1
-        if selected_device != "Standard (automatisch)" and selected_device in self.audio_devices:
-            device_index = self.audio_devices.index(selected_device)
+            # API-Key speichern (verschlüsselt)
+            api_key = self.api_key_var.get().strip()
+            if api_key:
+                if not api_key.startswith('sk-'):
+                    messagebox.showerror("Fehler", "Ungültiger API-Key Format. Muss mit 'sk-' beginnen.")
+                    return
+                user_config.set_encrypted('api.openai_key', api_key)
+                logger.info("API-Key erfolgreich verschlüsselt gespeichert")
 
-        # Transkriptions-Einstellungen
-        transcription_mode = self.transcription_mode_var.get()
-        use_local = transcription_mode == "local"
-        model_size = self.model_size_var.get()
+            # Audio-Gerät speichern
+            selected_device = self.audio_device_var.get()
+            device_index = -1
+            if selected_device != "Standard (automatisch)" and selected_device in self.audio_devices:
+                device_index = self.audio_devices.index(selected_device)
+                user_config.set('audio.device_index', device_index)
 
-        # Hier würde man die Einstellungen in .env speichern
-        # Für jetzt zeigen wir nur eine Nachricht
-        device_info = f"Audio-Gerät: {selected_device}"
-        if device_index >= 0:
-            device_info += f" (Index: {device_index})"
+            # Transkriptions-Einstellungen
+            transcription_mode = self.transcription_mode_var.get()
+            use_local = transcription_mode == "local"
+            model_size = self.model_size_var.get()
 
-        transcription_info = f"Transkription: {'Lokal' if use_local else 'API'}"
-        if use_local:
-            transcription_info += f" (Modell: {model_size})"
+            user_config.set('transcription.use_local', use_local)
+            user_config.set('transcription.whisper_model_size', model_size)
+            logger.info(f"Transkriptions-Einstellungen gespeichert: use_local={use_local}, model_size={model_size}")
 
-        messagebox.showinfo(
-            "Einstellungen gespeichert",
-            f"Hotkey: {selected_hotkey}\n"
-            f"{device_info}\n"
-            f"{transcription_info}\n\n"
-            "⚠️ Einstellungen werden noch nicht persistent gespeichert.\n"
-            "Bearbeiten Sie die .env Datei manuell."
-        )
-        self._close_window()
+            # Hotkey speichern
+            selected_hotkey = self.hotkey_var.get()
+            user_config.set_hotkey('primary', selected_hotkey)
+
+            # Speichern
+            user_config.save()
+            logger.info("Alle Einstellungen erfolgreich gespeichert")
+
+            messagebox.showinfo(
+                "Einstellungen gespeichert",
+                "✅ Alle Einstellungen wurden erfolgreich gespeichert!\n\n"
+                "🔄 Die Änderungen werden beim nächsten Neustart wirksam."
+            )
+            self._close_window()
+
+        except Exception as e:
+            logger.error(f"Fehler beim Speichern der Einstellungen: {e}")
+            messagebox.showerror("Fehler", f"Fehler beim Speichern: {e}")
 
     def _reset_defaults(self):
         """Setzt Standardeinstellungen zurück"""
@@ -357,6 +483,42 @@ class SettingsGUI:
         """Schließt das Fenster"""
         if self.window:
             self.window.destroy()
+
+    def _open_debug_file(self):
+        """Öffnet die Debug-Datei"""
+        try:
+            import os
+            import subprocess
+            from pathlib import Path
+
+            debug_file = Path.home() / "voice_transcriber_debug.txt"
+            if debug_file.exists():
+                # Öffne mit Standard-Editor
+                if os.name == 'nt':  # Windows
+                    subprocess.run(['notepad.exe', str(debug_file)])
+                else:
+                    subprocess.run(['xdg-open', str(debug_file)])
+            else:
+                messagebox.showinfo("Debug-Datei", "Debug-Datei existiert noch nicht.\nMachen Sie eine Aufnahme, um sie zu erstellen.")
+
+        except Exception as e:
+            logger.error(f"Fehler beim Öffnen der Debug-Datei: {e}")
+            messagebox.showerror("Fehler", f"Debug-Datei konnte nicht geöffnet werden: {e}")
+
+    def _clear_debug_file(self):
+        """Löscht die Debug-Datei"""
+        try:
+            from pathlib import Path
+            debug_file = Path.home() / "voice_transcriber_debug.txt"
+            if debug_file.exists():
+                debug_file.unlink()
+                messagebox.showinfo("Debug-Datei", "Debug-Datei wurde gelöscht.")
+            else:
+                messagebox.showinfo("Debug-Datei", "Debug-Datei existiert nicht.")
+
+        except Exception as e:
+            logger.error(f"Fehler beim Löschen der Debug-Datei: {e}")
+            messagebox.showerror("Fehler", f"Debug-Datei konnte nicht gelöscht werden: {e}")
 
     def get_selected_hotkey(self):
         """Gibt den ausgewählten Hotkey zurück"""

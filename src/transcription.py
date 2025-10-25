@@ -15,6 +15,10 @@ from src.local_transcription import LocalTranscriptionService
 
 logger = logging.getLogger(__name__)
 
+# Globales Singleton für lokalen Transkriptionsservice
+_global_local_service: Optional[LocalTranscriptionService] = None
+_global_local_service_model_size: Optional[str] = None
+
 class TranscriptionService:
     """Service für Audio-zu-Text Transkription"""
 
@@ -23,19 +27,29 @@ class TranscriptionService:
         self.max_retries = 3
         self.retry_delay = 1.0  # Sekunden
 
-        # Lokaler Transkriptionsservice (lazy loading)
-        self._local_service: Optional[LocalTranscriptionService] = None
+    def _get_local_transcription_service(self) -> Optional[LocalTranscriptionService]:
+        """Lokalen Transkriptionsservice abrufen (Singleton)"""
+        global _global_local_service, _global_local_service_model_size
 
-    def _get_local_service(self) -> Optional[LocalTranscriptionService]:
-        """Lädt den lokalen Service bei Bedarf"""
-        if self._local_service is None and config.USE_LOCAL_TRANSCRIPTION:
+        current_model_size = config.WHISPER_MODEL_SIZE
+
+        # Prüfe ob Modellgröße sich geändert hat
+        if (_global_local_service is not None and
+            _global_local_service_model_size != current_model_size):
+            logger.info(f"Modellgröße geändert von {_global_local_service_model_size} zu {current_model_size} - Service neu initialisieren")
+            _global_local_service = None
+
+        if _global_local_service is None and config.USE_LOCAL_TRANSCRIPTION:
             try:
-                self._local_service = LocalTranscriptionService()
-                logger.info("Lokaler Transkriptionsservice initialisiert")
+                _global_local_service = LocalTranscriptionService()
+                _global_local_service_model_size = current_model_size
+                logger.info(f"Lokaler Transkriptionsservice initialisiert (Modell: {current_model_size})")
             except Exception as e:
                 logger.error(f"Fehler beim Initialisieren des lokalen Services: {e}")
-                self._local_service = None
-        return self._local_service
+                _global_local_service = None
+                _global_local_service_model_size = None
+
+        return _global_local_service
 
     def transcribe(self, audio_path: str) -> Optional[str]:
         """Transkribiert Audio-Datei zu Text"""
@@ -44,7 +58,7 @@ class TranscriptionService:
 
         # Versuche lokale Transkription zuerst, falls aktiviert
         if config.USE_LOCAL_TRANSCRIPTION:
-            local_service = self._get_local_service()
+            local_service = self._get_local_transcription_service()
             if local_service and local_service.is_available():
                 logger.info("Verwende lokale Transkription")
                 result = local_service.transcribe(audio_path)
@@ -96,7 +110,7 @@ class TranscriptionService:
         """Transkribiert komprimierte Audio-Daten zu Text"""
         # Versuche lokale Transkription zuerst, falls aktiviert
         if config.USE_LOCAL_TRANSCRIPTION:
-            local_service = self._get_local_service()
+            local_service = self._get_local_transcription_service()
             if local_service and local_service.is_available():
                 logger.info("Verwende lokale Transkription für Audio-Daten")
                 result = local_service.transcribe_audio_data(audio_data, filename)
@@ -205,7 +219,7 @@ class TranscriptionService:
     def get_transcription_mode(self) -> str:
         """Gibt den aktuellen Transkriptionsmodus zurück"""
         if config.USE_LOCAL_TRANSCRIPTION:
-            local_service = self._get_local_service()
+            local_service = self._get_local_transcription_service()
             if local_service and local_service.is_available():
                 model_info = local_service.get_model_info()
                 return f"Lokal ({model_info.get('model_size', 'unbekannt')}, {model_info.get('device', 'unbekannt')})"

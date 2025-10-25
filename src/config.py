@@ -8,13 +8,17 @@ import os
 import sys
 from pathlib import Path
 
+logger = logging.getLogger(__name__)
+
 from dotenv import load_dotenv
 
 try:
     # Versuche relative Imports (für python -m src)
+    from .encryption import secure_storage
     from .user_config import user_config
 except ImportError:
     # Fallback für direkte Ausführung oder PyInstaller
+    from encryption import secure_storage
     from user_config import user_config
 
 # Lade .env Datei
@@ -27,8 +31,8 @@ class Config:
         # Lade UserConfig falls verfügbar
         self.user_config_loaded = user_config.load()
 
-        # OpenAI API (bleibt in .env für Sicherheit)
-        self.OPENAI_API_KEY: str = os.getenv('OPENAI_API_KEY', '')
+        # OpenAI API (aus sicherer User-Konfiguration oder .env Fallback)
+        self.OPENAI_API_KEY: str = user_config.get_decrypted('api.openai_key', os.getenv('OPENAI_API_KEY', ''))
 
         # Recording Settings (benutzerspezifisch konfigurierbar)
         self.MAX_RECORDING_DURATION: int = int(os.getenv('MAX_RECORDING_DURATION', '30'))
@@ -66,8 +70,8 @@ class Config:
         self.AUDIO_DEVICE_INDEX: int = int(os.getenv('AUDIO_DEVICE_INDEX', '-1'))  # -1 = default
 
         # Local Transcription (benutzerspezifisch konfigurierbar)
-        self.USE_LOCAL_TRANSCRIPTION: bool = os.getenv('USE_LOCAL_TRANSCRIPTION', 'false').lower() == 'true'
-        self.WHISPER_MODEL_SIZE: str = os.getenv('WHISPER_MODEL_SIZE', 'small')
+        self.USE_LOCAL_TRANSCRIPTION: bool = user_config.get('transcription.use_local', False) if self.user_config_loaded else os.getenv('USE_LOCAL_TRANSCRIPTION', 'false').lower() == 'true'
+        self.WHISPER_MODEL_SIZE: str = user_config.get('transcription.whisper_model_size', 'small') if self.user_config_loaded else os.getenv('WHISPER_MODEL_SIZE', 'small')
 
         # Migriere bestehende .env-Werte in user config falls nötig
         self._migrate_env_to_user_config()
@@ -90,11 +94,18 @@ class Config:
         # Migriere Local Transcription
         if os.getenv('USE_LOCAL_TRANSCRIPTION'):
             user_config.set('transcription.use_local',
-                          os.getenv('USE_LOCAL_TRANSCRIPTION', 'false').lower() == 'true')
+                           os.getenv('USE_LOCAL_TRANSCRIPTION', 'false').lower() == 'true')
 
         if os.getenv('WHISPER_MODEL_SIZE'):
             user_config.set('transcription.whisper_model_size',
-                          os.getenv('WHISPER_MODEL_SIZE', 'small'))
+                           os.getenv('WHISPER_MODEL_SIZE', 'small'))
+
+        # Migriere OpenAI API Key (verschlüsselt)
+        if os.getenv('OPENAI_API_KEY') and not user_config.get('api.openai_key'):
+            api_key = os.getenv('OPENAI_API_KEY', '')
+            if api_key and api_key != 'sk-your-openai-api-key-here':
+                user_config.set_encrypted('api.openai_key', api_key)
+                logger.info("OpenAI API-Key erfolgreich migriert und verschlüsselt")
 
         # Speichere migrierte Werte
         user_config.save()
@@ -136,15 +147,38 @@ class Config:
 
     def setup_logging(self):
         """Konfiguriert das Logging-System"""
-        # PowerShell-kompatibles Format (keine Datumsangaben am Anfang)
-        logging.basicConfig(
-            level=self.get_log_level(),
-            format='[%(levelname)s] %(name)s: %(message)s',
-            handlers=[
-                logging.FileHandler(self.LOG_FILE),
-                logging.StreamHandler()
-            ]
+        import logging.handlers
+
+        # Erweitertes Format mit Zeitstempel
+        formatter = logging.Formatter(
+            '%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
         )
+
+        # File Handler mit Rotation (max 5MB pro Datei, 5 Backups)
+        file_handler = logging.handlers.RotatingFileHandler(
+            self.LOG_FILE,
+            maxBytes=5*1024*1024,  # 5MB
+            backupCount=5,
+            encoding='utf-8'
+        )
+        file_handler.setFormatter(formatter)
+
+        # Console Handler (ohne Zeitstempel für bessere Lesbarkeit)
+        console_formatter = logging.Formatter('[%(levelname)s] %(name)s: %(message)s')
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(console_formatter)
+
+        # Root Logger konfigurieren
+        root_logger = logging.getLogger()
+        root_logger.setLevel(self.get_log_level())
+        root_logger.addHandler(file_handler)
+        root_logger.addHandler(console_handler)
+
+        # Vermeide doppelte Logs durch bereits konfigurierte Handler
+        logging.getLogger().handlers.clear()
+        logging.getLogger().addHandler(file_handler)
+        logging.getLogger().addHandler(console_handler)
 
     # UserConfig-Integration
     def get_user_hotkey(self, level: str = 'primary') -> str:

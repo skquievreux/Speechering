@@ -4,6 +4,7 @@ Erkennt konfigurierbare Hotkeys für Push-to-Talk Funktionalität.
 """
 
 import logging
+import time
 from typing import Callable, Optional
 
 import keyboard
@@ -18,6 +19,11 @@ class HotkeyListener:
         self.on_release_callback: Optional[Callable] = None
         self.hotkey_registered = False
         self.registered_hotkeys = []
+
+        # Debouncing für Hotkey-Events
+        self.last_press_time = 0.0
+        self.last_release_time = 0.0
+        self.debounce_interval = 0.1  # 100ms Debouncing
 
     def register_callbacks(self, on_press: Callable, on_release: Callable, config=None):
         """Registriert Callbacks für Hotkey Events"""
@@ -66,7 +72,17 @@ class HotkeyListener:
         logger.info(f"Insgesamt {len(self.registered_hotkeys)} Hotkeys registriert: {', '.join(self.registered_hotkeys)}")
 
     def _on_press_handler(self, event):
-        """Handler für Hotkey-Drücken"""
+        """Handler für Hotkey-Drücken mit Debouncing"""
+        current_time = time.time()
+
+        # Debouncing: Ignoriere Events die zu schnell aufeinander folgen
+        if current_time - self.last_press_time < self.debounce_interval:
+            logger.debug(".3f")
+            return
+
+        self.last_press_time = current_time
+        logger.debug(".3f")
+
         if self.on_press_callback:
             try:
                 self.on_press_callback()
@@ -74,7 +90,17 @@ class HotkeyListener:
                 logger.error(f"Fehler im on_press Callback: {e}")
 
     def _on_release_handler(self, event):
-        """Handler für Hotkey-Loslassen"""
+        """Handler für Hotkey-Loslassen mit Debouncing"""
+        current_time = time.time()
+
+        # Debouncing: Ignoriere Events die zu schnell aufeinander folgen
+        if current_time - self.last_release_time < self.debounce_interval:
+            logger.debug(".3f")
+            return
+
+        self.last_release_time = current_time
+        logger.debug(".3f")
+
         if self.on_release_callback:
             try:
                 self.on_release_callback()

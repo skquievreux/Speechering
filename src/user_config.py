@@ -9,6 +9,11 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+try:
+    from .encryption import secure_storage
+except ImportError:
+    from encryption import secure_storage
+
 logger = logging.getLogger(__name__)
 
 class UserConfig:
@@ -134,6 +139,25 @@ class UserConfig:
 
         # Setze den Wert
         config[keys[-1]] = value
+
+    def set_encrypted(self, key: str, value: str) -> None:
+        """Setzt einen verschlüsselten Konfigurationswert"""
+        encrypted_value = secure_storage.encrypt(value)
+        self.set(key, encrypted_value)
+        logger.debug(f"Verschlüsselter Wert für '{key}' gespeichert")
+
+    def get_decrypted(self, key: str, default: str = "") -> str:
+        """Gibt einen entschlüsselten Konfigurationswert zurück"""
+        encrypted_value = self.get(key, "")
+        if not encrypted_value:
+            return default
+
+        try:
+            decrypted_value = secure_storage.decrypt(encrypted_value)
+            return decrypted_value
+        except Exception as e:
+            logger.error(f"Fehler bei Entschlüsselung von '{key}': {e}")
+            return default
 
     def get_hotkey(self, level: str = 'primary') -> str:
         """Gibt einen Hotkey zurück"""

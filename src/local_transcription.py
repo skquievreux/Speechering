@@ -15,12 +15,40 @@ from src.config import config
 
 logger = logging.getLogger(__name__)
 
+# Globales Singleton für das lokale Transkriptionsservice
+_instance: Optional['LocalTranscriptionService'] = None
+_instance_model_size: Optional[str] = None
+
 class LocalTranscriptionService:
     """Service für lokale Audio-zu-Text Transkription mit faster-whisper"""
 
+    def __new__(cls):
+        """Singleton-Pattern: Stelle sicher, dass nur eine Instanz existiert"""
+        global _instance, _instance_model_size
+
+        current_model_size = config.WHISPER_MODEL_SIZE
+
+        # Prüfe ob Modellgröße sich geändert hat
+        if (_instance is not None and
+            _instance_model_size != current_model_size):
+            logger.info(f"Modellgröße geändert von {_instance_model_size} zu {current_model_size} - Service neu initialisieren")
+            _instance = None
+
+        if _instance is None:
+            _instance = super().__new__(cls)
+            _instance_model_size = current_model_size
+            logger.info(f"Neue LocalTranscriptionService Instanz erstellt (Modell: {current_model_size})")
+
+        return _instance
+
     def __init__(self):
+        # __init__ wird bei jedem Aufruf von __new__ aufgerufen, aber wir wollen nur einmal initialisieren
+        if hasattr(self, '_initialized'):
+            return
+
         self.model: Optional[WhisperModel] = None
         self.model_size = config.WHISPER_MODEL_SIZE
+        self._initialized = True
         self._load_model()
 
     def _load_model(self):
