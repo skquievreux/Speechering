@@ -83,6 +83,7 @@ def build_exe():
 
     # Automatisch alle src-Module als Hidden Imports hinzufügen
     hidden_imports = [
+        "--hidden-import=version_manager",  # Version Management
         "--hidden-import=pystray._win32",  # Windows-spezifische Imports
         "--hidden-import=winsound",    # Windows Sound-API
         "--hidden-import=pydub",       # Audio-Komprimierung

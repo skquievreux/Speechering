@@ -47,7 +47,7 @@ class HotkeyListener:
                 'f11',                    # F11 (Fallback)
                 'f10',                    # F10 (Fallback)
                 'ctrl+f12',               # Strg + F12 (falls verfügbar)
-                'alt+f12',                # Alt + F12 (falls verfügbar)
+                # 'alt+f12',              # Alt + F12 (deaktiviert - verursacht ValueError)
             ]
 
         # Entferne Duplikate

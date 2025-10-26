@@ -59,7 +59,7 @@ class Config:
 
         # Application Settings
         self.APP_NAME: str = os.getenv('APP_NAME', 'Voice Transcriber')
-        self.APP_VERSION: str = os.getenv('APP_VERSION', '1.3.0')
+        self.APP_VERSION: str = os.getenv('APP_VERSION', '1.4.0')
 
         # Audio-Komprimierung (benutzerspezifisch konfigurierbar)
         self.AUDIO_COMPRESSION_ENABLED: bool = os.getenv('AUDIO_COMPRESSION_ENABLED', 'true').lower() == 'true'
@@ -130,8 +130,16 @@ class Config:
 
     def get_temp_dir(self) -> Path:
         """Gibt das temporäre Verzeichnis zurück"""
-        temp_path = Path(self.TEMP_DIR)
-        temp_path.mkdir(exist_ok=True)
+        # Für EXE: Verwende AppData statt relativem temp/
+        if getattr(sys, 'frozen', False):
+            # Wir sind in einer EXE - verwende AppData für temp-Dateien
+            appdata = Path(os.environ.get('APPDATA', '')) / 'VoiceTranscriber'
+            temp_path = appdata / 'temp'
+        else:
+            # Für Entwicklung: relatives temp/ Verzeichnis
+            temp_path = Path(self.TEMP_DIR)
+
+        temp_path.mkdir(parents=True, exist_ok=True)
         return temp_path
 
     def get_log_level(self) -> int:

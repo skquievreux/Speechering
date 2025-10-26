@@ -6,6 +6,24 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2025-10-26
+
+### 🐛 Fixed - Behoben
+
+#### EXE-Kompatibilität verbessert
+- **Temp-Verzeichnis-Problem**: Zugriff verweigert bei relativen temp/ Pfaden in EXE
+  - Temp-Dateien werden jetzt in `%APPDATA%/VoiceTranscriber/temp/` erstellt
+  - Verhindert Zugriffsfehler bei Standalone-EXE-Ausführung
+- **Hotkey-Fehler behoben**: `ValueError("Key name 'alt+f12' is not mapped to any known key.")`
+  - Problemhaften Hotkey `'alt+f12'` aus Fallback-Liste entfernt
+  - Zuverlässige Hotkey-Registrierung ohne ValueError
+
+#### Versionsverwaltung implementiert
+- **Zentrales Versionsmanagement**: Automatische Synchronisation aller Versionseinträge
+  - `version.py` Tool für Versionsverwaltung (`patch`, `minor`, `major`)
+  - Automatische Aktualisierung von `src/config.py`, `installer.nsi`, `build.py`
+  - Kommandozeilen-Tool: `python version.py [get|set|patch|minor|major|info]`
+
 ## [1.3.0] - 2025-10-25
 
 ### 🎉 Added - Erstmals hinzugefügt
