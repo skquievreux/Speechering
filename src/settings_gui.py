@@ -361,7 +361,35 @@ class SettingsGUI:
                 device_info = audio.get_device_info_by_index(i)
                 max_channels = device_info.get('maxInputChannels')
                 if max_channels is not None and isinstance(max_channels, (int, float)) and max_channels > 0:  # Input device
-                    devices.append(device_info.get('name', f'Device {i}'))
+                    device_name = device_info.get('name', f'Device {i}')
+                    # Bereinige den Gerätenamen von Sonderzeichen und Codierungsproblemen
+                    try:
+                        # Stelle sicher, dass device_name ein String ist
+                        if not isinstance(device_name, str):
+                            device_name = str(device_name)
+
+                        # Versuche UTF-8 Decodierung falls nötig
+                        if isinstance(device_name, bytes):
+                            device_name = device_name.decode('utf-8', errors='replace')
+
+                        # Normalisiere Unicode-Zeichen und entferne problematische Zeichen
+                        import unicodedata
+                        device_name = unicodedata.normalize('NFKD', device_name).encode('ascii', 'ignore').decode('ascii')
+
+                        # Entferne Null-Bytes und andere Steuerzeichen
+                        device_name = ''.join(c for c in device_name if ord(c) >= 32 or c in '\t\n\r')
+
+                        # Entferne überflüssige Leerzeichen
+                        device_name = device_name.strip()
+
+                        # Fallback falls der Name leer ist
+                        if not device_name:
+                            device_name = f"Audio Device {i}"
+
+                    except Exception as encoding_error:
+                        logger.warning(f"Fehler bei der Bereinigung des Gerätenamens '{device_name}': {encoding_error}")
+                        device_name = f"Audio Device {i}"
+                    devices.append(device_name)
 
             audio.terminate()
             return devices

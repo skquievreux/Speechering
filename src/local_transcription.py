@@ -62,12 +62,17 @@ class LocalTranscriptionService:
 
             logger.info(f"Verwende Device: {device}, Compute Type: {compute_type}")
 
-            self.model = WhisperModel(
-                self.model_size,
-                device=device,
-                compute_type=compute_type,
-                download_root=str(config.get_temp_dir() / "whisper_models")
-            )
+            # Unterdrücke huggingface_hub Warnungen über fehlende hf_xet
+            import warnings
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", message=".*Xet Storage is enabled.*", category=UserWarning)
+
+                self.model = WhisperModel(
+                    self.model_size,
+                    device=device,
+                    compute_type=compute_type,
+                    download_root=str(config.get_temp_dir() / "whisper_models")
+                )
 
             logger.info(f"Whisper-Modell {self.model_size} erfolgreich geladen")
 

@@ -1,4 +1,4 @@
-# 🎤 Voice Transcriber v1.3.0
+# 🎤 Voice Transcriber v1.5.0
 
 Eine professionelle Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text Transkription mit
 KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem Eingabesystem.
@@ -32,7 +32,7 @@ KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem Eingabesystem.
 
 ### Option A: Windows-Installer (Empfohlen für Endbenutzer)
 
-1. **Download**: `VoiceTranscriber_Installer_v1.3.0.exe` herunterladen
+1. **Download**: `VoiceTranscriber_Installer_v1.5.0.exe` herunterladen
 2. **Installieren**: Doppelklick und Anweisungen folgen
 3. **Fertig**: Anwendung ist installiert und bereit!
 

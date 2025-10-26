@@ -46,6 +46,9 @@ class TranscriptionService:
                 logger.info(f"Lokaler Transkriptionsservice initialisiert (Modell: {current_model_size})")
             except Exception as e:
                 logger.error(f"Fehler beim Initialisieren des lokalen Services: {e}")
+                logger.info("Lokale Transkription wird deaktiviert - verwende API-Transkription")
+                # Deaktiviere lokale Transkription bei Fehlern
+                config.USE_LOCAL_TRANSCRIPTION = False
                 _global_local_service = None
                 _global_local_service_model_size = None
 
@@ -66,6 +69,8 @@ class TranscriptionService:
                     return result
                 else:
                     logger.warning("Lokale Transkription fehlgeschlagen, wechsle zu API")
+            else:
+                logger.warning("Lokaler Transkriptionsservice nicht verfügbar, wechsle zu API")
 
         # Fallback auf API-Transkription
         return self._transcribe_with_api(audio_path)

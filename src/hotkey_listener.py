@@ -46,7 +46,7 @@ class HotkeyListener:
                 'f12',                    # F12 (Standard - funktioniert garantiert)
                 'f11',                    # F11 (Fallback)
                 'f10',                    # F10 (Fallback)
-                'ctrl+f12',               # Strg + F12 (falls verfügbar)
+                # 'ctrl+f12',             # Strg + F12 (deaktiviert - verursacht ValueError)
                 # 'alt+f12',              # Alt + F12 (deaktiviert - verursacht ValueError)
             ]
 

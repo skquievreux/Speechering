@@ -289,11 +289,11 @@ class VoiceTranscriberApp:
                 # Transkribieren
                 if self._transcription_service_instance:
                     raw_text = self._transcription_service_instance.transcribe(final_audio_path)
+                    if not raw_text:
+                        logger.error("Transkription fehlgeschlagen - kein Text zurückgegeben")
+                        return
                 else:
                     logger.error("TranscriptionService nicht verfügbar")
-                    return
-                if not raw_text:
-                    logger.error("Transkription fehlgeschlagen")
                     return
 
                 logger.info(f"Transkribierter Text (WAV): {raw_text[:50]}...")
@@ -405,7 +405,7 @@ class VoiceTranscriberApp:
             self.debug_file_path = user_dir / "voice_transcriber_debug.txt"
 
             # Erstelle/überschreibe Datei mit Header
-            with open(self.debug_file_path, 'w', encoding='utf-8') as f:
+            with open(self.debug_file_path, 'w', encoding='utf-8-sig') as f:
                 f.write("Voice Transcriber Debug Log\n")
                 f.write("=" * 50 + "\n")
                 f.write(f"Gestartet: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n")
@@ -420,7 +420,7 @@ class VoiceTranscriberApp:
         if self.debug_file_path:
             try:
                 timestamp = time.strftime('%H:%M:%S')
-                with open(self.debug_file_path, 'a', encoding='utf-8') as f:
+                with open(self.debug_file_path, 'a', encoding='utf-8-sig') as f:
                     f.write(f"[{timestamp}] {text}\n")
             except Exception as e:
                 logger.error(f"Fehler beim Schreiben in Debug-Datei: {e}")

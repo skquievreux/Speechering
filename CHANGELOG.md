@@ -6,6 +6,40 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-10-26
+
+### 🎉 Added - Erstmals hinzugefügt
+
+#### Fehlerbehebungen und Verbesserungen
+
+- **Lokale Transkription optimiert**: Verbesserte Stabilität und Performance
+  - `hf_xet` Paket für bessere HuggingFace-Downloads hinzugefügt
+  - Warnungen über fehlende Xet Storage werden unterdrückt
+  - Automatischer Fallback bei lokalen Transkriptionsfehlern
+
+- **Audio-Geräte-Anzeige korrigiert**: Mikrofonnamen werden korrekt dargestellt
+  - Unicode-Normalisierung für deutsche Sonderzeichen
+  - Bereinigung fehlerhafter UTF-8-Kodierung
+  - Sichere Fallback-Namen bei Kodierungsfehlern
+
+- **Verbesserte Fehlerbehandlung**: Robuste Fallback-Mechanismen
+  - Lokale Transkription deaktiviert sich automatisch bei Fehlern
+  - Klare Logging-Nachrichten für Debugging
+  - Verbesserte Transkriptions-Validierung
+
+### 🔧 Changed - Geändert
+
+- **Dependencies aktualisiert**: `huggingface-hub` auf Version 0.36.0
+- **Audio-Geräte-Verarbeitung**: Unicode-sichere Namen-Bereinigung
+- **Transkriptions-Architektur**: Verbesserte Fehlerbehandlung und Logging
+
+### 🐛 Fixed - Behoben
+
+- **Sonderzeichen in Mikrofonnamen**: Deutsche Umlaute werden korrekt angezeigt
+- **HuggingFace-Warnungen**: Störende Xet Storage-Warnungen eliminiert
+- **Transkriptions-Fallback**: Automatische API-Nutzung bei lokalen Fehlern
+- **Einrückungsfehler**: Syntaxfehler in main.py behoben
+
 ## [1.4.1] - 2025-10-26
 
 ### 🐛 Fixed - Behoben
