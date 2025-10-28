@@ -34,6 +34,10 @@ class Config:
         # OpenAI API (aus sicherer User-Konfiguration oder .env Fallback)
         self.OPENAI_API_KEY: str = user_config.get_decrypted('api.openai_key', os.getenv('OPENAI_API_KEY', ''))
 
+        # Cloudflare R2 Storage (aus sicherer User-Konfiguration oder .env Fallback)
+        self.R2_BASE_URL: str = user_config.get_decrypted('r2.base_url', os.getenv('R2_BASE_URL', 'https://pub-fce2dd545d3648c38571dc323c7b403d.r2.dev'))
+        self.R2_ACCESS_TOKEN: str = user_config.get_decrypted('r2.access_token', os.getenv('R2_ACCESS_TOKEN', ''))
+
         # Recording Settings (benutzerspezifisch konfigurierbar)
         self.MAX_RECORDING_DURATION: int = int(os.getenv('MAX_RECORDING_DURATION', '30'))
         self.SAMPLE_RATE: int = int(os.getenv('SAMPLE_RATE', '16000'))
@@ -106,6 +110,19 @@ class Config:
             if api_key and api_key != 'sk-your-openai-api-key-here':
                 user_config.set_encrypted('api.openai_key', api_key)
                 logger.info("OpenAI API-Key erfolgreich migriert und verschlüsselt")
+
+        # Migriere R2 Storage Konfiguration (verschlüsselt)
+        if os.getenv('R2_ACCESS_TOKEN') and not user_config.get('r2.access_token'):
+            r2_token = os.getenv('R2_ACCESS_TOKEN', '')
+            if r2_token:
+                user_config.set_encrypted('r2.access_token', r2_token)
+                logger.info("R2 Access Token erfolgreich migriert und verschlüsselt")
+
+        if os.getenv('R2_BASE_URL') and not user_config.get('r2.base_url'):
+            r2_url = os.getenv('R2_BASE_URL', '')
+            if r2_url:
+                user_config.set_encrypted('r2.base_url', r2_url)
+                logger.info("R2 Base URL erfolgreich migriert und verschlüsselt")
 
         # Speichere migrierte Werte
         user_config.save()
