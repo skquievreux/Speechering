@@ -48,18 +48,18 @@ def generate_icon():
     """Generiert Icon falls nicht vorhanden"""
     icon_path = Path("assets/icon.ico")
     if not icon_path.exists():
-        print("🎨 Generiere Icon...")
+        print("Generiere Generiere Icon...")
         try:
             # Wechsle in assets Verzeichnis und führe Generator aus
             os.chdir("assets")
             subprocess.run([sys.executable, "icon_generator.py"], check=True)
             os.chdir("..")
-            print("✅ Icon generiert")
+            print("OK: Icon generiert")
         except subprocess.CalledProcessError as e:
-            print(f"❌ Fehler beim Generieren des Icons: {e}")
+            print(f"FEHLER: Fehler beim Generieren des Icons: {e}")
             return False
     else:
-        print("✅ Icon bereits vorhanden")
+        print("OK: Icon bereits vorhanden")
     return True
 
 def build_exe():
@@ -68,17 +68,17 @@ def build_exe():
     # if not check_venv():
     #     sys.exit(1)
 
-    print("🔨 Starte Build-Prozess...")
+    print("Starte Starte Build-Prozess...")
     print("=" * 50)
 
     # Cleanup
     if not clean_build():
-        print("❌ Build abgebrochen - Cleanup fehlgeschlagen")
+        print("FEHLER: Build abgebrochen - Cleanup fehlgeschlagen")
         sys.exit(1)
 
     # Icon generieren
     if not generate_icon():
-        print("❌ Build abgebrochen - Icon-Generierung fehlgeschlagen")
+        print("FEHLER: Build abgebrochen - Icon-Generierung fehlgeschlagen")
         sys.exit(1)
 
     # Automatisch alle src-Module als Hidden Imports hinzufügen
@@ -129,46 +129,46 @@ def build_exe():
         "main_exe.py"                  # Einstiegspunkt (PyInstaller-optimiert)
     ]
 
-    print("📦 Führe PyInstaller aus...")
+    print("Build: Führe PyInstaller aus...")
     print(f"Command: {' '.join(pyinstaller_cmd)}")
 
     try:
         result = subprocess.run(pyinstaller_cmd, check=True, capture_output=True, text=True)
 
         if result.returncode == 0:
-            print("✅ Build erfolgreich abgeschlossen!")
-            print("📁 EXE-Datei: dist/VoiceTranscriber.exe")
+            print("OK: Build erfolgreich abgeschlossen!")
+            print("Datei: EXE-Datei: dist/VoiceTranscriber.exe")
 
             # Dateigröße anzeigen
             exe_path = Path("dist/VoiceTranscriber.exe")
             if exe_path.exists():
                 size_mb = exe_path.stat().st_size / (1024 * 1024)
-                print(f"📊 Dateigröße: {size_mb:.1f} MB")
+                print(f"Groesse: Dateigröße: {size_mb:.1f} MB")
 
-            print("\n🚀 Bereit zur Verwendung!")
+            print("\nBereit: Bereit zur Verwendung!")
             print("   Hinweis: OpenAI API-Key in .env erforderlich")
 
         else:
-            print("❌ Build fehlgeschlagen!")
+            print("FEHLER: Build fehlgeschlagen!")
             print("STDOUT:", result.stdout)
             print("STDERR:", result.stderr)
             sys.exit(1)
 
     except subprocess.CalledProcessError as e:
-        print(f"❌ PyInstaller Fehler: {e}")
+        print(f"FEHLER: PyInstaller Fehler: {e}")
         if e.stdout:
             print("STDOUT:", e.stdout)
         if e.stderr:
             print("STDERR:", e.stderr)
         sys.exit(1)
     except FileNotFoundError:
-        print("❌ PyInstaller nicht gefunden!")
+        print("FEHLER: PyInstaller nicht gefunden!")
         print("   Bitte installieren: pip install pyinstaller")
         sys.exit(1)
 
 def build_bootstrap_installer():
     """Erstellt kleinen Bootstrap-Installer"""
-    print("📦 Erstelle Bootstrap-Installer...")
+    print("Build: Erstelle Bootstrap-Installer...")
 
     # PyInstaller-Befehl für Bootstrap-Installer
     pyinstaller_cmd = [
@@ -186,48 +186,48 @@ def build_bootstrap_installer():
         "bootstrap_installer.py"      # Einstiegspunkt
     ]
 
-    print("📦 Führe PyInstaller für Bootstrap-Installer aus...")
+    print("Build: Führe PyInstaller für Bootstrap-Installer aus...")
     print(f"Command: {' '.join(pyinstaller_cmd)}")
 
     try:
         result = subprocess.run(pyinstaller_cmd, check=True, capture_output=True, text=True)
 
         if result.returncode == 0:
-            print("✅ Bootstrap-Installer erfolgreich erstellt!")
+            print("OK: Bootstrap-Installer erfolgreich erstellt!")
 
             # Dateigröße anzeigen
             exe_path = Path("dist/BootstrapInstaller.exe")
             if exe_path.exists():
                 size_mb = exe_path.stat().st_size / (1024 * 1024)
-                print(f"📁 Bootstrap-Installer: {exe_path}")
-                print(f"📊 Größe: {size_mb:.1f} MB")
+                print(f"Datei: Bootstrap-Installer: {exe_path}")
+                print(f"Groesse: Größe: {size_mb:.1f} MB")
 
                 # Kopiere Bootstrap-Installer als Standard-Installer
                 bootstrap_installer = Path("VoiceTranscriber_Bootstrap_Installer.exe")
                 try:
                     exe_path.replace(bootstrap_installer)
-                    print(f"📁 Finaler Installer: {bootstrap_installer}")
+                    print(f"Datei: Finaler Installer: {bootstrap_installer}")
                 except Exception as e:
-                    print(f"⚠️  Konnte Bootstrap-Installer nicht kopieren: {e}")
+                    print(f"WARNUNG:  Konnte Bootstrap-Installer nicht kopieren: {e}")
 
-            print("\n🚀 Bootstrap-Installer bereit!")
+            print("\nBereit: Bootstrap-Installer bereit!")
             print("   Hinweis: Lädt VoiceTranscriber.exe von R2 Storage nach")
 
         else:
-            print("❌ Bootstrap-Installer Build fehlgeschlagen!")
+            print("FEHLER: Bootstrap-Installer Build fehlgeschlagen!")
             print("STDOUT:", result.stdout)
             print("STDERR:", result.stderr)
             return False
 
     except subprocess.CalledProcessError as e:
-        print(f"❌ PyInstaller Fehler: {e}")
+        print(f"FEHLER: PyInstaller Fehler: {e}")
         if e.stdout:
             print("STDOUT:", e.stdout)
         if e.stderr:
             print("STDERR:", e.stderr)
         return False
     except FileNotFoundError:
-        print("❌ PyInstaller nicht gefunden!")
+        print("FEHLER: PyInstaller nicht gefunden!")
         print("   Bitte installieren: pip install pyinstaller")
         return False
 
@@ -235,7 +235,7 @@ def build_bootstrap_installer():
 
 def build_bootstrap_installer_nsis():
     """Erstellt Bootstrap-Installer mit NSIS"""
-    print("📦 Erstelle Bootstrap-Installer mit NSIS...")
+    print("Build: Erstelle Bootstrap-Installer mit NSIS...")
 
     # Prüfe ob NSIS verfügbar ist
     nsis_path = None
@@ -250,20 +250,20 @@ def build_bootstrap_installer_nsis():
             result = subprocess.run([path, '/VERSION'], capture_output=True, text=True, timeout=10)
             if result.returncode == 0:
                 nsis_path = path
-                print(f"✅ NSIS gefunden: {path}")
+                print(f"OK: NSIS gefunden: {path}")
                 break
         except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
             continue
 
     if not nsis_path:
-        print("❌ NSIS nicht gefunden!")
+        print("FEHLER: NSIS nicht gefunden!")
         print("   Bitte installiere NSIS von: https://nsis.sourceforge.io/")
         return False
 
     # Prüfe ob bootstrap_installer.nsi existiert
     installer_script = Path("bootstrap_installer.nsi")
     if not installer_script.exists():
-        print(f"❌ Bootstrap-Installer-Skript nicht gefunden: {installer_script}")
+        print(f"FEHLER: Bootstrap-Installer-Skript nicht gefunden: {installer_script}")
         return False
 
     # NSIS-Befehl ausführen
@@ -273,7 +273,7 @@ def build_bootstrap_installer_nsis():
         str(installer_script)
     ]
 
-    print(f"🏗️ Führe NSIS aus: {' '.join(nsis_cmd)}")
+    print(f"NSIS: Führe NSIS aus: {' '.join(nsis_cmd)}")
 
     try:
         result = subprocess.run(nsis_cmd, check=True, capture_output=True, text=True)
@@ -284,32 +284,32 @@ def build_bootstrap_installer_nsis():
             if installer_files:
                 installer_file = max(installer_files, key=lambda x: x.stat().st_mtime)
                 size_mb = installer_file.stat().st_size / (1024 * 1024)
-                print("✅ Bootstrap-Installer erfolgreich erstellt!")
-                print(f"📁 Bootstrap-Installer: {installer_file}")
-                print(f"📊 Größe: {size_mb:.1f} MB")
+                print("OK: Bootstrap-Installer erfolgreich erstellt!")
+                print(f"Datei: Bootstrap-Installer: {installer_file}")
+                print(f"Groesse: Größe: {size_mb:.1f} MB")
             else:
-                print("✅ Bootstrap-Installer erfolgreich erstellt!")
+                print("OK: Bootstrap-Installer erfolgreich erstellt!")
             return True
         else:
-            print("❌ NSIS-Bootstrap-Build fehlgeschlagen!")
+            print("FEHLER: NSIS-Bootstrap-Build fehlgeschlagen!")
             print("STDOUT:", result.stdout)
             print("STDERR:", result.stderr)
             return False
 
     except subprocess.CalledProcessError as e:
-        print(f"❌ NSIS Fehler: {e}")
+        print(f"FEHLER: NSIS Fehler: {e}")
         if e.stdout:
             print("STDOUT:", e.stdout)
         if e.stderr:
             print("STDERR:", e.stderr)
         return False
     except FileNotFoundError:
-        print("❌ makensis.exe nicht gefunden")
+        print("FEHLER: makensis.exe nicht gefunden")
         return False
 
 def build_installer():
     """Erstellt Windows-Installer mit NSIS"""
-    print("📦 Erstelle Windows-Installer...")
+    print("Build: Erstelle Windows-Installer...")
 
     # Prüfe ob NSIS verfügbar ist
     nsis_path = None
@@ -324,20 +324,20 @@ def build_installer():
             result = subprocess.run([path, '/VERSION'], capture_output=True, text=True, timeout=10)
             if result.returncode == 0:
                 nsis_path = path
-                print(f"✅ NSIS gefunden: {path}")
+                print(f"OK: NSIS gefunden: {path}")
                 break
         except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
             continue
 
     if not nsis_path:
-        print("❌ NSIS nicht gefunden!")
+        print("FEHLER: NSIS nicht gefunden!")
         print("   Bitte installiere NSIS von: https://nsis.sourceforge.io/")
         return False
 
     # Prüfe ob installer.nsi existiert
     installer_script = Path("installer.nsi")
     if not installer_script.exists():
-        print(f"❌ Installer-Skript nicht gefunden: {installer_script}")
+        print(f"FEHLER: Installer-Skript nicht gefunden: {installer_script}")
         return False
 
     # NSIS-Befehl ausführen
@@ -347,7 +347,7 @@ def build_installer():
         str(installer_script)
     ]
 
-    print(f"🏗️ Führe NSIS aus: {' '.join(nsis_cmd)}")
+    print(f"NSIS: Führe NSIS aus: {' '.join(nsis_cmd)}")
 
     try:
         result = subprocess.run(nsis_cmd, check=True, capture_output=True, text=True)
@@ -358,27 +358,27 @@ def build_installer():
             if installer_files:
                 installer_file = max(installer_files, key=lambda x: x.stat().st_mtime)
                 size_mb = installer_file.stat().st_size / (1024 * 1024)
-                print("✅ Installer erfolgreich erstellt!")
-                print(f"📁 Installer: {installer_file}")
-                print(f"📊 Größe: {size_mb:.1f} MB")
+                print("OK: Installer erfolgreich erstellt!")
+                print(f"Datei: Installer: {installer_file}")
+                print(f"Groesse: Größe: {size_mb:.1f} MB")
             else:
-                print("✅ Installer erfolgreich erstellt!")
+                print("OK: Installer erfolgreich erstellt!")
             return True
         else:
-            print("❌ NSIS-Build fehlgeschlagen!")
+            print("FEHLER: NSIS-Build fehlgeschlagen!")
             print("STDOUT:", result.stdout)
             print("STDERR:", result.stderr)
             return False
 
     except subprocess.CalledProcessError as e:
-        print(f"❌ NSIS Fehler: {e}")
+        print(f"FEHLER: NSIS Fehler: {e}")
         if e.stdout:
             print("STDOUT:", e.stdout)
         if e.stderr:
             print("STDERR:", e.stderr)
         return False
     except FileNotFoundError:
-        print("❌ makensis.exe nicht gefunden")
+        print("FEHLER: makensis.exe nicht gefunden")
         return False
 
 def main():
@@ -399,38 +399,38 @@ def main():
         if build_bootstrap_flag:
             print("\n" + "=" * 50)
             if build_bootstrap_installer():
-                print("\n🎉 Bootstrap-Installer (PyInstaller) erfolgreich!")
+                print("\nERFOLG: Bootstrap-Installer (PyInstaller) erfolgreich!")
                 print("   - Bootstrap-Installer: VoiceTranscriber_Bootstrap_Installer.exe")
             else:
-                print("\n❌ Bootstrap-Installer-Build fehlgeschlagen!")
+                print("\nFEHLER: Bootstrap-Installer-Build fehlgeschlagen!")
                 sys.exit(1)
 
         # Optional Bootstrap-Installer (NSIS) bauen
         if build_bootstrap_nsis_flag:
             print("\n" + "=" * 50)
             if build_bootstrap_installer_nsis():
-                print("\n🎉 Bootstrap-Installer (NSIS) erfolgreich!")
+                print("\nERFOLG: Bootstrap-Installer (NSIS) erfolgreich!")
                 print("   - Bootstrap-Installer: VoiceTranscriber_Bootstrap_Installer.exe")
             else:
-                print("\n❌ Bootstrap-Installer-NSIS-Build fehlgeschlagen!")
+                print("\nFEHLER: Bootstrap-Installer-NSIS-Build fehlgeschlagen!")
                 sys.exit(1)
 
         # Optional Vollständigen Installer bauen
         if build_installer_flag:
             print("\n" + "=" * 50)
             if build_installer():
-                print("\n🎉 Vollständiger Build erfolgreich!")
+                print("\nERFOLG: Vollständiger Build erfolgreich!")
                 print("   - EXE: dist/VoiceTranscriber.exe")
                 print("   - Installer: VoiceTranscriber_Installer.exe")
             else:
-                print("\n❌ Installer-Build fehlgeschlagen!")
+                print("\nFEHLER: Installer-Build fehlgeschlagen!")
                 sys.exit(1)
 
     except KeyboardInterrupt:
-        print("\n❌ Build durch Benutzer abgebrochen")
+        print("\nFEHLER: Build durch Benutzer abgebrochen")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Unerwarteter Fehler: {e}")
+        print(f"FEHLER: Unerwarteter Fehler: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
