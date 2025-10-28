@@ -14,8 +14,8 @@ def check_venv():
     if not hasattr(sys, 'real_prefix') and not (
         hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix
     ):
-        print("❌ WARNUNG: Virtual Environment nicht aktiviert!")
-        print("   Bitte erst ausführen: venv\\Scripts\\activate")
+        print("WARNUNG: Virtual Environment nicht aktiviert!")
+        print("   Bitte erst ausfuehren: venv\\Scripts\\activate")
         return False
     return True
 
@@ -27,20 +27,20 @@ def clean_build():
         if dir_path.exists():
             try:
                 shutil.rmtree(dir_path)
-                print(f"🧹 Gelöscht: {dir_name}/")
+                print(f"Geloescht: {dir_name}/")
             except OSError as e:
-                print(f"⚠️  Konnte {dir_name}/ nicht löschen: {e}")
+                print(f"WARNUNG: Konnte {dir_name}/ nicht loeschen: {e}")
                 print("   Versuche laufende Prozesse zu beenden...")
 
                 # Versuche VoiceTranscriber.exe zu beenden
                 try:
                     subprocess.run(['taskkill', '/f', '/im', 'VoiceTranscriber.exe'],
                                  capture_output=True, timeout=10)
-                    print("   ✅ Prozesse beendet, versuche erneut...")
+                    print("   Prozesse beendet, versuche erneut...")
                     shutil.rmtree(dir_path)
-                    print(f"   ✅ Gelöscht: {dir_name}/")
+                    print(f"   Geloescht: {dir_name}/")
                 except (subprocess.TimeoutExpired, subprocess.CalledProcessError, OSError):
-                    print(f"   ❌ Konnte {dir_name}/ nicht bereinigen - bitte manuell schließen")
+                    print(f"   Konnte {dir_name}/ nicht bereinigen - bitte manuell schliessen")
                     return False
     return True
 
@@ -383,7 +383,7 @@ def build_installer():
 
 def main():
     """Hauptfunktion"""
-    print("🎤 Voice Transcriber - Build Script")
+    print("Voice Transcriber - Build Script")
     print("=" * 50)
 
     # Kommandozeilen-Argumente prüfen
