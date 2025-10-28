@@ -40,17 +40,20 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Install dependencies
+      shell: bash
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pyinstaller
 
     - name: Install NSIS
+      shell: bash
       run: |
         choco install nsis -y
 
     - name: Determine version
       id: version
+      shell: bash
       run: |
         if [ ! -z "${{ github.event.inputs.version }}" ]; then
           VERSION="${{ github.event.inputs.version }}"
@@ -66,6 +69,7 @@ jobs:
         echo "Building version: $VERSION"
 
     - name: Update version in files
+      shell: bash
       run: |
         # Update version.py
         echo "APP_VERSION = '$VERSION'" > version.py
@@ -85,21 +89,26 @@ jobs:
         sed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_installer.nsi
 
     - name: Generate icon
+      shell: bash
       run: |
         cd assets
         python icon_generator.py
         cd ..
 
     - name: Build VoiceTranscriber EXE
+      shell: bash
       run: python build.py
 
     - name: Build Bootstrap Installer
+      shell: bash
       run: python build.py --bootstrap
 
     - name: Build NSIS Installer
+      shell: bash
       run: python build.py --installer
 
     - name: Create version info
+      shell: bash
       run: |
         echo "VERSION=$VERSION" > build_info.txt
         echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> build_info.txt
@@ -138,10 +147,12 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install deployment dependencies
+      shell: bash
       run: |
         pip install boto3
 
     - name: Deploy to Cloudflare R2
+      shell: bash
       env:
         R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
         R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -186,11 +197,13 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install test dependencies
+      shell: bash
       run: |
         pip install -r requirements.txt
         pip install pytest pytest-cov
 
     - name: Run tests
+      shell: bash
       run: |
         pytest tests/ -v --cov=src --cov-report=xml
 
