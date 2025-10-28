@@ -2,7 +2,10 @@
 
 ## Übersicht
 
-Die lokale Transkriptionsfunktion ermöglicht offline-fähige Sprach-zu-Text-Umwandlung unter Verwendung der `faster-whisper` Bibliothek. Dies eliminiert die Abhängigkeit von der OpenAI Whisper API und bietet Offline-Nutzung, Kosteneinsparungen und verbesserte Privatsphäre.
+Die lokale Transkriptionsfunktion ermöglicht offline-fähige
+Sprach-zu-Text-Umwandlung unter Verwendung der `faster-whisper` Bibliothek. Dies
+eliminiert die Abhängigkeit von der OpenAI Whisper API und bietet
+Offline-Nutzung, Kosteneinsparungen und verbesserte Privatsphäre.
 
 ## Installation
 
@@ -64,22 +67,24 @@ WHISPER_MODEL_SIZE=small
 
 ### Modellgrößen und Ressourcen
 
-| Modell | Größe | RAM | Geschwindigkeit | Genauigkeit |
-|--------|-------|-----|----------------|-------------|
-| tiny   | 39 MB | ~1 GB | Sehr schnell | Grundlegend |
-| base   | 74 MB | ~1 GB | Schnell | Gut |
-| small  | 244 MB | ~2 GB | Mittel | Sehr gut |
-| medium | 769 MB | ~5 GB | Langsam | Ausgezeichnet |
-| large  | 1550 MB | ~10 GB | Sehr langsam | Hervorragend |
+| Modell | Größe   | RAM    | Geschwindigkeit | Genauigkeit   |
+| ------ | ------- | ------ | --------------- | ------------- |
+| tiny   | 39 MB   | ~1 GB  | Sehr schnell    | Grundlegend   |
+| base   | 74 MB   | ~1 GB  | Schnell         | Gut           |
+| small  | 244 MB  | ~2 GB  | Mittel          | Sehr gut      |
+| medium | 769 MB  | ~5 GB  | Langsam         | Ausgezeichnet |
+| large  | 1550 MB | ~10 GB | Sehr langsam    | Hervorragend  |
 
 ## Hardware-Anforderungen
 
 ### Minimale Anforderungen
+
 - **CPU**: Intel i5 oder equivalent
 - **RAM**: 4 GB (small Modell)
 - **Speicher**: 500 MB freier Speicherplatz
 
 ### Empfohlene Anforderungen
+
 - **CPU**: Intel i7 oder equivalent
 - **RAM**: 8 GB
 - **GPU**: NVIDIA mit CUDA (optional, beschleunigt Transkription)
@@ -195,13 +200,16 @@ pytest tests/test_integration.py::TestAudioToTextWorkflow::test_full_compression
 ## Sicherheit und Datenschutz
 
 ### Lokale Verarbeitung
+
 - **Audio-Daten**: Bleiben lokal auf dem Gerät
 - **Keine Übertragung**: Daten werden nicht an externe Server gesendet
 - **Temporäre Dateien**: Werden nach Verarbeitung automatisch gelöscht
 
 ### Modell-Speicherung
+
 - **Lokaler Cache**: Modelle werden in `temp/whisper_models/` gespeichert
-- **Keine externen Abhängigkeiten**: Nach Download sind Modelle offline verfügbar
+- **Keine externen Abhängigkeiten**: Nach Download sind Modelle offline
+  verfügbar
 
 ## Troubleshooting
 
@@ -245,16 +253,16 @@ logging.basicConfig(level=logging.DEBUG)
 
 ## Vergleich: Lokal vs. API
 
-| Aspekt | Lokale Transkription | OpenAI API |
-|--------|---------------------|------------|
-| **Kosten** | Kostenlos | $0.006/minute |
-| **Offline** | ✅ Ja | ❌ Nein |
-| **Privatsphäre** | ✅ Hoch | ⚠️ Daten an OpenAI |
-| **Latenz** | < 5 Sekunden* | 2-10 Sekunden |
-| **Setup** | Modell-Download | API-Key |
-| **Hardware** | CPU/GPU benötigt | Nur Internet |
+| Aspekt           | Lokale Transkription | OpenAI API         |
+| ---------------- | -------------------- | ------------------ |
+| **Kosten**       | Kostenlos            | $0.006/minute      |
+| **Offline**      | ✅ Ja                | ❌ Nein            |
+| **Privatsphäre** | ✅ Hoch              | ⚠️ Daten an OpenAI |
+| **Latenz**       | < 5 Sekunden\*       | 2-10 Sekunden      |
+| **Setup**        | Modell-Download      | API-Key            |
+| **Hardware**     | CPU/GPU benötigt     | Nur Internet       |
 
-*Abhängig von Hardware und Modellgröße
+\*Abhängig von Hardware und Modellgröße
 
 ## Erweiterte Konfiguration
 
@@ -288,12 +296,14 @@ segments, info = model.transcribe(
 ## Zukunftsaussichten
 
 ### Geplante Erweiterungen
+
 - **Modell-Updates**: Automatische Aktualisierung von Whisper-Modellen
 - **Caching**: Intelligentes Caching für häufig verwendete Modelle
 - **Batch-Verarbeitung**: Mehrere Dateien gleichzeitig transkribieren
 - **Streaming**: Echtzeit-Transkription während der Aufnahme
 
 ### Performance-Verbesserungen
+
 - **Quantisierung**: Weitere Optimierungen für CPU-Performance
 - **Modell-Komprimierung**: Kleinere Modelle mit gleicher Genauigkeit
 - **Hardware-Beschleunigung**: Optimierungen für verschiedene GPU-Typen

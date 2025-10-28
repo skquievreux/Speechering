@@ -2,21 +2,27 @@
 
 ## Übersicht
 
-Die neue Version des Voice Transcribers unterstützt das mittlere Mausrad als Alternative zu Hotkeys für die Aufnahmesteuerung. Dies löst Probleme mit Hotkey-Konflikten in Browsern und anderen Anwendungen.
+Die neue Version des Voice Transcribers unterstützt das mittlere Mausrad als
+Alternative zu Hotkeys für die Aufnahmesteuerung. Dies löst Probleme mit
+Hotkey-Konflikten in Browsern und anderen Anwendungen.
 
 ## Neue Features
 
 ### 1. Benutzerspezifische Konfiguration
-- Einstellungen werden jetzt in `%APPDATA%/VoiceTranscriber/config.json` gespeichert
+
+- Einstellungen werden jetzt in `%APPDATA%/VoiceTranscriber/config.json`
+  gespeichert
 - Persistente Hotkey-Konfiguration
 - Individuelle Einstellungen pro Benutzer
 
 ### 2. Konfigurierbare Hotkeys
+
 - Hotkeys können über die GUI angepasst werden
 - Mehrere Fallback-Optionen
 - Automatische Konflikterkennung
 
 ### 3. Mittleres Mausrad Unterstützung
+
 - Toggle-Modus: Ein Klick startet/stoppt die Aufnahme
 - Funktioniert in allen Anwendungen (Browser, Editoren, etc.)
 - Keine Konflikte mit bestehenden Hotkeys
@@ -31,7 +37,8 @@ Die neue Version des Voice Transcribers unterstützt das mittlere Mausrad als Al
 
 ### 2. Voice Transcriber aktualisieren
 
-Die neuen Features sind bereits in der aktuellen Version integriert. Bei der ersten Ausführung wird automatisch:
+Die neuen Features sind bereits in der aktuellen Version integriert. Bei der
+ersten Ausführung wird automatisch:
 
 - Das AppData-Verzeichnis erstellt: `%APPDATA%/VoiceTranscriber/`
 - Eine Standardkonfiguration angelegt: `config.json`
@@ -66,11 +73,13 @@ primary = config.get_user_hotkey('primary')
 ## Verwendung
 
 ### Mit Hotkeys (Standard)
+
 - Drücke den konfigurierten Hotkey zum Starten der Aufnahme
 - Lass den Hotkey los zum Stoppen
 - Piepton signalisiert Start/Stopp
 
 ### Mit mittlerem Mausrad (Alternative)
+
 1. Stelle sicher, dass AutoHotkey installiert ist
 2. Aktiviere mittleres Mausrad in den Einstellungen
 3. Starte die Anwendung neu
@@ -79,9 +88,13 @@ primary = config.get_user_hotkey('primary')
 ## Technische Details
 
 ### AHK-Skript
-Das AutoHotkey-Skript (`scripts/mouse_toggle.ahk`) erkennt mittlere Mausrad-Klicks und simuliert F12-Tastenanschläge an die Voice Transcriber Anwendung.
+
+Das AutoHotkey-Skript (`scripts/mouse_toggle.ahk`) erkennt mittlere
+Mausrad-Klicks und simuliert F12-Tastenanschläge an die Voice Transcriber
+Anwendung.
 
 ### Konfigurationsdatei
+
 ```json
 {
   "version": "1.0",
@@ -102,6 +115,7 @@ Das AutoHotkey-Skript (`scripts/mouse_toggle.ahk`) erkennt mittlere Mausrad-Klic
 ### API
 
 #### UserConfig
+
 ```python
 from src.user_config import user_config
 
@@ -119,6 +133,7 @@ enabled = user_config.is_mouse_wheel_enabled()
 ```
 
 #### MouseWheelIntegration
+
 ```python
 from src.mouse_integration import MouseWheelIntegration
 
@@ -172,4 +187,5 @@ Die alte .env-Datei bleibt unverändert als Fallback erhalten.
 
 - **GUI für Einstellungen**: Benutzerfreundliche Konfiguration über Tray-Menü
 - **Mehr Eingabemethoden**: Touchpad-Gesten, Sprachbefehle
-- **Profil-Unterstützung**: Verschiedene Konfigurationen für verschiedene Anwendungsfälle
+- **Profil-Unterstützung**: Verschiedene Konfigurationen für verschiedene
+  Anwendungsfälle

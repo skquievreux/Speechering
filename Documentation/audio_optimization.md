@@ -2,16 +2,20 @@
 
 ## Übersicht
 
-Dieses Dokument beschreibt die Optimierung der Audiodaten-Verarbeitung in Voice Transcriber zur Reduzierung der Latenz bei der Übertragung zu Cloud-APIs (z.B. Vercel + OpenAI).
+Dieses Dokument beschreibt die Optimierung der Audiodaten-Verarbeitung in Voice
+Transcriber zur Reduzierung der Latenz bei der Übertragung zu Cloud-APIs (z.B.
+Vercel + OpenAI).
 
 ## Problemstellung
 
 **Aktuelle Situation:**
+
 - WAV-Dateien: 30s bei 16kHz, 16-bit, Mono = ~960 KB
 - Übertragungszeit: ~500-1000ms bei typischen Internet-Verbindungen
 - Gesamtlater: >2-3 Sekunden für komplette Transkription
 
 **Ziel:**
+
 - Reduzierung der Datenmenge um 50-75%
 - Latenz-Reduzierung auf <1-2 Sekunden
 - Beibehaltung der Transkriptionsqualität
@@ -21,12 +25,14 @@ Dieses Dokument beschreibt die Optimierung der Audiodaten-Verarbeitung in Voice 
 ### 1. Audio-Komprimierung
 
 #### MP3-Komprimierung
+
 - **Format**: MP3 mit 64kbps Bitrate
 - **Größenreduktion**: ~75% (960KB → ~240KB)
 - **Qualitätsverlust**: Minimal für Sprachaufnahmen
 - **OpenAI-Kompatibilität**: Vollständig unterstützt
 
 #### Opus-Komprimierung (Alternative)
+
 - **Format**: Opus mit 64kbps
 - **Größenreduktion**: ~75%
 - **Vorteil**: Bessere Qualität bei gleicher Bitrate
@@ -35,11 +41,13 @@ Dieses Dokument beschreibt die Optimierung der Audiodaten-Verarbeitung in Voice 
 ### 2. Implementierungsarchitektur
 
 #### Vor der Optimierung:
+
 ```
 Audio-Aufnahme → WAV-Speicherung → Base64-Encoding → HTTP-Upload → API
 ```
 
 #### Nach der Optimierung:
+
 ```
 Audio-Aufnahme → WAV-Speicherung → MP3-Komprimierung → Base64-Encoding → HTTP-Upload → API
 ```
@@ -47,6 +55,7 @@ Audio-Aufnahme → WAV-Speicherung → MP3-Komprimierung → Base64-Encoding →
 ### 3. Technische Details
 
 #### Komprimierungs-Parameter
+
 ```python
 # Empfohlene Einstellungen für Sprachaufnahmen
 FORMAT = 'mp3'
@@ -55,24 +64,27 @@ SAMPLE_RATE = 16000  # Beibehalten für Whisper-Kompatibilität
 ```
 
 #### Dateigrößen-Vergleich
+
 | Format | Bitrate | 30s Audio | Reduzierung |
-|--------|---------|-----------|-------------|
-| WAV    | -      | ~960 KB  | -          |
-| MP3    | 128k   | ~480 KB  | ~50%       |
-| MP3    | 64k    | ~240 KB  | ~75%       |
-| Opus   | 64k    | ~240 KB  | ~75%       |
+| ------ | ------- | --------- | ----------- |
+| WAV    | -       | ~960 KB   | -           |
+| MP3    | 128k    | ~480 KB   | ~50%        |
+| MP3    | 64k     | ~240 KB   | ~75%        |
+| Opus   | 64k     | ~240 KB   | ~75%        |
 
 ## Implementierung
 
 ### 1. Dependencies
 
 #### Neue Abhängigkeiten
+
 ```txt
 # requirements.txt
 pydub==0.25.1          # Audio-Konvertierung
 ```
 
 #### System-Dependencies
+
 ```bash
 # Windows
 # ffmpeg wird von pydub automatisch verwendet
@@ -87,6 +99,7 @@ brew install ffmpeg      # Mac
 ### 2. Code-Änderungen
 
 #### audio_recorder.py - Neue Methoden
+
 ```python
 import io
 from pydub import AudioSegment
@@ -115,6 +128,7 @@ class AudioRecorder:
 ```
 
 #### transcription.py - API-Anpassungen
+
 ```python
 class TranscriptionService:
     def transcribe_audio(self, audio_data: bytes, format: str = 'mp3') -> str:
@@ -135,6 +149,7 @@ class TranscriptionService:
 ### 3. Konfigurations-Optionen
 
 #### .env Erweiterungen
+
 ```env
 # Audio-Komprimierung
 AUDIO_COMPRESSION_ENABLED=true
@@ -143,6 +158,7 @@ AUDIO_COMPRESSION_BITRATE=64k
 ```
 
 #### config.py Erweiterungen
+
 ```python
 class Config:
     # Audio-Komprimierung
@@ -154,13 +170,15 @@ class Config:
 ## Performance-Messungen
 
 ### Latenz-Vergleich
-| Szenario | Datengröße | Upload-Zeit | Gesamtlatenz |
-|----------|------------|-------------|--------------|
-| WAV + Base64 | ~1.28 MB | ~800ms | ~2.5s |
-| MP3 + Base64 | ~320 KB | ~200ms | ~1.2s |
-| MP3 + Multipart | ~240 KB | ~150ms | ~1.0s |
+
+| Szenario        | Datengröße | Upload-Zeit | Gesamtlatenz |
+| --------------- | ---------- | ----------- | ------------ |
+| WAV + Base64    | ~1.28 MB   | ~800ms      | ~2.5s        |
+| MP3 + Base64    | ~320 KB    | ~200ms      | ~1.2s        |
+| MP3 + Multipart | ~240 KB    | ~150ms      | ~1.0s        |
 
 ### Qualitätsvergleich
+
 - **WAV**: Referenzqualität (100%)
 - **MP3 128k**: ~98% Qualität
 - **MP3 64k**: ~95% Qualität (für Sprache ausreichend)
@@ -168,6 +186,7 @@ class Config:
 ## Fallback-Strategien
 
 ### Bei Komprimierungs-Fehlern
+
 ```python
 try:
     compressed_data = self.compress_audio(wav_path)
@@ -179,12 +198,14 @@ except Exception as e:
 ```
 
 ### Konfigurations-Override
+
 - Benutzer kann Komprimierung in GUI deaktivieren
 - Automatische Fallback bei fehlenden Dependencies
 
 ## Testing
 
 ### Unit-Tests
+
 ```python
 def test_audio_compression():
     # Test-Datei erstellen
@@ -195,6 +216,7 @@ def test_audio_compression():
 ```
 
 ### Integration-Tests
+
 ```python
 def test_full_pipeline():
     # Aufnahme → Komprimierung → Transkription
@@ -206,6 +228,7 @@ def test_full_pipeline():
 ## Deployment-Überlegungen
 
 ### PyInstaller-Anpassungen
+
 ```python
 # build.py
 a = Analysis(
@@ -219,18 +242,21 @@ a = Analysis(
 ```
 
 ### System-Requirements
+
 - **Windows**: ffmpeg.exe im PATH oder bundled
 - **Linux/Mac**: ffmpeg system-wide installiert
 
 ## Monitoring & Debugging
 
 ### Logging
+
 ```python
 logger.info(f"Audio komprimiert: {original_size} → {compressed_size} bytes")
 logger.info(f"Komprimierungsrate: {compression_ratio:.1%}")
 ```
 
 ### Performance-Metriken
+
 - Dateigrößen vor/nach Komprimierung
 - Komprimierungszeit
 - Upload-Zeit
@@ -239,11 +265,13 @@ logger.info(f"Komprimierungsrate: {compression_ratio:.1%}")
 ## Roadmap
 
 ### Phase 1 (Aktuell)
+
 - ✅ MP3-Komprimierung implementieren
 - ✅ Fallback-Mechanismen
 - ✅ Konfiguration
 
 ### Phase 2 (Zukunft)
+
 - 🔄 Opus-Format-Unterstützung
 - 🔄 Adaptive Bitrate basierend auf Netzwerk
 - 🔄 Client-seitige Chunking für lange Aufnahmen
@@ -251,13 +279,16 @@ logger.info(f"Komprimierungsrate: {compression_ratio:.1%}")
 ## Risiken & Mitigation
 
 ### Kompatibilitätsrisiken
+
 - **OpenAI API**: MP3 wird unterstützt
 - **Fallback**: Bei Problemen auf WAV zurückfallen
 
 ### Performance-Risiken
+
 - **CPU-Last**: Komprimierung erhöht lokale CPU-Nutzung
 - **Speicher**: Temporäre Dateien größer während Konvertierung
 
 ### Qualitätsrisiken
+
 - **Transkriptionsgenauigkeit**: Bei zu niedriger Bitrate
 - **Monitoring**: Qualität kontinuierlich überwachen

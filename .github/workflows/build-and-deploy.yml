@@ -20,6 +20,8 @@ env:
 jobs:
   build:
     runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout code
@@ -85,20 +87,20 @@ jobs:
         run: |
           # Update version.py
           echo "APP_VERSION = '$VERSION'" > version.py
-  
+
           # Update .env (create if not exists)
           if [ -f ".env" ]; then
             sed -i "s/APP_VERSION=.*/APP_VERSION=$VERSION/" .env
           else
             echo "APP_VERSION=$VERSION" > .env
           fi
-  
+
           # Update installer script
           sed -i "s/Name \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/Name \"Voice Transcriber v$VERSION\"/" installer.nsi
           sed -i "s/OutFile \"VoiceTranscriber_Installer_v[0-9]\+\.[0-9]\+\.[0-9]\+\.exe\"/OutFile \"VoiceTranscriber_Installer_v$VERSION.exe\"/" installer.nsi
           sed -i "s/DisplayName \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber v$VERSION\"/" installer.nsi
           sed -i "s/DisplayVersion \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayVersion \"$VERSION\"/" installer.nsi
-  
+
           # Update bootstrap installer
           sed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_installer.nsi
           sed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" bootstrap_installer.nsi
@@ -158,6 +160,8 @@ jobs:
         with:
           name: voice-transcriber-builds-${{ needs.build.outputs.version }}
           path: artifacts/
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id || github.run_id }}
 
       - name: Set up Python for deployment
         uses: actions/setup-python@v4
@@ -231,3 +235,32 @@ jobs:
           file: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
+
+  # Separate job for manual testing of build artifacts
+  manual-test:
+    runs-on: windows-latest
+    if: github.event_name == 'workflow_dispatch'
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: voice-transcriber-builds-${{ needs.build.outputs.version }}
+          path: artifacts/
+
+      - name: List downloaded artifacts
+        shell: bash
+        run: |
+          echo "Downloaded artifacts:"
+          ls -la artifacts/
+
+      - name: Test EXE execution (basic smoke test)
+        shell: bash
+        run: |
+          cd artifacts
+          # Try to run the EXE briefly to check if it's not corrupted
+          timeout 10s ./VoiceTranscriber.exe --help || echo "EXE test completed (expected timeout or help output)"

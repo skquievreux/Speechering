@@ -1,0 +1,21 @@
+{
+  "version": "0.2",
+  "language": "de,en",
+  "words": [
+    "Transcriber",
+    "Whisper", 
+    "Standalone",
+    "Toggle",
+    "Dependencies",
+    "Deinstaller",
+    "PyInstaller",
+    "Cloudflare"
+  ],
+  "ignorePaths": [
+    "node_modules/**",
+    ".git/**",
+    "dist/**",
+    "build/**",
+    "venv/**"
+  ]
+}

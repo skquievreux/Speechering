@@ -1,20 +1,28 @@
 # 🎤 Voice Transcriber v1.5.0
 
-Eine professionelle Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text Transkription mit
-KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem Eingabesystem.
+Eine professionelle Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text
+Transkription mit KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem
+Eingabesystem.
+
+**🚀 Neue Deployment-Option**: Kleiner Bootstrap-Installer (15 MB) lädt automatisch
+die vollständige Anwendung (220 MB) von Cloudflare R2 Storage nach!
 
 ## ✨ Features
 
 ### 🎯 Kernfunktionalität
+
 - 🎤 **Push-to-Talk Aufnahme**: Mehrere Hotkey-Optionen (F12, F11, F10, etc.)
-- 🖱️ **Mittleres Mausrad**: Systemweite Alternative (funktioniert in allen Anwendungen!)
-- 🔊 **Audio-Komprimierung**: Automatische MP3-Komprimierung (75% Datenreduktion)
+- 🖱️ **Mittleres Mausrad**: Systemweite Alternative (funktioniert in allen
+  Anwendungen!)
+- 🔊 **Audio-Komprimierung**: Automatische MP3-Komprimierung (75%
+  Datenreduktion)
 - ⚡ **Schnelle Transkription**: < 1.2s Gesamtlatenz (vorher ~2.5s)
 - 🤖 **KI-Transkription**: OpenAI Whisper API + Offline-Modi
 - ✨ **Text-Korrektur**: GPT-4 basierte Verbesserung (ohne Anführungszeichen)
 - ⌨️ **Auto-Einfügen**: Text direkt an Cursor-Position
 
 ### 💼 Professionelle Features
+
 - 📦 **Windows-Installer**: Vollständige Installation mit Deinstaller
 - ⚙️ **Benutzerspezifische Konfiguration**: Persistente Einstellungen im AppData
 - 🔧 **Konfigurierbare Hotkeys**: Individuelle Tastenkombinationen
@@ -22,6 +30,7 @@ KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem Eingabesystem.
 - 📍 **System Tray**: Unsichtbar im Hintergrund mit erweitertem Menü
 
 ### 🎨 Benutzerfreundlichkeit
+
 - 🔔 **Akustisches Feedback**: Start/Stop Beeps
 - ⏱️ **30s Limit**: Automatischer Stop nach 30 Sekunden
 - 🌐 **Mehrsprachig**: Deutsch/Englisch (Installer & App)
@@ -30,13 +39,21 @@ KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem Eingabesystem.
 
 ## 🚀 Schnellstart
 
-### Option A: Windows-Installer (Empfohlen für Endbenutzer)
+### Option A: Bootstrap-Installer (Empfohlen - nur 15 MB!)
+
+1. **Download**: `VoiceTranscriber_Bootstrap_Installer_v1.5.0.exe` herunterladen
+2. **Installieren**: Doppelklick - lädt automatisch die vollständige App (220 MB) nach
+3. **Fertig**: Anwendung ist installiert und bereit!
+
+**Vorteile**: Schneller Download, automatische Updates, Cloudflare R2 Storage
+
+### Option B: Vollständiger Installer (220 MB)
 
 1. **Download**: `VoiceTranscriber_Installer_v1.5.0.exe` herunterladen
 2. **Installieren**: Doppelklick und Anweisungen folgen
 3. **Fertig**: Anwendung ist installiert und bereit!
 
-**Vorteile**: Automatische AHK-Installation, Desktop-Verknüpfung, Deinstaller
+**Vorteile**: Alles in einem Paket, Offline-Installation möglich
 
 ### Option B: Manuelle Installation (für Entwickler)
 
@@ -79,8 +96,17 @@ python src/main.py
 #### 6. Standalone-EXE erstellen (optional)
 
 ```bash
+# Nur EXE erstellen
 python build.py
-# Erstellt: dist/VoiceTranscriber.exe
+
+# Bootstrap-Installer erstellen (empfohlen für Distribution)
+python build.py --bootstrap
+
+# Vollständigen Installer erstellen
+python build.py --installer
+
+# Hilfe anzeigen
+python build.py --help
 ```
 
 ## 🎯 Verwendung
@@ -94,16 +120,19 @@ python build.py
 ### 🎤 Eingabemethoden
 
 #### Option A: Hotkeys (traditionell)
+
 - **F12 gedrückt halten** → Aufnahme startet
 - **F12 loslassen** → Verarbeitung beginnt
 - **Text erscheint** automatisch an Cursor-Position
 
 **Hotkey-Optionen** (automatische Fallback-Reihenfolge):
+
 - **F12** (Standard, funktioniert garantiert)
 - **F11, F10** (Fallbacks)
 - **Strg+F12, Alt+F12** (erweiterte Optionen)
 
 #### Option B: Mittleres Mausrad (empfohlen!)
+
 - **Mittlere Maustaste klicken** → Aufnahme startet/stoppt (Toggle-Modus)
 - **Funktioniert überall**: Browser, Editoren, alle Anwendungen!
 - **Keine Konflikte**: Umgehung von Browser-Hotkey-Blockaden
@@ -156,10 +185,24 @@ voice-transcriber/
 
 ```bash
 # Virtual Environment muss aktiv sein!
+
+# Option 1: Nur EXE erstellen (für Tests)
 python build.py
+
+# Option 2: Bootstrap-Installer (empfohlen für Releases)
+python build.py --bootstrap
+
+# Option 3: Vollständiger Installer (traditionell)
+python build.py --installer
+
+# Option 4: Alle Varianten erstellen
+python build.py --bootstrap --installer
 ```
 
-Das erstellt `dist/VoiceTranscriber.exe` - eine standalone Windows-Anwendung.
+**Build-Artefakte:**
+- `dist/VoiceTranscriber.exe` - Standalone Windows-Anwendung (221 MB)
+- `VoiceTranscriber_Bootstrap_Installer.exe` - Kleiner Downloader (15 MB)
+- `VoiceTranscriber_Installer.exe` - Vollständiger Installer (220 MB)
 
 ## ⚙️ Konfiguration
 
@@ -210,6 +253,7 @@ Automatisch erstellt in: `%APPDATA%/VoiceTranscriber/config.json`
 ```
 
 **Konfiguration über Code:**
+
 ```python
 from src.config import config
 
@@ -245,6 +289,7 @@ pytest --cov=src tests/
 ## 📋 Anforderungen
 
 ### Systemanforderungen
+
 - **Betriebssystem**: Windows 10/11 (64-Bit)
 - **Prozessor**: 1 GHz oder schneller
 - **RAM**: 4 GB minimum, 8 GB empfohlen
@@ -252,11 +297,13 @@ pytest --cov=src tests/
 - **Mikrofon**: Standard-Audio-Gerät
 
 ### Software-Abhängigkeiten
+
 - **AutoHotkey**: Wird automatisch installiert (für mittleres Mausrad)
 - **Python**: 3.8+ (nur für manuelle Installation)
 - **Internet**: Erforderlich für OpenAI API (Offline-Modi verfügbar)
 
 ### Optionale Features
+
 - **CUDA-GPU**: Für schnellere Offline-Transkription
 - ** Mehrere Mikrofone**: Für erweiterte Audio-Konfiguration
 
@@ -295,6 +342,7 @@ pip install pyinstaller
 ## 📈 Performance
 
 ### Audio-Verarbeitung
+
 - **Audio-Komprimierung**: 75% Datenreduktion (WAV → MP3)
 - **Upload-Zeit**: 800ms → 200ms (75% schneller)
 - **Gesamtlatenz**: 2.5s → 1.2s (52% schneller)
@@ -302,14 +350,25 @@ pip install pyinstaller
 - **Offline-Modi**: 0$ Kosten, lokale Verarbeitung
 
 ### System-Performance
+
 - **Hotkey-Reaktion**: < 100ms
 - **Mausrad-Reaktion**: < 50ms (systemweit)
 - **CPU im Idle**: < 1%
 - **Memory-Verbrauch**: ~50 MB RAM
-- **EXE-Größe**: 216.3 MB (Standalone mit allen Features)
-- **Installer-Größe**: 214.8 MB (komprimiert)
+- **EXE-Größe**: 221.8 MB (Standalone mit allen Features)
+- **Bootstrap-Installer**: 14.9 MB (kleiner Downloader)
+- **Vollständiger Installer**: 220.3 MB (komprimiert)
+- **Download-Ersparnis**: 93% weniger initialer Download (220 MB → 15 MB)
+
+### Neue Deployment-Features
+
+- **Bootstrap-Installer**: Automatisches Nachladen von Cloudflare R2
+- **Versionsverwaltung**: Automatische Update-Prüfung
+- **Retry-Mechanismus**: Robuste Downloads mit Fehlerbehandlung
+- **CDN-Integration**: Weltweite schnelle Downloads via Cloudflare
 
 ### Neue Features Performance
+
 - **Konfiguration**: < 10ms Laden/Speichern
 - **AHK-Integration**: Automatische Verfügbarkeitsprüfung
 - **Registry-Operationen**: Sichere Windows-Integration
@@ -330,3 +389,5 @@ pip install pyinstaller
 
 - OpenAI für Whisper und GPT APIs
 - Python-Community für exzellente Libraries
+- Cloudflare für R2 Storage und CDN-Infrastruktur
+- GitHub für Actions und Artifact-Management

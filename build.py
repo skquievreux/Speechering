@@ -390,6 +390,25 @@ def main():
     build_installer_flag = "--installer" in sys.argv
     build_bootstrap_flag = "--bootstrap" in sys.argv
     build_bootstrap_nsis_flag = "--bootstrap-nsis" in sys.argv
+    help_flag = "--help" in sys.argv or "-h" in sys.argv
+
+    # Hilfe anzeigen
+    if help_flag:
+        print("Verwendung: python build.py [OPTIONEN]")
+        print("")
+        print("Optionen:")
+        print("  --installer      Erstellt vollständigen NSIS-Installer")
+        print("  --bootstrap      Erstellt kleinen Bootstrap-Installer (PyInstaller)")
+        print("  --bootstrap-nsis Erstellt kleinen Bootstrap-Installer (NSIS)")
+        print("  --help, -h       Diese Hilfe anzeigen")
+        print("")
+        print("Beispiele:")
+        print("  python build.py                           # Nur EXE erstellen")
+        print("  python build.py --installer              # EXE + vollständiger Installer")
+        print("  python build.py --bootstrap              # EXE + Bootstrap-Installer")
+        print("  python build.py --bootstrap-nsis         # EXE + Bootstrap-Installer (NSIS)")
+        print("  python build.py --installer --bootstrap  # Alles erstellen")
+        return
 
     try:
         # Immer EXE bauen

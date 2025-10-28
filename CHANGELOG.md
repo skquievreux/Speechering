@@ -10,6 +10,24 @@ und dieses Projekt hält sich an
 
 ### 🎉 Added - Erstmals hinzugefügt
 
+#### Bootstrap-Installer & Cloudflare R2 Deployment
+
+- **Kleiner Bootstrap-Installer**: Nur 14.9 MB Downloader lädt automatisch 221.8 MB App nach
+  - 93% weniger initialer Download (220 MB → 15 MB)
+  - Automatisches Nachladen von Cloudflare R2 Storage
+  - Versionsverwaltung und Update-Prüfung
+  - Robuste Download-Fehlerbehandlung mit Retry-Mechanismus
+- **Cloudflare R2 Storage Integration**: Weltweite schnelle Downloads
+  - CDN-Integration für optimale Performance
+  - Sichere API-basierte Uploads via boto3
+  - Versionsgesteuerte Artefakt-Verwaltung
+  - Automatische GitHub Actions CI/CD Pipeline
+- **Verbesserte Deployment-Architektur**: Mehrere Installer-Optionen
+  - Bootstrap-Installer (15 MB) für schnelle Downloads
+  - Vollständiger Installer (220 MB) für Offline-Installation
+  - Standalone-EXE (221.8 MB) für direkte Ausführung
+  - Automatische Versionssynchronisation
+
 #### Fehlerbehebungen und Verbesserungen
 
 - **Lokale Transkription optimiert**: Verbesserte Stabilität und Performance
@@ -45,15 +63,20 @@ und dieses Projekt hält sich an
 ### 🐛 Fixed - Behoben
 
 #### EXE-Kompatibilität verbessert
-- **Temp-Verzeichnis-Problem**: Zugriff verweigert bei relativen temp/ Pfaden in EXE
+
+- **Temp-Verzeichnis-Problem**: Zugriff verweigert bei relativen temp/ Pfaden in
+  EXE
   - Temp-Dateien werden jetzt in `%APPDATA%/VoiceTranscriber/temp/` erstellt
   - Verhindert Zugriffsfehler bei Standalone-EXE-Ausführung
-- **Hotkey-Fehler behoben**: `ValueError("Key name 'alt+f12' is not mapped to any known key.")`
+- **Hotkey-Fehler behoben**:
+  `ValueError("Key name 'alt+f12' is not mapped to any known key.")`
   - Problemhaften Hotkey `'alt+f12'` aus Fallback-Liste entfernt
   - Zuverlässige Hotkey-Registrierung ohne ValueError
 
 #### Versionsverwaltung implementiert
-- **Zentrales Versionsmanagement**: Automatische Synchronisation aller Versionseinträge
+
+- **Zentrales Versionsmanagement**: Automatische Synchronisation aller
+  Versionseinträge
   - `version.py` Tool für Versionsverwaltung (`patch`, `minor`, `major`)
   - Automatische Aktualisierung von `src/config.py`, `installer.nsi`, `build.py`
   - Kommandozeilen-Tool: `python version.py [get|set|patch|minor|major|info]`
@@ -64,29 +87,36 @@ und dieses Projekt hält sich an
 
 #### Zuverlässigkeits-Verbesserungen
 
-- **Hotkey-Debouncing**: Verhindert doppelte Aufnahmen durch zu schnelle Hotkey-Presses
+- **Hotkey-Debouncing**: Verhindert doppelte Aufnahmen durch zu schnelle
+  Hotkey-Presses
   - Mindestens 0.5 Sekunden Abstand zwischen Aufnahmen
   - Automatische Erkennung von Hotkey-Spamming
-- **Mindestaufnahmedauer**: Erzwingt 0.5 Sekunden Mindestdauer für zuverlässige Transkription
+- **Mindestaufnahmedauer**: Erzwingt 0.5 Sekunden Mindestdauer für zuverlässige
+  Transkription
   - Verhindert extrem kurze Aufnahmen (1-8 Frames)
   - Verbessert Transkriptionsqualität und -genauigkeit
-- **Singleton-Pattern für TranscriptionService**: Lokales Whisper-Modell wird nur einmal geladen
+- **Singleton-Pattern für TranscriptionService**: Lokales Whisper-Modell wird
+  nur einmal geladen
   - Kein Neuladen bei jeder Transkription
   - Reduzierte Startzeit und Memory-Verbrauch
-- **Verbessertes Logging und Debugging**: Separate Debug-Datei für Transkriptionsergebnisse
+- **Verbessertes Logging und Debugging**: Separate Debug-Datei für
+  Transkriptionsergebnisse
   - Detaillierte Logs für bessere Fehlerdiagnose
   - Automatische Debug-Datei-Erstellung im User-Verzeichnis
 
 #### Timing-Optimierungen
 
-- **Thread-Synchronisation**: Verbesserte Koordination zwischen Aufnahme- und Stopp-Threads
+- **Thread-Synchronisation**: Verbesserte Koordination zwischen Aufnahme- und
+  Stopp-Threads
 - **Timing-Korrekturen**: Zusätzliche Pausen für zuverlässiges Audio-Stoppen
 - **Korrekte Fehlerbehandlung**: Null-Checks für Service-Instanzen
 
 #### Benutzeroberfläche
 
-- **Persistente Einstellungen**: Settings-GUI speichert Einstellungen korrekt in config.json
-- **Erweiterte Hotkey-Optionen**: Zusätzliche Kombinationen für Browser-Kompatibilität
+- **Persistente Einstellungen**: Settings-GUI speichert Einstellungen korrekt in
+  config.json
+- **Erweiterte Hotkey-Optionen**: Zusätzliche Kombinationen für
+  Browser-Kompatibilität
 - **Warnung für Windows-Taste**: Klare Hinweise zu blockierten OS-Hotkeys
 
 ### 🔧 Changed - Geändert
@@ -116,23 +146,27 @@ und dieses Projekt hält sich an
 
 #### Windows Installer & Professional Deployment
 
-- **Professioneller NSIS-Installer**: Vollständiger Windows-Installer mit Modern UI
+- **Professioneller NSIS-Installer**: Vollständiger Windows-Installer mit Modern
+  UI
   - Automatische Installation aller Komponenten
   - Deutsche und englische Sprachunterstützung
   - Fortschrittsanzeige und benutzerfreundliche Oberfläche
   - Automatische Desktop- und Startmenü-Verknüpfungen
-- **Automatische AutoHotkey-Installation**: AHK wird bei Bedarf automatisch heruntergeladen und installiert
+- **Automatische AutoHotkey-Installation**: AHK wird bei Bedarf automatisch
+  heruntergeladen und installiert
   - Nahtlose Integration ohne manuelle Schritte
   - Versionsprüfung und Update-Mechanismus
   - Fallback bei Download-Fehlern
-- **Vollständiger Deinstaller**: Professionelle Deinstallation über Windows-Systemsteuerung
+- **Vollständiger Deinstaller**: Professionelle Deinstallation über
+  Windows-Systemsteuerung
   - Komplette Entfernung aller installierten Dateien
   - Registry-Bereinigung
   - Optionale Beibehaltung von Benutzerdaten
 
 #### Benutzerspezifisches Konfigurationssystem
 
-- **AppData-Integration**: Persistente Einstellungen im Windows AppData-Verzeichnis
+- **AppData-Integration**: Persistente Einstellungen im Windows
+  AppData-Verzeichnis
   - `%APPDATA%/VoiceTranscriber/config.json` für benutzerspezifische Daten
   - Automatische Migration von .env-Einstellungen
   - Sichere Speicherung ohne Projektabhängigkeit
@@ -143,7 +177,8 @@ und dieses Projekt hält sich an
 
 #### Mittleres Mausrad als Eingabemethode
 
-- **Systemweite Mauserkennung**: Mittleres Mausrad funktioniert in allen Anwendungen
+- **Systemweite Mauserkennung**: Mittleres Mausrad funktioniert in allen
+  Anwendungen
   - Keine Konflikte mit Browser-Hotkeys (F12, etc.)
   - Toggle-Modus für intuitive Bedienung
   - Automatischer AHK-Skript-Start mit der Anwendung
@@ -156,7 +191,8 @@ und dieses Projekt hält sich an
 
 #### Architektur-Verbesserungen
 
-- **Modulare Konfiguration**: Trennung zwischen System- und Benutzereinstellungen
+- **Modulare Konfiguration**: Trennung zwischen System- und
+  Benutzereinstellungen
   - `.env` für globale/systemweite Einstellungen (API-Keys, etc.)
   - `config.json` für benutzerspezifische Präferenzen
   - Automatische Synchronisation und Migration
@@ -215,12 +251,14 @@ und dieses Projekt hält sich an
 
 #### Lokale Sprach-zu-Text Transkription
 
-- **Offline-Transkription**: Integration von `faster-whisper` für lokale Verarbeitung
+- **Offline-Transkription**: Integration von `faster-whisper` für lokale
+  Verarbeitung
   - Keine Abhängigkeit von OpenAI API für Offline-Nutzung
   - Reduzierte Kosten und verbesserte Privatsphäre
   - Automatische GPU-Erkennung (CUDA) mit CPU-Fallback
   - Konfigurierbare Modellgrößen (tiny, base, small, medium, large)
-- **Dual-Mode Architektur**: Nahtlose Umschaltung zwischen lokal und API-Transkription
+- **Dual-Mode Architektur**: Nahtlose Umschaltung zwischen lokal und
+  API-Transkription
   - Automatischer Fallback bei lokalen Fehlern
   - Konfiguration via `.env` (USE_LOCAL_TRANSCRIPTION, WHISPER_MODEL_SIZE)
   - GUI-Integration für Benutzereinstellungen
@@ -234,13 +272,15 @@ und dieses Projekt hält sich an
 
 #### Erweiterte Konfiguration
 
-- **Lokale Transkriptions-Einstellungen**: Neue GUI-Tab für Transkriptionsoptionen
+- **Lokale Transkriptions-Einstellungen**: Neue GUI-Tab für
+  Transkriptionsoptionen
 - **Modell-Auswahl**: Dropdown für Whisper-Modellgrößen
 - **Status-Anzeige**: Live-Informationen über aktiven Transkriptionsmodus
 
 ### 🔧 Changed - Geändert
 
-- **Transkriptions-Architektur**: Erweiterte `TranscriptionService` mit lokaler Unterstützung
+- **Transkriptions-Architektur**: Erweiterte `TranscriptionService` mit lokaler
+  Unterstützung
 - **Konfigurationssystem**: Neue Parameter für lokale Transkription
 - **GUI-Struktur**: Neuer "Transkription"-Tab in Einstellungen
 - **Build-System**: Zusätzliche Dependencies (faster-whisper, torch)
@@ -263,16 +303,20 @@ und dieses Projekt hält sich an
 ### 🐛 Fixed - Behoben
 
 #### Hotkey-System korrigiert
-- **Problem:** Windows-Hotkey-Kombinationen (`ctrl+alt+s`, `ctrl+shift+f12`) wurden nicht erkannt
+
+- **Problem:** Windows-Hotkey-Kombinationen (`ctrl+alt+s`, `ctrl+shift+f12`)
+  wurden nicht erkannt
 - **Lösung:** F12 als garantierte Standard-Hotkey mit Fallback-Kette
 - **Status:** Hotkey funktioniert zuverlässig
 
 #### Debug-Logging implementiert
+
 - **Problem:** Keine sichtbaren Logs für MP3-Komprimierung
 - **Lösung:** Detaillierte Logs für Komprimierungs-Status und Datengrößen
 - **Status:** Zeigt Komprimierungs-Details in Echtzeit
 
 #### PyInstaller-Import-Fehler behoben
+
 - **Problem:** Relative Imports in EXE funktionierten nicht
 - **Lösung:** `--paths=src` für korrekte Modul-Auflösung
 - **Status:** EXE startet ohne Import-Fehler
@@ -352,7 +396,8 @@ und dieses Projekt hält sich an
   Anwendungseinstellungen
 - **Tray-Menü Integration**: Rechtsklick-Menü mit direkten Zugriff auf
   Einstellungen
-- **Hotkey-Auswahl**: GUI zur Auswahl und Testen verschiedener Hotkey-Kombinationen
+- **Hotkey-Auswahl**: GUI zur Auswahl und Testen verschiedener
+  Hotkey-Kombinationen
 - **Status-Anzeige**: Live-Status der Anwendung im Tray-Icon und GUI
 - **Audio-Device Auswahl**: Dropdown-Menü zur Auswahl des Mikrofons
 
@@ -373,8 +418,10 @@ und dieses Projekt hält sich an
 
 ### 🔧 Changed - Geändert
 
-- **Hotkey-System**: Erweiterte Hotkey-Optionen (F12, F11, F10, Strg+Shift+S, etc.)
-- **Dokumentation**: Vollständig überarbeitete und linter-konforme Markdown-Dateien
+- **Hotkey-System**: Erweiterte Hotkey-Optionen (F12, F11, F10, Strg+Shift+S,
+  etc.)
+- **Dokumentation**: Vollständig überarbeitete und linter-konforme
+  Markdown-Dateien
 - **Code-Struktur**: Bereinigte Imports und verbesserte Typisierung
 
 ### 🐛 Fixed - Behoben
