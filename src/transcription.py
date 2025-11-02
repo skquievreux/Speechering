@@ -92,7 +92,7 @@ class TranscriptionService:
                     )
 
                 duration = time.time() - start_time
-                logger.info(".2f")
+                logger.info(f"API-Transkription erfolgreich in {duration:.2f}s")
 
                 # Validiere Ergebnis
                 if self._validate_transcript(transcript):
@@ -149,7 +149,7 @@ class TranscriptionService:
                 )
 
                 duration = time.time() - start_time
-                logger.info(".2f")
+                logger.info(f"API-Transkription (Audio-Daten) erfolgreich in {duration:.2f}s")
 
                 # Validiere Ergebnis
                 if self._validate_transcript(transcript):

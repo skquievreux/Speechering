@@ -88,6 +88,7 @@ class VoiceTranscriberApp:
 
         self.is_recording = False
         self.recording_thread = None
+        self.recording_stop_event = threading.Event()  # Event für Thread-Koordination
         self.last_recording_start_time = 0.0  # Verhindert doppelte Aufnahmen
 
         # Debug-Datei für Transkriptionsergebnisse
@@ -95,7 +96,6 @@ class VoiceTranscriberApp:
 
         # Singleton-Instanz des TranscriptionService
         self._transcription_service_instance = None
-        self.last_recording_start_time = 0.0  # Verhindert doppelte Aufnahmen
 
     def initialize_components(self):
         """Initialisiert alle Anwendungskomponenten"""
@@ -185,12 +185,14 @@ class VoiceTranscriberApp:
 
         # Verhindere doppelte Aufnahmen durch zu schnelle Hotkey-Presses
         current_time = time.time()
-        if current_time - self.last_recording_start_time < 0.5:  # Mindestens 0.5s zwischen Aufnahmen
-            logger.debug(".2f")
+        time_since_last = current_time - self.last_recording_start_time
+        if time_since_last < 0.5:  # Mindestens 0.5s zwischen Aufnahmen
+            logger.debug(f"Aufnahme zu schnell: {time_since_last:.2f}s seit letzter Aufnahme - ignoriere")
             return
 
         logger.info("Hotkey gedrückt - Starte Aufnahme")
         self.is_recording = True
+        self.recording_stop_event.clear()  # Event zurücksetzen
         self.last_recording_start_time = current_time
 
         # Akustisches Feedback
@@ -209,6 +211,7 @@ class VoiceTranscriberApp:
 
         logger.info("Hotkey losgelassen - Stoppe Aufnahme")
         self.is_recording = False
+        self.recording_stop_event.set()  # Signalisiere Ende der Aufnahme
 
         # Akustisches Feedback
         self.play_beep(config.BEEP_FREQUENCY_STOP)
@@ -262,10 +265,8 @@ class VoiceTranscriberApp:
 
                 logger.info(f"Audio aufgezeichnet: {audio_path}")
 
-                # Warten bis Hotkey losgelassen wird
-                while self.is_recording:
-                    import time
-                    time.sleep(0.01)  # Kurze Pause
+                # Warten bis Hotkey losgelassen wird (max 30 Sekunden)
+                self.recording_stop_event.wait(timeout=config.MAX_RECORDING_DURATION)
 
                 # Kurze zusätzliche Pause um sicherzustellen, dass der Audio-Thread beendet ist
                 time.sleep(0.05)
@@ -281,10 +282,10 @@ class VoiceTranscriberApp:
                 # Prüfe Mindestdauer (0.5 Sekunden für zuverlässige Transkription)
                 audio_duration = self.audio_recorder.last_recording_duration if self.audio_recorder else 0.0
                 if audio_duration < 0.5:
-                    logger.warning(".2f")
+                    logger.warning(f"Aufnahme zu kurz ({audio_duration:.2f}s) - mindestens 0.5s erforderlich")
                     return
 
-                logger.info(".2f")
+                logger.info(f"Aufnahme-Dauer: {audio_duration:.2f}s - fahre mit Transkription fort")
 
                 # Transkribieren
                 if self._transcription_service_instance:
@@ -459,11 +460,6 @@ def main():
     warnings.filterwarnings("ignore", message=".*pkg_resources.*", category=UserWarning)
 
     try:
-        # Prüfe Single-Instance (für Testzwecke deaktiviert)
-        # if not check_single_instance():
-        #     logger.warning("Eine Instanz der Anwendung läuft bereits. Beende.")
-        #     sys.exit(0)
-
         # Single-Instance-Überprüfung für Testzwecke deaktiviert
         # if not check_single_instance():
         #     logger.warning("Eine Instanz der Anwendung läuft bereits. Beende.")
