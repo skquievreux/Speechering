@@ -84,7 +84,6 @@ def build_exe():
     # Automatisch alle src-Module als Hidden Imports hinzufügen
     hidden_imports = [
         "--hidden-import=version_manager",  # Version Management
-        "--hidden-import=version_manager",  # Version Management
         "--hidden-import=pystray._win32",  # Windows-spezifische Imports
         "--hidden-import=winsound",    # Windows Sound-API
         "--hidden-import=pydub",       # Audio-Komprimierung
@@ -98,10 +97,9 @@ def build_exe():
         "--hidden-import=pyautogui",   # GUI-Automation
         "--hidden-import=pyperclip",   # Clipboard-Zugriff
         "--hidden-import=pillow",      # Bildverarbeitung für Tray-Icon
-        # Neue Module für v1.4.1
+        # Neue Module für v1.5.0
         "--hidden-import=user_config", # Benutzerspezifische Konfiguration
         "--hidden-import=mouse_integration", # AHK-Integration
-        "--hidden-import=version_manager", # Versionsverwaltung
     ]
 
     # Alle src-Module automatisch hinzufügen
