@@ -22,8 +22,20 @@ try:
     from .audio_recorder import AudioRecorder
     from .clipboard_injector import ClipboardInjector
     from .config import config
+    from .exceptions import (
+        AudioRecordingError,
+        AudioCompressionError,
+        TranscriptionError,
+        TextProcessingError,
+        ClipboardError,
+        NetworkError,
+        APIError,
+        RETRYABLE_EXCEPTIONS,
+        CRITICAL_EXCEPTIONS
+    )
     from .hotkey_listener import HotkeyListener
     from .mouse_integration import MouseWheelIntegration
+    from .notification import notification_service
     from .settings_gui import SettingsGUI
     from .text_processor import TextProcessor
     from .transcription import TranscriptionService
@@ -32,8 +44,20 @@ except ImportError:
     from audio_recorder import AudioRecorder
     from clipboard_injector import ClipboardInjector
     from config import config
+    from exceptions import (
+        AudioRecordingError,
+        AudioCompressionError,
+        TranscriptionError,
+        TextProcessingError,
+        ClipboardError,
+        NetworkError,
+        APIError,
+        RETRYABLE_EXCEPTIONS,
+        CRITICAL_EXCEPTIONS
+    )
     from hotkey_listener import HotkeyListener
     from mouse_integration import MouseWheelIntegration
+    from notification import notification_service
     from settings_gui import SettingsGUI
     from text_processor import TextProcessor
     from transcription import TranscriptionService
@@ -218,9 +242,17 @@ class VoiceTranscriberApp:
 
     def _perform_recording(self):
         """Führt die komplette Aufnahme- und Verarbeitung durch"""
+        audio_data = None
+        final_audio_path = None
+        raw_text = None
+
         try:
             # Prüfe Komprimierungs-Status
-            from .audio_recorder import PYDUB_AVAILABLE
+            try:
+                from .audio_recorder import PYDUB_AVAILABLE
+            except ImportError:
+                from audio_recorder import PYDUB_AVAILABLE
+
             if PYDUB_AVAILABLE and config.AUDIO_COMPRESSION_ENABLED:
                 logger.info("Audio-Komprimierung aktiviert - verwende MP3")
                 use_compression = True
@@ -233,37 +265,71 @@ class VoiceTranscriberApp:
                 logger.info("Starte Aufnahme mit Komprimierung...")
 
                 # Audio aufnehmen und komprimieren
-                audio_data = self.audio_recorder.record_and_compress()  # type: ignore
-                if not audio_data:
-                    logger.error("Audio-Aufnahme + Komprimierung fehlgeschlagen")
-                    return
+                try:
+                    audio_data = self.audio_recorder.record_and_compress()  # type: ignore
+                    if not audio_data:
+                        raise AudioCompressionError(
+                            "Audio-Komprimierung lieferte keine Daten",
+                            user_message="Aufnahme fehlgeschlagen. Bitte Mikrofon überprüfen."
+                        )
 
-                data_size = len(audio_data)
-                logger.info(f"Audio komprimiert: {data_size} bytes ({data_size/1024:.1f} KB)")
+                    data_size = len(audio_data)
+                    logger.info(f"Audio komprimiert: {data_size} bytes ({data_size/1024:.1f} KB)")
+
+                except (OSError, IOError) as e:
+                    raise AudioRecordingError(
+                        f"Audio-Aufnahme-Fehler: {e}",
+                        user_message="Mikrofon konnte nicht aufgenommen werden."
+                    ) from e
+                except Exception as e:
+                    raise AudioCompressionError(
+                        f"Komprimierungs-Fehler: {e}",
+                        user_message="Audio-Komprimierung fehlgeschlagen."
+                    ) from e
 
                 # Transkribieren mit komprimierten Daten
-                if self._transcription_service_instance:
-                    raw_text = self._transcription_service_instance.transcribe_audio_data(audio_data, "audio.mp3")
-                else:
-                    logger.error("TranscriptionService nicht verfügbar")
-                    return
-                if not raw_text:
-                    logger.error("Transkription fehlgeschlagen")
-                    return
+                try:
+                    if not self._transcription_service_instance:
+                        raise TranscriptionError(
+                            "TranscriptionService nicht initialisiert",
+                            user_message="Transkriptions-Service nicht verfügbar."
+                        )
 
-                logger.info(f"Transkribierter Text (MP3): {raw_text[:50]}...")
+                    raw_text = self._transcription_service_instance.transcribe_audio_data(audio_data, "audio.mp3")
+                    if not raw_text:
+                        raise TranscriptionError(
+                            "Transkription lieferte keinen Text",
+                            user_message="Keine Sprache erkannt. Bitte deutlicher sprechen."
+                        )
+
+                    logger.info(f"Transkribierter Text (MP3): {raw_text[:50]}...")
+
+                except (ConnectionError, TimeoutError) as e:
+                    raise NetworkError(
+                        f"Netzwerk-Fehler bei Transkription: {e}",
+                        user_message="Netzwerkproblem. Bitte Internetverbindung prüfen."
+                    ) from e
 
             else:
                 # Fallback: Klassische WAV-Methode
                 logger.info("Verwende klassische WAV-Aufnahme...")
 
                 # Audio aufnehmen
-                audio_path = self.audio_recorder.start_recording()  # type: ignore
-                if not audio_path:
-                    logger.error("Audio-Aufnahme fehlgeschlagen")
-                    return
+                try:
+                    audio_path = self.audio_recorder.start_recording()  # type: ignore
+                    if not audio_path:
+                        raise AudioRecordingError(
+                            "start_recording() lieferte keinen Pfad",
+                            user_message="Aufnahme konnte nicht gestartet werden."
+                        )
 
-                logger.info(f"Audio aufgezeichnet: {audio_path}")
+                    logger.info(f"Audio aufgezeichnet: {audio_path}")
+
+                except (OSError, IOError) as e:
+                    raise AudioRecordingError(
+                        f"Audio-Aufnahme-Fehler: {e}",
+                        user_message="Mikrofon konnte nicht aufgenommen werden."
+                    ) from e
 
                 # Warten bis Hotkey losgelassen wird (max 30 Sekunden)
                 self.recording_stop_event.wait(timeout=config.MAX_RECORDING_DURATION)
@@ -272,59 +338,145 @@ class VoiceTranscriberApp:
                 time.sleep(0.05)
 
                 # Stoppe Aufnahme und erstelle Datei
-                final_audio_path = self.audio_recorder.stop_recording()  # type: ignore
-                if not final_audio_path:
-                    logger.error("Audio-Stopp fehlgeschlagen")
-                    return
+                try:
+                    final_audio_path = self.audio_recorder.stop_recording()  # type: ignore
+                    if not final_audio_path:
+                        raise AudioRecordingError(
+                            "stop_recording() lieferte keinen Pfad",
+                            user_message="Aufnahme konnte nicht gespeichert werden."
+                        )
 
-                logger.info(f"Audio-Datei erstellt: {final_audio_path}")
+                    logger.info(f"Audio-Datei erstellt: {final_audio_path}")
+
+                except (OSError, IOError) as e:
+                    raise AudioRecordingError(
+                        f"Audio-Stopp-Fehler: {e}",
+                        user_message="Aufnahme konnte nicht beendet werden."
+                    ) from e
 
                 # Prüfe Mindestdauer (0.5 Sekunden für zuverlässige Transkription)
                 audio_duration = self.audio_recorder.last_recording_duration if self.audio_recorder else 0.0
                 if audio_duration < 0.5:
                     logger.warning(f"Aufnahme zu kurz ({audio_duration:.2f}s) - mindestens 0.5s erforderlich")
+                    notification_service.notify_warning(
+                        f"Aufnahme zu kurz ({audio_duration:.2f}s). Bitte länger sprechen.",
+                        title="Aufnahme zu kurz"
+                    )
                     return
 
                 logger.info(f"Aufnahme-Dauer: {audio_duration:.2f}s - fahre mit Transkription fort")
 
                 # Transkribieren
-                if self._transcription_service_instance:
+                try:
+                    if not self._transcription_service_instance:
+                        raise TranscriptionError(
+                            "TranscriptionService nicht initialisiert",
+                            user_message="Transkriptions-Service nicht verfügbar."
+                        )
+
                     raw_text = self._transcription_service_instance.transcribe(final_audio_path)
                     if not raw_text:
-                        logger.error("Transkription fehlgeschlagen - kein Text zurückgegeben")
-                        return
-                else:
-                    logger.error("TranscriptionService nicht verfügbar")
-                    return
+                        raise TranscriptionError(
+                            "Transkription lieferte keinen Text",
+                            user_message="Keine Sprache erkannt. Bitte deutlicher sprechen."
+                        )
 
-                logger.info(f"Transkribierter Text (WAV): {raw_text[:50]}...")
+                    logger.info(f"Transkribierter Text (WAV): {raw_text[:50]}...")
+
+                except (ConnectionError, TimeoutError) as e:
+                    raise NetworkError(
+                        f"Netzwerk-Fehler bei Transkription: {e}",
+                        user_message="Netzwerkproblem. Bitte Internetverbindung prüfen."
+                    ) from e
 
             # Text korrigieren
-            corrected_text = self.text_processor.process_text(raw_text)  # type: ignore
-            if not corrected_text:
-                logger.warning("Text-Korrektur fehlgeschlagen, verwende Original")
-                corrected_text = raw_text
+            try:
+                corrected_text = self.text_processor.process_text(raw_text)  # type: ignore
+                if not corrected_text:
+                    logger.warning("Text-Korrektur fehlgeschlagen, verwende Original")
+                    corrected_text = raw_text
 
-            logger.info(f"Korrigierter Text: {corrected_text[:50]}...")
+                logger.info(f"Korrigierter Text: {corrected_text[:50]}...")
+
+            except Exception as e:
+                logger.warning(f"Text-Korrektur fehlgeschlagen: {e} - verwende Original")
+                corrected_text = raw_text
 
             # Debug-Eintrag schreiben
             self._write_debug_entry(f"Transkript: {corrected_text}")
 
             # Text einfügen
-            success = self.clipboard_injector.inject_text(corrected_text)  # type: ignore
-            if success:
-                logger.info("Text erfolgreich eingefügt")
-                self._write_debug_entry("Status: Erfolgreich eingefügt")
-            else:
-                logger.warning("Text-Einfügung fehlgeschlagen")
-                self._write_debug_entry("Status: Einfügung fehlgeschlagen")
+            try:
+                success = self.clipboard_injector.inject_text(corrected_text)  # type: ignore
+                if success:
+                    logger.info("Text erfolgreich eingefügt")
+                    self._write_debug_entry("Status: Erfolgreich eingefügt")
+                    notification_service.notify_success(
+                        f"'{corrected_text[:30]}...' eingefügt",
+                        title="Transkription erfolgreich"
+                    )
+                else:
+                    raise ClipboardError(
+                        "inject_text() gab False zurück",
+                        user_message="Text konnte nicht eingefügt werden."
+                    )
 
+            except Exception as e:
+                logger.warning(f"Text-Einfügung fehlgeschlagen: {e}")
+                self._write_debug_entry("Status: Einfügung fehlgeschlagen")
+                # Fallback: Text in Clipboard kopieren
+                try:
+                    import pyperclip
+                    pyperclip.copy(corrected_text)
+                    notification_service.notify_warning(
+                        "Text wurde in Zwischenablage kopiert (Einfügung fehlgeschlagen)",
+                        title="Fallback: Zwischenablage"
+                    )
+                except Exception as clipboard_error:
+                    logger.error(f"Auch Clipboard-Fallback fehlgeschlagen: {clipboard_error}")
+                    raise ClipboardError(
+                        f"Weder Einfügen noch Clipboard funktionierte: {e}",
+                        user_message="Text konnte nicht eingefügt werden."
+                    ) from e
+
+        except AudioRecordingError as e:
+            logger.error(f"Audio-Aufnahme-Fehler: {e}")
+            notification_service.notify_error(e.user_message, title="Aufnahme-Fehler")
+        except AudioCompressionError as e:
+            logger.error(f"Audio-Komprimierungs-Fehler: {e}")
+            notification_service.notify_error(e.user_message, title="Komprimierungs-Fehler")
+        except TranscriptionError as e:
+            logger.error(f"Transkriptions-Fehler: {e}")
+            notification_service.notify_error(e.user_message, title="Transkriptions-Fehler")
+        except NetworkError as e:
+            logger.error(f"Netzwerk-Fehler: {e}")
+            notification_service.notify_error(e.user_message, title="Netzwerk-Fehler")
+        except ClipboardError as e:
+            logger.error(f"Clipboard-Fehler: {e}")
+            notification_service.notify_error(e.user_message, title="Einfüge-Fehler")
+        except KeyboardInterrupt:
+            logger.info("Aufnahme durch Benutzer abgebrochen")
+            notification_service.notify_info("Aufnahme abgebrochen", title="Abgebrochen")
         except Exception as e:
-            logger.error(f"Fehler während der Verarbeitung: {e}")
+            # Unerwarteter Fehler - detailliertes Logging
+            logger.error(f"Unerwarteter Fehler während der Verarbeitung: {e}", exc_info=True)
+            notification_service.notify_error(
+                "Ein unerwarteter Fehler ist aufgetreten. Bitte Logs prüfen.",
+                title="Unerwarteter Fehler"
+            )
 
         finally:
-            # Cleanup wird bereits in stop_recording gemacht
-            pass
+            # Cleanup: Sichere Freigabe von Ressourcen
+            try:
+                if final_audio_path:
+                    # Audio-Dateien werden bereits in audio_recorder aufgeräumt
+                    pass
+
+                # Stelle sicher, dass Recording-Status zurückgesetzt ist
+                self.is_recording = False
+
+            except Exception as cleanup_error:
+                logger.error(f"Fehler beim Cleanup: {cleanup_error}")
 
     def play_beep(self, frequency: int):
         """Spielt einen Beep-Ton"""
