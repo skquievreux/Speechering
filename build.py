@@ -100,6 +100,8 @@ def build_exe():
         # Neue Module für v1.5.0
         "--hidden-import=user_config", # Benutzerspezifische Konfiguration
         "--hidden-import=mouse_integration", # AHK-Integration
+        "--hidden-import=exceptions",  # Custom Exceptions
+        "--hidden-import=notification",  # Notification Service
     ]
 
     # Alle src-Module automatisch hinzufügen

@@ -42,10 +42,14 @@ die vollständige Anwendung (220 MB) von Cloudflare R2 Storage nach!
 ### Option A: Bootstrap-Installer (Empfohlen - nur 15 MB!)
 
 1. **Download**: `VoiceTranscriber_Bootstrap_Installer_v1.5.0.exe` herunterladen
-2. **Installieren**: Doppelklick - lädt automatisch die vollständige App (220 MB) nach
-3. **Fertig**: Anwendung ist installiert und bereit!
+2. **Installieren**: Doppelklick → Installer lädt **vollautomatisch** die App (220 MB) von Cloudflare R2 herunter
+3. **Fertig**: Desktop-Verknüpfung "Voice Transcriber" klicken und loslegen!
 
-**Vorteile**: Schneller Download, automatische Updates, Cloudflare R2 Storage
+**Vorteile**:
+- ⚡ Schneller Download (nur 15 MB initial)
+- 🤖 Vollautomatische Installation (kein zweiter Klick nötig!)
+- ☁️ Cloudflare R2 Storage (weltweite schnelle Downloads)
+- 🔄 Basis für zukünftige Auto-Updates
 
 ### Option B: Vollständiger Installer (220 MB)
 
