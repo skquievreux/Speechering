@@ -48,9 +48,9 @@ Section "Voice Transcriber Bootstrap" SecApp
 
     SetOutPath "$INSTDIR"
 
-    ; Bootstrap-Installer kopieren
+    ; Bootstrap-Installer kopieren (temporär für Download)
     DetailPrint "Installiere Bootstrap-Installer..."
-    File "VoiceTranscriber_Bootstrap_Installer.exe"
+    File "dist\BootstrapInstaller.exe"
 
     ; Dokumentation kopieren
     DetailPrint "Installiere Dokumentation..."
@@ -60,16 +60,49 @@ Section "Voice Transcriber Bootstrap" SecApp
     ; Registry-Einträge
     DetailPrint "Registriere Programm..."
     WriteRegStr HKLM "Software\VoiceTranscriber" "" $INSTDIR
-    WriteRegStr HKLM "Software\VoiceTranscriber" "Version" "1.4.1"
+    WriteRegStr HKLM "Software\VoiceTranscriber" "Version" "1.5.0"
     WriteRegStr HKLM "Software\VoiceTranscriber" "InstallDate" "$0"
     WriteRegStr HKLM "Software\VoiceTranscriber" "BootstrapMode" "1"
 
+    ; ====================================================================
+    ; WICHTIG: Automatischer Download von VoiceTranscriber.exe
+    ; ====================================================================
+    DetailPrint "Lade VoiceTranscriber.exe von Cloudflare R2 herunter..."
+    DetailPrint "Dies kann einige Minuten dauern (~220 MB)..."
+
+    ; Führe Bootstrap-Installer im Silent-Mode aus
+    ExecWait '"$INSTDIR\BootstrapInstaller.exe" --silent' $0
+
+    ; Prüfe Exit-Code
+    ${If} $0 == 0
+        DetailPrint "✅ Download erfolgreich!"
+    ${Else}
+        DetailPrint "❌ Download fehlgeschlagen (Exit-Code: $0)"
+        MessageBox MB_ICONEXCLAMATION|MB_OK "Der Download von VoiceTranscriber.exe ist fehlgeschlagen.$\n$\nBitte überprüfen Sie Ihre Internetverbindung und führen Sie die Installation erneut aus.$\n$\nSie können den Download später über '$INSTDIR\BootstrapInstaller.exe' wiederholen."
+        ; Setze Flag für Fehler, aber Installation fortsetzen
+        WriteRegStr HKLM "Software\VoiceTranscriber" "DownloadFailed" "1"
+    ${EndIf}
+
+    ; Prüfe ob VoiceTranscriber.exe erfolgreich heruntergeladen wurde
+    IfFileExists "$INSTDIR\VoiceTranscriber.exe" download_ok download_failed
+
+    download_ok:
+        DetailPrint "VoiceTranscriber.exe erfolgreich installiert"
+        WriteRegStr HKLM "Software\VoiceTranscriber" "DownloadSuccess" "1"
+        Goto after_download_check
+
+    download_failed:
+        DetailPrint "⚠️ VoiceTranscriber.exe wurde nicht heruntergeladen"
+        WriteRegStr HKLM "Software\VoiceTranscriber" "DownloadSuccess" "0"
+
+    after_download_check:
+
     ; Windows-Programme-Liste
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayName" "Voice Transcriber Bootstrap v1.4.1"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayName" "Voice Transcriber v1.5.0"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "UninstallString" "$INSTDIR\uninstall.exe"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "InstallLocation" "$INSTDIR"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "Publisher" "Voice Transcriber Team"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayVersion" "1.4.1"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayVersion" "1.5.0"
     WriteRegDWord HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "NoModify" 1
     WriteRegDWord HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "NoRepair" 1
 
@@ -82,16 +115,39 @@ Section "Voice Transcriber Bootstrap" SecApp
     DetailPrint "Erstelle Deinstaller..."
     WriteUninstaller "$INSTDIR\uninstall.exe"
 
-    ; Desktop-Verknüpfung für Bootstrap-Installer
-    DetailPrint "Erstelle Desktop-Verknüpfung..."
-    CreateShortCut "$DESKTOP\Voice Transcriber Setup.lnk" "$INSTDIR\VoiceTranscriber_Bootstrap_Installer.exe" "" "$INSTDIR\VoiceTranscriber_Bootstrap_Installer.exe" 0
+    ; ====================================================================
+    ; Desktop & Startmenü-Verknüpfungen auf VoiceTranscriber.exe
+    ; (NICHT auf Bootstrap-Installer!)
+    ; ====================================================================
 
-    ; Startmenü-Verknüpfung
-    DetailPrint "Erstelle Startmenü-Eintrag..."
-    CreateDirectory "$SMPROGRAMS\Voice Transcriber"
-    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber Setup.lnk" "$INSTDIR\VoiceTranscriber_Bootstrap_Installer.exe"
-    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe"
-    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\README.md"
+    IfFileExists "$INSTDIR\VoiceTranscriber.exe" create_shortcuts_app create_shortcuts_bootstrap
+
+    create_shortcuts_app:
+        ; Desktop-Verknüpfung auf die eigentliche App
+        DetailPrint "Erstelle Desktop-Verknüpfung für Voice Transcriber..."
+        CreateShortCut "$DESKTOP\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0
+
+        ; Startmenü-Verknüpfungen
+        DetailPrint "Erstelle Startmenü-Einträge..."
+        CreateDirectory "$SMPROGRAMS\Voice Transcriber"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Installation erneut durchführen.lnk" "$INSTDIR\BootstrapInstaller.exe"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\README.md"
+        Goto shortcuts_done
+
+    create_shortcuts_bootstrap:
+        ; Fallback: Wenn Download fehlgeschlagen, Verknüpfung auf Bootstrap erstellen
+        DetailPrint "Download fehlgeschlagen - erstelle Verknüpfung auf Bootstrap-Installer..."
+        CreateShortCut "$DESKTOP\Voice Transcriber - Installation durchführen.lnk" "$INSTDIR\BootstrapInstaller.exe" "" "$INSTDIR\BootstrapInstaller.exe" 0
+
+        ; Startmenü
+        CreateDirectory "$SMPROGRAMS\Voice Transcriber"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Installation durchführen.lnk" "$INSTDIR\BootstrapInstaller.exe"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\README.md"
+
+    shortcuts_done:
 
     ; Installationsdatum setzen
     ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "InstallDate"
@@ -108,15 +164,20 @@ Section "Uninstall"
 
     ; Anwendung beenden falls läuft
     DetailPrint "Beende Voice Transcriber..."
-    ExecWait '"$INSTDIR\VoiceTranscriber.exe" --exit'
+    ExecWait 'taskkill /f /im VoiceTranscriber.exe'
 
     ; Bootstrap-Installer beenden
     DetailPrint "Beende Bootstrap-Installer..."
-    ExecWait 'taskkill /f /im VoiceTranscriber_Bootstrap_Installer.exe /fi "WINDOWTITLE eq Voice Transcriber*"'
+    ExecWait 'taskkill /f /im BootstrapInstaller.exe'
+
+    ; Warte kurz für Process Cleanup
+    Sleep 500
 
     ; Dateien löschen
     DetailPrint "Entferne Programmdateien..."
-    Delete "$INSTDIR\VoiceTranscriber_Bootstrap_Installer.exe"
+    Delete "$INSTDIR\VoiceTranscriber.exe"
+    Delete "$INSTDIR\VoiceTranscriber.exe.backup"
+    Delete "$INSTDIR\BootstrapInstaller.exe"
     Delete "$INSTDIR\README.md"
     Delete "$INSTDIR\LICENSE"
     Delete "$INSTDIR\uninstall.exe"
@@ -131,7 +192,8 @@ Section "Uninstall"
 
     ; Verknüpfungen entfernen
     DetailPrint "Entferne Verknüpfungen..."
-    Delete "$DESKTOP\Voice Transcriber Setup.lnk"
+    Delete "$DESKTOP\Voice Transcriber.lnk"
+    Delete "$DESKTOP\Voice Transcriber - Installation durchführen.lnk"
     RMDir /r "$SMPROGRAMS\Voice Transcriber"
 
     ; Benutzerdaten fragen (optional)

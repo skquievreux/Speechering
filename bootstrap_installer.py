@@ -1,8 +1,13 @@
 """
 Bootstrap Installer - Kleiner Installer der nur den Downloader enthält
 Lädt die eigentliche VoiceTranscriber.exe von Cloudflare R2 Storage nach.
+
+Verwendung:
+    bootstrap_installer.exe              # Mit GUI
+    bootstrap_installer.exe --silent     # Silent-Mode (für NSIS)
 """
 
+import argparse
 import logging
 import os
 import sys
@@ -32,7 +37,8 @@ logger = logging.getLogger(__name__)
 class BootstrapInstaller:
     """Bootstrap-Installer für Voice Transcriber"""
 
-    def __init__(self):
+    def __init__(self, silent_mode: bool = False):
+        self.silent_mode = silent_mode
         self.root = None
         self.progress_var = None
         self.status_label = None
@@ -143,22 +149,81 @@ class BootstrapInstaller:
         if self.root:
             self.root.quit()
 
+    def run_silent(self) -> int:
+        """
+        Führt Installation im Silent-Mode durch (ohne GUI)
+
+        Returns:
+            0 bei Erfolg, 1 bei Fehler
+        """
+        try:
+            logger.info("Bootstrap-Installer startet im Silent-Mode")
+
+            # Installationsverzeichnis bestimmen
+            if getattr(sys, 'frozen', False):
+                # Wir sind in einer EXE - verwende Programm-Verzeichnis
+                install_dir = Path(sys.executable).parent
+            else:
+                # Entwicklung - verwende Standard-Programm-Verzeichnis
+                install_dir = Path(os.environ.get('PROGRAMFILES', 'C:\\Program Files')) / "Voice Transcriber"
+
+            logger.info(f"Installationsverzeichnis: {install_dir}")
+            logger.info("Lade VoiceTranscriber.exe von R2 Storage herunter...")
+
+            # Download durchführen
+            if download_voice_transcriber(str(install_dir)):
+                logger.info("✅ Installation erfolgreich abgeschlossen!")
+                logger.info(f"VoiceTranscriber.exe wurde nach {install_dir} installiert")
+                return 0
+            else:
+                logger.error("❌ Installation fehlgeschlagen!")
+                return 1
+
+        except Exception as e:
+            logger.error(f"❌ Unerwarteter Fehler: {e}", exc_info=True)
+            return 1
+
     def run(self):
         """Startet den Installer"""
-        self.create_gui()
-        if self.root:
-            self.root.mainloop()
+        if self.silent_mode:
+            # Silent-Mode: Keine GUI, direkter Download
+            exit_code = self.run_silent()
+            sys.exit(exit_code)
+        else:
+            # GUI-Mode: Normale tkinter-GUI
+            self.create_gui()
+            if self.root:
+                self.root.mainloop()
 
 def main():
     """Haupteinstiegspunkt"""
+    # Argument-Parser
+    parser = argparse.ArgumentParser(description='Voice Transcriber Bootstrap Installer')
+    parser.add_argument(
+        '--silent',
+        action='store_true',
+        help='Silent-Mode ohne GUI (für automatische Installation)'
+    )
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        help='Verbose Logging'
+    )
+
+    args = parser.parse_args()
+
     # Logging konfigurieren
+    log_level = logging.DEBUG if args.verbose else logging.INFO
     logging.basicConfig(
-        level=logging.INFO,
+        level=log_level,
         format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
         datefmt='%H:%M:%S'
     )
 
-    installer = BootstrapInstaller()
+    if args.silent:
+        logger.info("Starte im Silent-Mode (keine GUI)")
+
+    installer = BootstrapInstaller(silent_mode=args.silent)
     installer.run()
 
 if __name__ == "__main__":
