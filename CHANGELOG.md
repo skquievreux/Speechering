@@ -6,6 +6,22 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.2] - 2025-11-10
+
+### 🔧 Changed - Geändert
+- **GitHub Actions Workflow optimiert**: Verbesserte CI/CD-Pipeline
+  - Explizite Berechtigungen für GitHub Releases hinzugefügt
+  - Veraltete `actions/create-release@v1` durch `softprops/action-gh-release@v1` ersetzt
+  - PyInstaller-Caching für schnellere Builds implementiert
+  - UPX-Komprimierung für kleinere EXE-Dateien integriert
+  - Retry-Mechanismen für Cloudflare R2 Deployment hinzugefügt
+  - Parallele Testausführung für schnellere Tests aktiviert
+
+### 🐛 Fixed - Behoben
+- **GitHub Release-Fehler**: "Resource not accessible by integration" behoben
+  - Fehlende Berechtigungen im Workflow hinzugefügt
+  - Moderne Release-Action mit besserer Fehlerbehandlung implementiert
+
 ## [1.5.0] - 2025-11-09
 
 ### 🎉 Added - Erstmals hinzugefügt
