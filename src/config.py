@@ -63,7 +63,7 @@ class Config:
 
         # Application Settings
         self.APP_NAME: str = os.getenv('APP_NAME', 'Voice Transcriber')
-        self.APP_VERSION: str = os.getenv('APP_VERSION', '1.4.1')
+        self.APP_VERSION: str = os.getenv('APP_VERSION', '1.5.2')
 
         # Audio-Komprimierung (benutzerspezifisch konfigurierbar)
         self.AUDIO_COMPRESSION_ENABLED: bool = os.getenv('AUDIO_COMPRESSION_ENABLED', 'true').lower() == 'true'

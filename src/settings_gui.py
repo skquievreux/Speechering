@@ -194,7 +194,11 @@ class SettingsGUI:
 
         # Dropdown für Geräteauswahl
         device_options = ["Standard (automatisch)"] + self.audio_devices
-        self.audio_device_var.set(device_options[config.AUDIO_DEVICE_INDEX + 1] if config.AUDIO_DEVICE_INDEX >= 0 else device_options[0])
+        # Sicherstellen, dass der Index gültig ist
+        if config.AUDIO_DEVICE_INDEX >= 0 and config.AUDIO_DEVICE_INDEX < len(self.audio_devices):
+            self.audio_device_var.set(device_options[config.AUDIO_DEVICE_INDEX + 1])
+        else:
+            self.audio_device_var.set(device_options[0])
 
         device_combo = ttk.Combobox(device_frame, textvariable=self.audio_device_var, values=device_options, state="readonly")
         device_combo.pack(fill='x')
@@ -341,7 +345,7 @@ class SettingsGUI:
         ttk.Label(about_frame, text="🎤", font=("Arial", 48)).pack(pady=10)
 
         ttk.Label(about_frame, text="Voice Transcriber", font=("Arial", 16, "bold")).pack(pady=5)
-        ttk.Label(about_frame, text=f"Version {config.APP_VERSION}").pack()
+        ttk.Label(about_frame, text=f"Version {config.APP_VERSION} (Build 2025-11-10)").pack()
         ttk.Label(about_frame, text="Push-to-Talk Sprach-zu-Text Transkription").pack(pady=5)
 
         ttk.Label(about_frame, text="Technologien:").pack(anchor='w', pady=5)
@@ -472,7 +476,10 @@ class SettingsGUI:
             device_index = -1
             if selected_device != "Standard (automatisch)" and selected_device in self.audio_devices:
                 device_index = self.audio_devices.index(selected_device)
-                user_config.set('audio.device_index', device_index)
+            
+            # Immer den Index speichern, auch wenn es -1 ist (Standard)
+            user_config.set('audio.device_index', device_index)
+            logger.info(f"Audio-Gerät gespeichert: {selected_device} (Index: {device_index})")
 
             # Transkriptions-Einstellungen
             transcription_mode = self.transcription_mode_var.get()
