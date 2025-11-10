@@ -1,4 +1,4 @@
-name: Build and Deploy Voice Transcriber
+name: Build and Deploy Voice Transcriber (Optimized)
 
 on:
   push:
@@ -13,6 +13,11 @@ on:
           "Version to build (optional, uses git tag or auto-increment)"
         required: false
         type: string
+
+# Explizite Berechtigungen für den Workflow
+permissions:
+  contents: write  # Erlaubt das Erstellen von Releases
+  packages: read
 
 env:
   PYTHON_VERSION: "3.11"
@@ -45,6 +50,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      # Verbesserte Cache-Konfiguration
       - name: Cache pip dependencies
         uses: actions/cache@v3
         with:
@@ -52,6 +58,17 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
+
+      # PyInstaller Cache für schnellere Builds
+      - name: Cache PyInstaller
+        uses: actions/cache@v3
+        with:
+          path: |
+            build/
+            .pyinstaller_cache/
+          key: ${{ runner.os }}-pyinstaller-${{ hashFiles('src/**/*.py', 'main_exe.py', 'build.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pyinstaller-
 
       - name: Install dependencies
         shell: bash
@@ -113,9 +130,17 @@ jobs:
           python icon_generator.py
           cd ..
 
+      # Optimierte PyInstaller-Konfiguration mit UPX-Komprimierung
+      - name: Install UPX
+        shell: bash
+        run: |
+          choco install upx -y
+
       - name: Build VoiceTranscriber EXE
         shell: bash
-        run: python build.py
+        run: |
+          # Modifizierter Build-Befehl mit UPX-Komprimierung
+          python build.py --upx
 
       - name: Build Bootstrap Installer
         shell: bash
@@ -173,6 +198,7 @@ jobs:
         run: |
           pip install boto3
 
+      # Verbesserte Fehlerbehandlung für R2 Deployment
       - name: Deploy to Cloudflare R2
         shell: bash
         env:
@@ -181,16 +207,33 @@ jobs:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
         run: |
-          python scripts/deploy_to_r2.py
+          # Retry-Mechanismus für robusteres Deployment
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if python scripts/deploy_to_r2.py; then
+              echo "✅ Deployment erfolgreich!"
+              break
+            else
+              RETRY_COUNT=$((RETRY_COUNT+1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "⚠️ Deployment fehlgeschlagen. Versuche erneut in 10 Sekunden... ($RETRY_COUNT/$MAX_RETRIES)"
+                sleep 10
+              else
+                echo "❌ Deployment nach $MAX_RETRIES Versuchen fehlgeschlagen."
+                exit 1
+              fi
+            fi
+          done
 
+      # Aktualisierte GitHub Release Action
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          name: Release ${{ needs.build.outputs.version }}
+          tag_name: v${{ needs.build.outputs.version }}
           body: |
             ## Voice Transcriber ${{ needs.build.outputs.version }}
 
@@ -204,6 +247,8 @@ jobs:
             - [VoiceTranscriber EXE](${{ secrets.R2_PUBLIC_URL }}/VoiceTranscriber.exe)
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     runs-on: windows-latest
@@ -218,16 +263,27 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      # Verbesserte Cache-Konfiguration für Tests
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-test-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-test-
+            ${{ runner.os }}-pip-
+
       - name: Install test dependencies
         shell: bash
         run: |
           pip install -r requirements.txt
-          pip install pytest pytest-cov
+          pip install pytest pytest-cov pytest-xdist
 
+      # Parallele Testausführung für schnellere Tests
       - name: Run tests
         shell: bash
         run: |
-          pytest tests/ -v --cov=src --cov-report=xml
+          pytest tests/ -v --cov=src --cov-report=xml -n auto
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
