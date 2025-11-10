@@ -24,6 +24,10 @@ class SettingsGUI:
         self.api_key_var = tk.StringVar()
         self.show_key_var = tk.BooleanVar(value=False)  # Für API-Key Sichtbarkeit
 
+        # Rate-Limiting für Speichern (verhindert Mehrfach-Speicherung)
+        self.last_save_time = 0
+        self.save_cooldown = 1.0  # 1 Sekunde Cooldown
+
         # Lade Transkriptions-Einstellungen aus user_config für Konsistenz
         try:
             from src.user_config import user_config
@@ -317,9 +321,16 @@ class SettingsGUI:
 
         ttk.Label(input_frame, text="OpenAI API-Key:").pack(anchor='w', pady=5)
 
-        # Password-Entry für Sicherheit
+        # Password-Entry für Sicherheit mit Validierung
         self.api_key_entry = ttk.Entry(input_frame, textvariable=self.api_key_var, show="*")
         self.api_key_entry.pack(fill='x', pady=5)
+
+        # Validierungs-Label (wird dynamisch aktualisiert)
+        self.api_key_validation_label = ttk.Label(input_frame, text="", foreground="red")
+        self.api_key_validation_label.pack(anchor='w', pady=2)
+
+        # API-Key Validierung beim Tippen
+        self.api_key_var.trace_add("write", self._validate_api_key)
 
         # Checkbox zum Anzeigen/Verstecken
         self.show_key_var = tk.BooleanVar(value=False)
@@ -349,6 +360,47 @@ class SettingsGUI:
             self.api_key_entry.config(show="")
         else:
             self.api_key_entry.config(show="*")
+
+    def _validate_api_key(self, *args):
+        """Validiert den API-Key beim Tippen"""
+        api_key = self.api_key_var.get().strip()
+
+        if not api_key:
+            self.api_key_validation_label.config(text="", foreground="red")
+            return
+
+        # Länge prüfen (OpenAI Keys sind ~51 Zeichen)
+        if len(api_key) < 20:
+            self.api_key_validation_label.config(
+                text="❌ Zu kurz (OpenAI Keys sind ~51 Zeichen)",
+                foreground="red"
+            )
+            return
+
+        # Format prüfen (muss mit sk- beginnen)
+        if not api_key.startswith('sk-'):
+            self.api_key_validation_label.config(
+                text="❌ Muss mit 'sk-' beginnen",
+                foreground="red"
+            )
+            return
+
+        # Länge für vollständigen Key prüfen
+        if len(api_key) > 10 and len(api_key) < 50:
+            self.api_key_validation_label.config(
+                text="⚠️ Unvollständig (OpenAI Keys sind ~51 Zeichen)",
+                foreground="orange"
+            )
+            return
+
+        # Erfolgreich
+        if len(api_key) >= 50:
+            self.api_key_validation_label.config(
+                text="✅ Format korrekt",
+                foreground="green"
+            )
+        else:
+            self.api_key_validation_label.config(text="", foreground="red")
 
     def _create_about_tab(self, parent):
         """Erstellt den Über-Tab"""
@@ -482,34 +534,56 @@ class SettingsGUI:
 
     def _save_settings(self):
         """Speichert die Einstellungen"""
+        # Rate-Limiting prüfen
+        import time
+        current_time = time.time()
+        if current_time - self.last_save_time < self.save_cooldown:
+            messagebox.showwarning("Bitte warten", "Bitte warten Sie einen Moment, bevor Sie erneut speichern.")
+            return
+        self.last_save_time = current_time
+
         try:
             from src.user_config import user_config
 
-            # API-Key speichern (verschlüsselt)
+            # API-Key Validierung
             api_key = self.api_key_var.get().strip()
             if api_key:
                 if not api_key.startswith('sk-'):
                     messagebox.showerror("Fehler", "Ungültiger API-Key Format. Muss mit 'sk-' beginnen.")
                     return
+                if len(api_key) < 50:
+                    messagebox.showerror("Fehler", "API-Key scheint unvollständig zu sein. OpenAI Keys sind ~51 Zeichen lang.")
+                    return
                 user_config.set_encrypted('api.openai_key', api_key)
                 logger.info("API-Key erfolgreich verschlüsselt gespeichert")
+
+                # API-Key aus RAM löschen für Sicherheit
+                self.api_key_var.set("")
+                self.api_key_validation_label.config(text="", foreground="red")
 
             # Audio-Gerät speichern
             selected_device = self.audio_device_var.get()
             user_config.set('audio.device_name', selected_device)
 
-            # Transkriptions-Einstellungen
+            # Transkriptions-Einstellungen mit Validierung
             transcription_mode = self.transcription_mode_var.get()
             use_local = transcription_mode == "local"
             model_size = self.model_size_var.get()
+
+            # Modell-Validierung
+            valid_models = ['tiny', 'base', 'small', 'medium', 'large']
+            if use_local and model_size not in valid_models:
+                messagebox.showerror("Fehler", f"Ungültiges Whisper-Modell: {model_size}. Muss eines der folgenden sein: {', '.join(valid_models)}")
+                return
 
             user_config.set('transcription.use_local', use_local)
             user_config.set('transcription.whisper_model_size', model_size)
             logger.info(f"Transkriptions-Einstellungen gespeichert: use_local={use_local}, model_size={model_size}")
 
-            # Hotkey speichern
-            selected_hotkey = self.hotkey_var.get()
-            user_config.set_hotkey('primary', selected_hotkey)
+            # Hotkey speichern mit Sanitization
+            selected_hotkey = self.hotkey_var.get().strip().lower()
+            if selected_hotkey:
+                user_config.set_hotkey('primary', selected_hotkey)
 
             # Speichern
             user_config.save()
