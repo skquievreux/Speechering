@@ -21,9 +21,20 @@ class SettingsGUI:
         self.window = None
         self.hotkey_var = tk.StringVar(value="f12")
         self.audio_device_var = tk.StringVar()
-        self.transcription_mode_var = tk.StringVar(value="api" if not config.USE_LOCAL_TRANSCRIPTION else "local")
-        self.model_size_var = tk.StringVar(value=config.WHISPER_MODEL_SIZE)
         self.api_key_var = tk.StringVar()
+        self.show_key_var = tk.BooleanVar(value=False)  # Für API-Key Sichtbarkeit
+
+        # Lade Transkriptions-Einstellungen aus user_config für Konsistenz
+        try:
+            from src.user_config import user_config
+            use_local = user_config.get('transcription.use_local', False)
+            model_size = user_config.get('transcription.whisper_model_size', 'small')
+        except:
+            use_local = getattr(config, 'USE_LOCAL_TRANSCRIPTION', False)
+            model_size = getattr(config, 'WHISPER_MODEL_SIZE', 'small')
+
+        self.transcription_mode_var = tk.StringVar(value="local" if use_local else "api")
+        self.model_size_var = tk.StringVar(value=model_size)
 
         # Audio-Geräte laden
         self.audio_devices = self._get_audio_devices()
@@ -70,27 +81,22 @@ class SettingsGUI:
         # Tab 1: Allgemein
         general_tab = ttk.Frame(notebook)
         notebook.add(general_tab, text="Allgemein")
-        self._create_general_tab(general_tab)
 
         # Tab 2: Hotkeys
         hotkey_tab = ttk.Frame(notebook)
         notebook.add(hotkey_tab, text="Hotkeys")
-        self._create_hotkey_tab(hotkey_tab)
 
         # Tab 3: Audio
         audio_tab = ttk.Frame(notebook)
         notebook.add(audio_tab, text="Audio")
-        self._create_audio_tab(audio_tab)
 
         # Tab 4: Transkription
         transcription_tab = ttk.Frame(notebook)
         notebook.add(transcription_tab, text="Transkription")
-        self._create_transcription_tab(transcription_tab)
 
         # Tab 5: API-Schlüssel
         api_tab = ttk.Frame(notebook)
         notebook.add(api_tab, text="API-Schlüssel")
-        self._create_api_tab(api_tab)
 
         # Tab 6: Über
         about_tab = ttk.Frame(notebook)
@@ -107,6 +113,9 @@ class SettingsGUI:
 
     def _create_general_tab(self, parent):
         """Erstellt den Allgemein-Tab"""
+        # Fett gedruckte Überschrift
+        ttk.Label(parent, text="ALLGEMEIN", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
+
         # App Status
         status_frame = ttk.LabelFrame(parent, text="App Status", padding=10)
         status_frame.pack(fill='x', pady=5)
@@ -127,6 +136,9 @@ class SettingsGUI:
 
     def _create_hotkey_tab(self, parent):
         """Erstellt den Hotkey-Tab"""
+        # Fett gedruckte Überschrift
+        ttk.Label(parent, text="HOTKEYS", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
+
         hotkey_frame = ttk.LabelFrame(parent, text="Push-to-Talk Hotkey", padding=10)
         hotkey_frame.pack(fill='x', pady=5)
 
@@ -176,15 +188,15 @@ class SettingsGUI:
 
     def _create_audio_tab(self, parent):
         """Erstellt den Audio-Tab"""
+        # Fett gedruckte Überschrift
+        ttk.Label(parent, text="AUDIO", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
+
         audio_frame = ttk.LabelFrame(parent, text="Audio-Geräte", padding=10)
         audio_frame.pack(fill='x', pady=5)
 
-        # Aktuelles Gerät anzeigen
-        current_device = "Standard (automatisch)"
-        if config.AUDIO_DEVICE_INDEX >= 0 and config.AUDIO_DEVICE_INDEX < len(self.audio_devices):
-            current_device = self.audio_devices[config.AUDIO_DEVICE_INDEX]
-
-        ttk.Label(audio_frame, text=f"Aktives Mikrofon: {current_device}").pack(anchor='w', pady=5)
+        # Aktuelles Gerät anzeigen (wird später in _load_current_settings gesetzt)
+        self.current_device_label = ttk.Label(audio_frame, text="Aktives Mikrofon: Wird geladen...")
+        self.current_device_label.pack(anchor='w', pady=5)
 
         # Geräte-Auswahl
         ttk.Label(audio_frame, text="Mikrofon auswählen:").pack(anchor='w', pady=5)
@@ -194,7 +206,7 @@ class SettingsGUI:
 
         # Dropdown für Geräteauswahl
         device_options = ["Standard (automatisch)"] + self.audio_devices
-        self.audio_device_var.set(device_options[config.AUDIO_DEVICE_INDEX + 1] if config.AUDIO_DEVICE_INDEX >= 0 else device_options[0])
+        self.audio_device_var.set("Standard (automatisch)")  # Default, wird in _load_current_settings überschrieben
 
         device_combo = ttk.Combobox(device_frame, textvariable=self.audio_device_var, values=device_options, state="readonly")
         device_combo.pack(fill='x')
@@ -206,8 +218,9 @@ class SettingsGUI:
         device_list_frame.pack(fill='x')
 
         if self.audio_devices:
-            for i, device in enumerate(self.audio_devices[:8]):  # Max 8 anzeigen
-                status = "✅" if i == config.AUDIO_DEVICE_INDEX else "○"
+            current_device = self.audio_device_var.get()
+            for device in self.audio_devices[:8]:  # Max 8 anzeigen
+                status = "✅" if device == current_device else "○"
                 ttk.Label(device_list_frame, text=f"{status} {device}").pack(anchor='w')
         else:
             ttk.Label(device_list_frame, text="❌ Keine Mikrofone gefunden", foreground="red").pack(anchor='w')
@@ -217,6 +230,9 @@ class SettingsGUI:
 
     def _create_transcription_tab(self, parent):
         """Erstellt den Transkription-Tab"""
+        # Fett gedruckte Überschrift
+        ttk.Label(parent, text="TRANSKRIPTION", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
+
         transcription_frame = ttk.LabelFrame(parent, text="Transkriptions-Einstellungen", padding=10)
         transcription_frame.pack(fill='x', pady=5)
 
@@ -226,8 +242,7 @@ class SettingsGUI:
 
         ttk.Label(mode_frame, text="Transkriptionsmodus:").pack(anchor='w')
 
-        # Radio-Buttons für Modus-Auswahl
-        self.transcription_mode_var = tk.StringVar(value="local" if config.USE_LOCAL_TRANSCRIPTION else "api")
+        # Radio-Buttons für Modus-Auswahl (verwendet bereits oben definierte Variable)
 
         ttk.Radiobutton(
             mode_frame,
@@ -249,7 +264,7 @@ class SettingsGUI:
 
         ttk.Label(model_frame, text="Whisper-Modellgröße:").pack(anchor='w', pady=5)
 
-        self.model_size_var = tk.StringVar(value=config.WHISPER_MODEL_SIZE)
+        # model_size_var ist bereits oben definiert
 
         model_options = [
             ("Tiny (ca. 39 MB, schnell aber weniger genau)", "tiny"),
@@ -280,6 +295,9 @@ class SettingsGUI:
 
     def _create_api_tab(self, parent):
         """Erstellt den API-Schlüssel-Tab"""
+        # Fett gedruckte Überschrift
+        ttk.Label(parent, text="API-SCHLÜSSEL", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
+
         api_frame = ttk.LabelFrame(parent, text="OpenAI API-Schlüssel", padding=10)
         api_frame.pack(fill='x', pady=5)
 
@@ -334,6 +352,9 @@ class SettingsGUI:
 
     def _create_about_tab(self, parent):
         """Erstellt den Über-Tab"""
+        # Fett gedruckte Überschrift
+        ttk.Label(parent, text="ÜBER", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
+
         about_frame = ttk.LabelFrame(parent, text="Voice Transcriber", padding=10)
         about_frame.pack(fill='x', pady=5)
 
@@ -392,7 +413,11 @@ class SettingsGUI:
                     devices.append(device_name)
 
             audio.terminate()
-            return devices
+
+            # Entferne Duplikate und sortiere
+            unique_devices = list(set(devices))
+            unique_devices.sort()
+            return unique_devices
 
         except Exception as e:
             logger.error(f"Fehler beim Laden der Audio-Geräte: {e}")
@@ -432,11 +457,13 @@ class SettingsGUI:
                 self.hotkey_var.set(primary_hotkey)
 
             # Audio-Gerät laden
-            device_index = user_config.get('audio.device_index', -1)
-            if device_index >= 0 and device_index < len(self.audio_devices):
-                self.audio_device_var.set(self.audio_devices[device_index])
+            saved_device = user_config.get('audio.device_name', "Standard (automatisch)")
+            if saved_device in self.audio_devices or saved_device == "Standard (automatisch)":
+                self.audio_device_var.set(saved_device)
+                self.current_device_label.config(text=f"Aktives Mikrofon: {saved_device}")
             else:
                 self.audio_device_var.set("Standard (automatisch)")
+                self.current_device_label.config(text="Aktives Mikrofon: Standard (automatisch)")
 
             # Transkriptions-Einstellungen laden
             use_local = user_config.get('transcription.use_local', False)
@@ -469,10 +496,7 @@ class SettingsGUI:
 
             # Audio-Gerät speichern
             selected_device = self.audio_device_var.get()
-            device_index = -1
-            if selected_device != "Standard (automatisch)" and selected_device in self.audio_devices:
-                device_index = self.audio_devices.index(selected_device)
-                user_config.set('audio.device_index', device_index)
+            user_config.set('audio.device_name', selected_device)
 
             # Transkriptions-Einstellungen
             transcription_mode = self.transcription_mode_var.get()
@@ -519,19 +543,57 @@ class SettingsGUI:
             import subprocess
             from pathlib import Path
 
-            debug_file = Path.home() / "voice_transcriber_debug.txt"
-            if debug_file.exists():
+            # Versuche verschiedene mögliche Pfade
+            possible_paths = [
+                Path.home() / "voice_transcriber_debug.txt",  # Home-Verzeichnis
+                Path.cwd() / "voice_transcriber_debug.txt",   # Arbeitsverzeichnis
+                Path.home() / "AppData" / "Roaming" / "VoiceTranscriber" / "voice_transcriber_debug.txt",  # Windows AppData
+                Path.home() / ".config" / "VoiceTranscriber" / "voice_transcriber_debug.txt",  # Linux config
+            ]
+
+            debug_file = None
+            for path in possible_paths:
+                if path.exists():
+                    debug_file = path
+                    break
+
+            if debug_file and debug_file.exists():
+                logger.info(f"Öffne Debug-Datei: {debug_file}")
                 # Öffne mit Standard-Editor
                 if os.name == 'nt':  # Windows
-                    subprocess.run(['notepad.exe', str(debug_file)])
-                else:
-                    subprocess.run(['xdg-open', str(debug_file)])
+                    subprocess.run(['notepad.exe', str(debug_file)], check=True)
+                else:  # Linux/macOS
+                    subprocess.run(['xdg-open', str(debug_file)], check=True)
+
+                messagebox.showinfo("Debug-Datei", f"Debug-Datei geöffnet:\n{debug_file}")
             else:
-                messagebox.showinfo("Debug-Datei", "Debug-Datei existiert noch nicht.\nMachen Sie eine Aufnahme, um sie zu erstellen.")
+                # Erstelle eine Beispiel-Datei zur Demonstration
+                example_file = Path.home() / "voice_transcriber_debug.txt"
+                try:
+                    example_content = """Voice Transcriber - Debug-Datei
+
+Diese Datei wird während der Aufnahme erstellt und enthält:
+- Aufnahme-Details (Dauer, Format, Größe)
+- Transkriptions-Ergebnisse
+- Fehler-Logs und Warnungen
+- Performance-Messungen
+
+Die Datei wird automatisch erstellt, wenn Sie eine Aufnahme machen.
+"""
+                    example_file.parent.mkdir(parents=True, exist_ok=True)
+                    example_file.write_text(example_content, encoding='utf-8')
+                    messagebox.showinfo("Debug-Datei", f"Beispiel-Debug-Datei erstellt:\n{example_file}\n\nMachen Sie eine Aufnahme, um echte Debug-Daten zu sehen.")
+                except Exception as create_error:
+                    logger.error(f"Fehler beim Erstellen der Beispiel-Datei: {create_error}")
+                    messagebox.showinfo("Debug-Datei", "Debug-Datei existiert noch nicht.\nMachen Sie eine Aufnahme, um sie zu erstellen.")
 
         except Exception as e:
-            logger.error(f"Fehler beim Öffnen der Debug-Datei: {e}")
-            messagebox.showerror("Fehler", f"Debug-Datei konnte nicht geöffnet werden: {e}")
+            if "subprocess" in str(type(e)).lower():
+                logger.error(f"Fehler beim Öffnen der Debug-Datei mit Editor: {e}")
+                messagebox.showerror("Fehler", f"Editor konnte Datei nicht öffnen: {e}")
+            else:
+                logger.error(f"Fehler beim Öffnen der Debug-Datei: {e}")
+                messagebox.showerror("Fehler", f"Debug-Datei konnte nicht geöffnet werden: {e}")
 
     def _clear_debug_file(self):
         """Löscht die Debug-Datei"""

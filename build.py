@@ -81,49 +81,70 @@ def build_exe():
         print("FEHLER: Build abgebrochen - Icon-Generierung fehlgeschlagen")
         sys.exit(1)
 
-    # Automatisch alle src-Module als Hidden Imports hinzufügen
+    # Selektive Hidden Imports - nur tatsächlich benötigte Module
     hidden_imports = [
         "--hidden-import=version_manager",  # Version Management
+        # Kern-Module (immer benötigt)
         "--hidden-import=pystray._win32",  # Windows-spezifische Imports
-        "--hidden-import=winsound",    # Windows Sound-API
-        "--hidden-import=pydub",       # Audio-Komprimierung
-        "--hidden-import=pydub.effects",  # pydub Effekte
-        "--hidden-import=httpx",       # HTTP/2 Unterstützung
-        "--hidden-import=requests",    # HTTP-Requests
-        "--hidden-import=numpy",       # Für Audio-Verarbeitung
-        "--hidden-import=pyaudio",     # Audio-Aufnahme
-        "--hidden-import=audioop",     # Audio-Verarbeitung (pyaudioop)
-        "--hidden-import=keyboard",    # Hotkey-Unterstützung
-        "--hidden-import=pyautogui",   # GUI-Automation
-        "--hidden-import=pyperclip",   # Clipboard-Zugriff
-        "--hidden-import=pillow",      # Bildverarbeitung für Tray-Icon
-        # Neue Module für v1.5.0
-        "--hidden-import=user_config", # Benutzerspezifische Konfiguration
+        "--hidden-import=winsound",        # Windows Sound-API
+        "--hidden-import=keyboard",        # Hotkey-Unterstützung
+        "--hidden-import=pyperclip",       # Clipboard-Zugriff
+        "--hidden-import=pillow",          # Bildverarbeitung für Tray-Icon
+
+        # Audio-Verarbeitung (immer benötigt)
+        "--hidden-import=pyaudio",         # Audio-Aufnahme
+        "--hidden-import=audioop",         # Audio-Verarbeitung
+
+        # Optionale Features (nur wenn verfügbar)
+        "--hidden-import=pydub",           # Audio-Komprimierung (optional)
+        "--hidden-import=pydub.effects",   # pydub Effekte (optional)
+        "--hidden-import=numpy",           # Für Audio-Verarbeitung (optional)
+
+        # Netzwerk (nur für API-Calls)
+        "--hidden-import=httpx",           # HTTP/2 Unterstützung
+        "--hidden-import=requests",        # HTTP-Requests
+
+        # GUI-Automation (nur für Settings)
+        "--hidden-import=pyautogui",       # GUI-Automation
+
+        # Projekt-spezifische Module
+        "--hidden-import=version_manager", # Version Management
+        "--hidden-import=user_config",     # Benutzerspezifische Konfiguration
         "--hidden-import=mouse_integration", # AHK-Integration
-        "--hidden-import=exceptions",  # Custom Exceptions
-        "--hidden-import=notification",  # Notification Service
+        "--hidden-import=exceptions",      # Custom Exceptions
+        "--hidden-import=notification",    # Notification Service
     ]
 
-    # Alle src-Module automatisch hinzufügen
+    # Automatisch nur produktive src-Module hinzufügen (keine Tests)
     import os
     src_dir = Path("src")
     if src_dir.exists():
         for py_file in src_dir.glob("*.py"):
-            if py_file.name != "__init__.py":
+            if py_file.name != "__init__.py" and not py_file.name.startswith("test_"):
                 module_name = f"src.{py_file.stem}"
                 hidden_imports.append(f"--hidden-import={module_name}")
 
-    # PyInstaller-Befehl
+    # PyInstaller-Befehl - Optimiert für Performance und Größe
     pyinstaller_cmd = [
         "pyinstaller",
         "--onefile",                    # Einzelne EXE-Datei
         "--windowed",                  # Kein Konsolenfenster
         "--icon=assets/icon.ico",      # Icon für EXE
         "--name=VoiceTranscriber",     # Name der EXE
-        "--add-data=assets;assets",    # Assets einbinden
-        "--add-data=scripts;scripts",  # AHK-Skript einbinden
-        "--add-data=MOUSE_WHEEL_README.md;.",  # Dokumentation einbinden
+        "--add-data=assets:assets",    # Assets einbinden
+        "--add-data=scripts:scripts",  # AHK-Skript einbinden
+        "--add-data=MOUSE_WHEEL_README.md:.",  # Dokumentation einbinden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
+        # Performance-Optimierungen
+        "--optimize=1",                # Bytecode optimieren
+        "--strip",                     # Debug-Info entfernen
+        "--noupx",                     # UPX-Komprimierung deaktivieren (schneller)
+        # Modul-Excludes für kleinere EXE
+        "--exclude-module=matplotlib", # Nicht benötigte Module ausschließen
+        "--exclude-module=unittest",   # Test-Module entfernen
+        "--exclude-module=doctest",    # Doctest entfernen
+        "--exclude-module=pytest",     # Test-Framework entfernen
+        "--exclude-module=setuptools", # Build-Tools entfernen
         # ffmpeg ist bereits im PATH verfügbar - kein Bündeln nötig
     ] + hidden_imports + [
         "main_exe.py"                  # Einstiegspunkt (PyInstaller-optimiert)

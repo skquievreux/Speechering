@@ -1,11 +1,11 @@
-# 🎤 Voice Transcriber v1.5.0
+# 🎤 Voice Transcriber v1.4.2
 
 Eine professionelle Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text
 Transkription mit KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem
 Eingabesystem.
 
-**🚀 Neue Deployment-Option**: Kleiner Bootstrap-Installer (15 MB) lädt automatisch
-die vollständige Anwendung (220 MB) von Cloudflare R2 Storage nach!
+**🆕 Bugfix-Release**: Verbesserte Settings-GUI, Mikrofon-Auswahl repariert,
+Build-Optimierungen und stabilere Funktionalität.
 
 ## ✨ Features
 
@@ -41,7 +41,7 @@ die vollständige Anwendung (220 MB) von Cloudflare R2 Storage nach!
 
 ### Option A: Bootstrap-Installer (Empfohlen - nur 15 MB!)
 
-1. **Download**: `VoiceTranscriber_Bootstrap_Installer_v1.5.0.exe` herunterladen
+1. **Download**: `VoiceTranscriber_Bootstrap_Installer_v1.4.2.exe` herunterladen
 2. **Installieren**: Doppelklick → Installer lädt **vollautomatisch** die App (220 MB) von Cloudflare R2 herunter
 3. **Fertig**: Desktop-Verknüpfung "Voice Transcriber" klicken und loslegen!
 

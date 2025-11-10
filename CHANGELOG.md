@@ -6,6 +6,29 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2025-11-10
+
+### 🐛 Fixed - Behoben
+
+#### Settings-GUI Verbesserungen
+- **Mikrofon-Auswahl repariert**: Auswahl wird jetzt korrekt gespeichert und wieder geladen
+- **Mikrofon-Liste bereinigt**: Duplikate entfernt, alphabetische Sortierung
+- **Tab-Beschriftungen**: Fett gedruckte Überschriften für bessere UX
+- **Debug-Datei Funktion**: Mehrere Pfade, automatische Beispiel-Erstellung
+- **Datenfluss konsistent**: GUI verwendet jetzt user_config statt config für Einstellungen
+
+#### Build-Optimierungen
+- **Performance-Flags**: `--optimize=1 --strip --noupx` für schnellere Builds
+- **Modul-Excludes**: Nicht benötigte Module entfernt für kleinere EXE
+- **Cross-Platform**: Korrekte Pfad-Syntax für Linux/Windows
+
+### 🔧 Changed - Geändert
+
+#### Code-Qualität
+- **Variable Redefinition behoben**: Einmalige Definition aller GUI-Variablen
+- **Exception Handling verbessert**: Bessere Fehlerbehandlung in Debug-Funktionen
+- **Import-Konsistenz**: Korrekte user_config Integration
+
 ## [1.5.0] - 2025-11-09
 
 ### 🎉 Added - Erstmals hinzugefügt
