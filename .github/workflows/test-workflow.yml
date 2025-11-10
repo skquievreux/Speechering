@@ -1,0 +1,139 @@
+name: Test Workflow Optimizations
+
+# Dieser Workflow ist eine vereinfachte Version des Haupt-Workflows,
+# um Änderungen zu testen, ohne den vollständigen Build-Prozess durchzuführen
+
+on:
+  # Manueller Trigger mit optionaler Versionseingabe
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version für den Test (optional)"
+        required: false
+        type: string
+      skip_build:
+        description: "Build-Schritte überspringen und nur Release-Erstellung testen"
+        required: false
+        type: boolean
+        default: true
+
+env:
+  PYTHON_VERSION: "3.11"
+  TEST_FILE: "README.md"  # Kleine Datei für schnelle Tests
+
+# Explizite Berechtigungen für den Workflow
+permissions:
+  contents: write  # Erlaubt das Erstellen von Releases
+  packages: read
+
+jobs:
+  # Vereinfachter Build-Job
+  build:
+    runs-on: ubuntu-latest  # Ubuntu statt Windows für schnellere Ausführung
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        shell: bash
+        run: |
+          if [ ! -z "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            VERSION="0.0.1-test"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Testing with version: $VERSION"
+
+      - name: Create test artifact
+        if: ${{ !github.event.inputs.skip_build }}
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp $TEST_FILE dist/test-artifact.txt
+          echo "VERSION=$VERSION" > build_info.txt
+          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> build_info.txt
+          echo "GIT_COMMIT=$GITHUB_SHA" >> build_info.txt
+          echo "GIT_REF=$GITHUB_REF" >> build_info.txt
+
+      - name: Upload test artifacts
+        if: ${{ !github.event.inputs.skip_build }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts-${{ steps.version.outputs.version }}
+          path: |
+            dist/
+            build_info.txt
+          retention-days: 1
+
+  # Test des Deploy-Jobs mit Fokus auf GitHub Release
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download test artifacts
+        if: ${{ !github.event.inputs.skip_build }}
+        uses: actions/download-artifact@v4
+        with:
+          name: test-artifacts-${{ needs.build.outputs.version }}
+          path: artifacts/
+
+      - name: Create test file if skipping build
+        if: ${{ github.event.inputs.skip_build }}
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          echo "Test content" > artifacts/test-file.txt
+
+      # Test der GitHub Release-Erstellung mit der neuen Action
+      - name: Create GitHub Release (New Method)
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Test Release ${{ needs.build.outputs.version }}
+          tag_name: test-v${{ needs.build.outputs.version }}
+          body: |
+            ## Test Release ${{ needs.build.outputs.version }}
+            
+            Dies ist ein Test-Release zur Überprüfung der Workflow-Optimierungen.
+            
+            ### Änderungen
+            - Verwendung von softprops/action-gh-release@v1
+            - Explizite Permissions-Konfiguration
+            - Vereinfachter Workflow für schnellere Tests
+          files: |
+            artifacts/*
+          draft: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Cleanup-Job zum Entfernen des Test-Tags
+  cleanup:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: always()  # Immer ausführen, auch wenn vorherige Jobs fehlschlagen
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Delete test tag
+        shell: bash
+        run: |
+          echo "Hinweis: In einer realen Implementierung würde hier das Test-Tag gelöscht werden."
+          echo "Da dies jedoch API-Berechtigungen erfordert, wird dieser Schritt simuliert."
+          # In einer realen Implementierung:
+          # git push --delete origin test-v${{ needs.build.outputs.version }}
