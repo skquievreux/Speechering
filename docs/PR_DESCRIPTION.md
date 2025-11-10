@@ -177,7 +177,7 @@ numpy>=2.2.0  # Nur einmal, neueste Version
 
 **Manuelle Tests:**
 - ✅ Version-Synchronisation: `python version.py get` → `1.5.0`
-- ✅ Build-Prozess: `python build.py` → keine Fehler
+- ✅ Build-Prozess: `python tools/build.py` → keine Fehler
 - ✅ Log-Ausgaben: Alle `.2f` durch korrekte Werte ersetzt
 - ✅ CPU-Last: Idle-Verbrauch reduziert (messbar mit Task Manager)
 

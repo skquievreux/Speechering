@@ -14,9 +14,9 @@
 - Format other files: `prettier --write "**/*.{md,yml,yaml,json,js,ts,html,css}"`
 
 ### Building
-- Build EXE: `python build.py`
-- Build with installer: `python build.py --installer`
-- Build bootstrap installer: `python build.py --bootstrap`
+- Build EXE: `python tools/build.py`
+- Build with installer: `python tools/build.py --installer`
+- Build bootstrap installer: `python tools/build.py --bootstrap`
 
 ## Code Style Guidelines
 

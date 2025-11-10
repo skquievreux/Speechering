@@ -69,13 +69,13 @@ Um Builds lokal zu testen, ohne sie auf Cloudflare R2 hochzuladen, gibt es mehre
 
 ```bash
 # Nur EXE erstellen
-python build.py
+python tools/build.py
 
 # Bootstrap-Installer erstellen
-python build.py --bootstrap
+python tools/build.py --bootstrap
 
 # Vollständigen Installer erstellen
-python build.py --installer
+python tools/build.py --installer
 ```
 
 Die erstellten Dateien befinden sich im `dist/`-Verzeichnis und können direkt getestet werden.

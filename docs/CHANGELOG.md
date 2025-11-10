@@ -228,7 +228,7 @@ und dieses Projekt hält sich an
   - `config.json` für benutzerspezifische Präferenzen
   - Automatische Synchronisation und Migration
 - **Erweiterte Build-System**: Vollständige NSIS-Integration
-  - Automatischer Installer-Build mit `python build.py --installer`
+  - Automatischer Installer-Build mit `python tools/build.py --installer`
   - Mehrsprachige Installer-Unterstützung
   - Professionelle Registry-Integration
 

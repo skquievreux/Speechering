@@ -610,7 +610,7 @@ python src/main.py
 python src/main.py
 
 # Production: EXE erstellen
-python build.py
+python tools/build.py
 
 # Output: dist/VoiceTranscriber.exe
 ```

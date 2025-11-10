@@ -101,16 +101,16 @@ python src/main.py
 
 ```bash
 # Nur EXE erstellen
-python build.py
+python tools/build.py
 
 # Bootstrap-Installer erstellen (empfohlen für Distribution)
-python build.py --bootstrap
+python tools/build.py --bootstrap
 
 # Vollständigen Installer erstellen
-python build.py --installer
+python tools/build.py --installer
 
 # Hilfe anzeigen
-python build.py --help
+python tools/build.py --help
 ```
 
 ## 🎯 Verwendung
@@ -191,16 +191,16 @@ voice-transcriber/
 # Virtual Environment muss aktiv sein!
 
 # Option 1: Nur EXE erstellen (für Tests)
-python build.py
+python tools/build.py
 
 # Option 2: Bootstrap-Installer (empfohlen für Releases)
-python build.py --bootstrap
+python tools/build.py --bootstrap
 
 # Option 3: Vollständiger Installer (traditionell)
-python build.py --installer
+python tools/build.py --installer
 
 # Option 4: Alle Varianten erstellen
-python build.py --bootstrap --installer
+python tools/build.py --bootstrap --installer
 ```
 
 **Build-Artefakte:**

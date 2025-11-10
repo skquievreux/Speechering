@@ -13,6 +13,49 @@ from src.config import config
 
 logger = logging.getLogger(__name__)
 
+class Tooltip:
+    """Custom Tooltip class for tkinter widgets"""
+
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tooltip_window = None
+        self.widget.bind("<Enter>", self.show_tooltip)
+        self.widget.bind("<Leave>", self.hide_tooltip)
+
+    def show_tooltip(self, event=None):
+        """Shows the tooltip"""
+        if self.tooltip_window or not self.text:
+            return
+
+        # Get widget position
+        x, y, cx, cy = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + 25
+        y += self.widget.winfo_rooty() + 20
+
+        # Create tooltip window
+        self.tooltip_window = tk.Toplevel(self.widget)
+        self.tooltip_window.wm_overrideredirect(True)
+        self.tooltip_window.wm_geometry(f"+{x}+{y}")
+
+        # Create label with tooltip text
+        label = tk.Label(
+            self.tooltip_window,
+            text=self.text,
+            justify='left',
+            background="#ffffe0",
+            relief='solid',
+            borderwidth=1,
+            font=("TkDefaultFont", 8)
+        )
+        label.pack(ipadx=1)
+
+    def hide_tooltip(self, event=None):
+        """Hides the tooltip"""
+        if self.tooltip_window:
+            self.tooltip_window.destroy()
+            self.tooltip_window = None
+
 class SettingsGUI:
     """Einstellungs-GUI für Voice Transcriber"""
 
@@ -67,17 +110,21 @@ class SettingsGUI:
         debug_frame = ttk.Frame(self.window)
         debug_frame.pack(fill='x', padx=10, pady=5)
 
-        ttk.Button(
+        open_debug_btn = ttk.Button(
             debug_frame,
             text="📄 Debug-Datei öffnen",
             command=self._open_debug_file
-        ).pack(side='left', padx=5)
+        )
+        open_debug_btn.pack(side='left', padx=5)
+        Tooltip(open_debug_btn, "Öffnet die Debug-Datei im Standard-Editor.\nEnthält Aufnahme-Details, Transkriptions-Ergebnisse und Fehler-Logs.")
 
-        ttk.Button(
+        clear_debug_btn = ttk.Button(
             debug_frame,
             text="🗑️ Debug-Datei löschen",
             command=self._clear_debug_file
-        ).pack(side='left', padx=5)
+        )
+        clear_debug_btn.pack(side='left', padx=5)
+        Tooltip(clear_debug_btn, "Löscht die Debug-Datei vollständig.\nDie Datei wird bei der nächsten Aufnahme neu erstellt.")
 
         notebook = ttk.Notebook(self.window)
         notebook.pack(fill='both', expand=True, padx=10, pady=10)
@@ -111,9 +158,25 @@ class SettingsGUI:
         button_frame = ttk.Frame(self.window)
         button_frame.pack(fill='x', padx=10, pady=5)
 
-        ttk.Button(button_frame, text="Speichern", command=self._save_settings).pack(side='right', padx=5)
-        ttk.Button(button_frame, text="Abbrechen", command=self._close_window).pack(side='right', padx=5)
-        ttk.Button(button_frame, text="Standard", command=self._reset_defaults).pack(side='left', padx=5)
+        save_btn = ttk.Button(button_frame, text="Speichern", command=self._save_settings)
+        save_btn.pack(side='right', padx=5)
+        Tooltip(save_btn, "Speichert alle Einstellungen und schließt das Fenster.\nÄnderungen werden beim nächsten Neustart wirksam.")
+
+        cancel_btn = ttk.Button(button_frame, text="Abbrechen", command=self._close_window)
+        cancel_btn.pack(side='right', padx=5)
+        Tooltip(cancel_btn, "Schließt das Einstellungsfenster ohne zu speichern.")
+
+        export_btn = ttk.Button(button_frame, text="Export", command=self._export_settings)
+        export_btn.pack(side='left', padx=5)
+        Tooltip(export_btn, "Exportiert alle Einstellungen in eine Datei.")
+
+        import_btn = ttk.Button(button_frame, text="Import", command=self._import_settings)
+        import_btn.pack(side='left', padx=5)
+        Tooltip(import_btn, "Importiert Einstellungen aus einer Datei.")
+
+        reset_btn = ttk.Button(button_frame, text="Standard", command=self._reset_defaults)
+        reset_btn.pack(side='left', padx=5)
+        Tooltip(reset_btn, "Setzt alle Einstellungen auf Standardwerte zurück.")
 
     def _create_general_tab(self, parent):
         """Erstellt den Allgemein-Tab"""
@@ -161,34 +224,47 @@ class SettingsGUI:
         ]
 
         for text, value in hotkey_options:
-            ttk.Radiobutton(
+            rb = ttk.Radiobutton(
                 hotkey_frame,
                 text=text,
                 variable=self.hotkey_var,
                 value=value
-            ).pack(anchor='w', pady=2)
+            )
+            rb.pack(anchor='w', pady=2)
+            Tooltip(rb, f"Aktiviert Push-to-Talk mit {text}.\nDrücken Sie diese Taste, um mit der Aufnahme zu beginnen.")
 
         # Info
         info_frame = ttk.Frame(hotkey_frame)
         info_frame.pack(fill='x', pady=10)
 
-        ttk.Label(
+        rec_label = ttk.Label(
             info_frame,
             text="💡 Empfehlung: F12 - funktioniert immer und ist einfach zu erreichen",
             foreground="blue"
-        ).pack(anchor='w')
+        )
+        rec_label.pack(anchor='w')
+        Tooltip(rec_label, "F12 ist die beste Wahl für die meisten Benutzer.\nSie ist immer verfügbar und einfach zu erreichen.")
 
-        ttk.Label(
+        restart_label = ttk.Label(
             info_frame,
             text="🔄 Änderungen werden nach Neustart wirksam",
             foreground="orange"
-        ).pack(anchor='w')
+        )
+        restart_label.pack(anchor='w')
+        Tooltip(restart_label, "Der Hotkey-Listener muss neu gestartet werden,\num die Änderungen zu übernehmen.")
 
-        ttk.Label(
+        windows_label = ttk.Label(
             info_frame,
             text="⚠️ Windows-Taste-Kombinationen werden vom OS blockiert",
             foreground="red"
-        ).pack(anchor='w')
+        )
+        windows_label.pack(anchor='w')
+        Tooltip(windows_label, "Kombinationen mit der Windows-Taste werden vom\nBetriebssystem reserviert und funktionieren nicht.")
+
+        # Test Button für Live-Vorschau
+        test_hotkey_btn = ttk.Button(hotkey_frame, text="Hotkey testen", command=self._test_hotkey)
+        test_hotkey_btn.pack(pady=10)
+        Tooltip(test_hotkey_btn, "Testet den ausgewählten Hotkey live.\nDrücken Sie den Hotkey innerhalb von 5 Sekunden.")
 
     def _create_audio_tab(self, parent):
         """Erstellt den Audio-Tab"""
@@ -214,6 +290,7 @@ class SettingsGUI:
 
         device_combo = ttk.Combobox(device_frame, textvariable=self.audio_device_var, values=device_options, state="readonly")
         device_combo.pack(fill='x')
+        Tooltip(device_combo, "Wählen Sie Ihr bevorzugtes Mikrofon aus.\n'Standard' verwendet das System-Standardgerät.")
 
         # Info
         ttk.Label(audio_frame, text="Verfügbare Mikrofone:").pack(anchor='w', pady=5)
@@ -230,7 +307,9 @@ class SettingsGUI:
             ttk.Label(device_list_frame, text="❌ Keine Mikrofone gefunden", foreground="red").pack(anchor='w')
 
         # Test Button
-        ttk.Button(audio_frame, text="Mikrofon testen", command=self._test_microphone).pack(pady=10)
+        test_btn = ttk.Button(audio_frame, text="Mikrofon testen", command=self._test_microphone)
+        test_btn.pack(pady=10)
+        Tooltip(test_btn, "Testet das ausgewählte Mikrofon auf Funktionalität.\nÜberprüft Audio-Eingang und Qualität.")
 
     def _create_transcription_tab(self, parent):
         """Erstellt den Transkription-Tab"""
@@ -248,19 +327,23 @@ class SettingsGUI:
 
         # Radio-Buttons für Modus-Auswahl (verwendet bereits oben definierte Variable)
 
-        ttk.Radiobutton(
+        api_rb = ttk.Radiobutton(
             mode_frame,
             text="OpenAI API (kostenpflichtig, immer verfügbar)",
             variable=self.transcription_mode_var,
             value="api"
-        ).pack(anchor='w', pady=2)
+        )
+        api_rb.pack(anchor='w', pady=2)
+        Tooltip(api_rb, "Verwendet OpenAI's Whisper API für Transkription.\nErfordert API-Key und Internet-Verbindung.")
 
-        ttk.Radiobutton(
+        local_rb = ttk.Radiobutton(
             mode_frame,
             text="Lokales Modell (kostenlos, offline-fähig)",
             variable=self.transcription_mode_var,
             value="local"
-        ).pack(anchor='w', pady=2)
+        )
+        local_rb.pack(anchor='w', pady=2)
+        Tooltip(local_rb, "Lädt Whisper-Modell auf Ihren Computer.\nFunktioniert offline, erster Start dauert länger.")
 
         # Modellgröße (nur bei lokalem Modus)
         model_frame = ttk.LabelFrame(transcription_frame, text="Lokales Modell", padding=10)
@@ -279,12 +362,14 @@ class SettingsGUI:
         ]
 
         for text, value in model_options:
-            ttk.Radiobutton(
+            rb = ttk.Radiobutton(
                 model_frame,
                 text=text,
                 variable=self.model_size_var,
                 value=value
-            ).pack(anchor='w', pady=1)
+            )
+            rb.pack(anchor='w', pady=1)
+            Tooltip(rb, f"Wählt das {value.upper()} Modell.\n{text.split('(')[1].rstrip(')')}\nGrößere Modelle sind genauer aber langsamer.")
 
         # Info-Text
         info_frame = ttk.Frame(transcription_frame)
@@ -324,6 +409,7 @@ class SettingsGUI:
         # Password-Entry für Sicherheit mit Validierung
         self.api_key_entry = ttk.Entry(input_frame, textvariable=self.api_key_var, show="*")
         self.api_key_entry.pack(fill='x', pady=5)
+        Tooltip(self.api_key_entry, "Geben Sie Ihren OpenAI API-Key ein.\nBeginnt mit 'sk-' und ist ca. 51 Zeichen lang.\nWird verschlüsselt gespeichert.")
 
         # Validierungs-Label (wird dynamisch aktualisiert)
         self.api_key_validation_label = ttk.Label(input_frame, text="", foreground="red")
@@ -334,12 +420,14 @@ class SettingsGUI:
 
         # Checkbox zum Anzeigen/Verstecken
         self.show_key_var = tk.BooleanVar(value=False)
-        ttk.Checkbutton(
+        show_key_cb = ttk.Checkbutton(
             input_frame,
             text="API-Key anzeigen",
             variable=self.show_key_var,
             command=self._toggle_api_key_visibility
-        ).pack(anchor='w', pady=5)
+        )
+        show_key_cb.pack(anchor='w', pady=5)
+        Tooltip(show_key_cb, "Zeigt den API-Key im Klartext an.\nDeaktivieren Sie dies für Sicherheit.")
 
         # Info-Text
         info_frame = ttk.Frame(api_frame)
@@ -683,6 +771,135 @@ Die Datei wird automatisch erstellt, wenn Sie eine Aufnahme machen.
         except Exception as e:
             logger.error(f"Fehler beim Löschen der Debug-Datei: {e}")
             messagebox.showerror("Fehler", f"Debug-Datei konnte nicht gelöscht werden: {e}")
+
+    def _export_settings(self):
+        """Exportiert Einstellungen in eine Datei"""
+        try:
+            from tkinter import filedialog
+            from pathlib import Path
+            import json
+            from datetime import datetime
+
+            # Datei-Dialog für Export
+            file_path = filedialog.asksaveasfilename(
+                defaultextension=".json",
+                filetypes=[("JSON-Dateien", "*.json"), ("Alle Dateien", "*.*")],
+                title="Einstellungen exportieren"
+            )
+
+            if not file_path:
+                return
+
+            # Sammle alle Einstellungen
+            from src.user_config import user_config
+            settings = {
+                "version": config.APP_VERSION,
+                "export_date": datetime.now().isoformat(),
+                "settings": user_config._config.copy()  # Export raw config
+            }
+
+            # Schreibe in Datei
+            Path(file_path).write_text(json.dumps(settings, indent=2, ensure_ascii=False), encoding='utf-8')
+
+            messagebox.showinfo("Export erfolgreich", f"Einstellungen wurden nach {file_path} exportiert.")
+
+        except Exception as e:
+            logger.error(f"Fehler beim Exportieren: {e}")
+            messagebox.showerror("Fehler", f"Export fehlgeschlagen: {e}")
+
+    def _import_settings(self):
+        """Importiert Einstellungen aus einer Datei"""
+        try:
+            from tkinter import filedialog
+            from pathlib import Path
+            import json
+
+            # Datei-Dialog für Import
+            file_path = filedialog.askopenfilename(
+                filetypes=[("JSON-Dateien", "*.json"), ("Alle Dateien", "*.*")],
+                title="Einstellungen importieren"
+            )
+
+            if not file_path:
+                return
+
+            # Lese Datei
+            content = Path(file_path).read_text(encoding='utf-8')
+            data = json.loads(content)
+
+            # Validiere Format
+            if "settings" not in data:
+                raise ValueError("Ungültiges Dateiformat")
+
+            # Bestätigung
+            if not messagebox.askyesno("Import bestätigen",
+                f"Möchten Sie wirklich alle Einstellungen aus {Path(file_path).name} importieren?\n\nDies überschreibt alle aktuellen Einstellungen."):
+                return
+
+            # Importiere Einstellungen
+            from src.user_config import user_config
+            user_config._config = data["settings"]
+            user_config.save()
+
+            messagebox.showinfo("Import erfolgreich",
+                "Einstellungen wurden erfolgreich importiert.\n\nDie Änderungen werden beim nächsten Neustart wirksam.")
+
+        except Exception as e:
+            logger.error(f"Fehler beim Importieren: {e}")
+            messagebox.showerror("Fehler", f"Import fehlgeschlagen: {e}")
+
+    def _test_hotkey(self):
+        """Testet den ausgewählten Hotkey live"""
+        import threading
+        import time
+
+        selected_hotkey = self.hotkey_var.get()
+        if not selected_hotkey:
+            messagebox.showwarning("Kein Hotkey", "Bitte wählen Sie zuerst einen Hotkey aus.")
+            return
+
+        # Temporäres Flag für Test-Erkennung
+        self.hotkey_test_detected = False
+
+        def on_test_press():
+            self.hotkey_test_detected = True
+
+        def test_thread():
+            try:
+                import keyboard
+                # Registriere temporären Hotkey
+                keyboard.on_press_key(selected_hotkey, lambda e: on_test_press())
+
+                # Zeige Countdown
+                for i in range(5, 0, -1):
+                    if hasattr(self, 'test_progress_label'):
+                        self.test_progress_label.config(text=f"Drücken Sie {selected_hotkey.upper()} ... {i}s")
+                    time.sleep(1)
+
+                # Aufräumen
+                keyboard.unhook_all()
+
+                # Ergebnis anzeigen
+                if self.hotkey_test_detected:
+                    messagebox.showinfo("Hotkey-Test", f"✅ Hotkey '{selected_hotkey.upper()}' funktioniert!\n\nDer Hotkey wurde erfolgreich erkannt.")
+                else:
+                    messagebox.showwarning("Hotkey-Test", f"❌ Hotkey '{selected_hotkey.upper()}' nicht erkannt.\n\nMögliche Ursachen:\n• Hotkey wird vom System blockiert\n• Tippfehler in der Kombination\n• Andere Anwendung verwendet den Hotkey")
+
+            except Exception as e:
+                messagebox.showerror("Fehler", f"Hotkey-Test fehlgeschlagen: {e}")
+
+        # Erstelle temporäres Label für Countdown
+        if self.window:
+            self.test_progress_label = ttk.Label(self.window, text=f"Drücken Sie {selected_hotkey.upper()} ... 5s")
+            self.test_progress_label.pack(pady=5)
+
+            # Starte Test in separatem Thread
+            threading.Thread(target=test_thread, daemon=True).start()
+
+            # Entferne Label nach 6 Sekunden
+            self.window.after(6000, lambda: self.test_progress_label.destroy() if hasattr(self, 'test_progress_label') else None)
+        else:
+            messagebox.showerror("Fehler", "Fenster nicht verfügbar für Hotkey-Test.")
 
     def get_selected_hotkey(self):
         """Gibt den ausgewählten Hotkey zurück"""

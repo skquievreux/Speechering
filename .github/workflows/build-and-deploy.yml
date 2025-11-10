@@ -66,7 +66,7 @@ jobs:
           path: |
             build/
             .pyinstaller_cache/
-          key: ${{ runner.os }}-pyinstaller-${{ hashFiles('src/**/*.py', 'main_exe.py', 'build.py') }}
+          key: ${{ runner.os }}-pyinstaller-${{ hashFiles('src/**/*.py', 'tools/main_exe.py', 'tools/build.py') }}
           restore-keys: |
             ${{ runner.os }}-pyinstaller-
 
@@ -140,15 +140,15 @@ jobs:
         shell: bash
         run: |
           # Modifizierter Build-Befehl mit UPX-Komprimierung
-          python build.py --upx
+          python tools/build.py --upx
 
       - name: Build Bootstrap Installer
         shell: bash
-        run: python build.py --bootstrap
+        run: python tools/build.py --bootstrap
 
       - name: Build NSIS Installer
         shell: bash
-        run: python build.py --installer
+        run: python tools/build.py --installer
 
       - name: Create version info
         shell: bash
