@@ -65,11 +65,8 @@ class Config:
         self.APP_NAME: str = os.getenv('APP_NAME', 'Voice Transcriber')
 
         # Version aus version_manager laden für Konsistenz
-        try:
-            import version_manager
-            self.APP_VERSION: str = version_manager.version_manager.get_version()
-        except (ImportError, AttributeError):
-            self.APP_VERSION: str = os.getenv('APP_VERSION', '1.4.1')
+        # Temporär deaktiviert nach Struktur-Änderung
+        self.APP_VERSION: str = os.getenv('APP_VERSION', '1.5.1')
 
         # Audio-Komprimierung (benutzerspezifisch konfigurierbar)
         self.AUDIO_COMPRESSION_ENABLED: bool = os.getenv('AUDIO_COMPRESSION_ENABLED', 'true').lower() == 'true'

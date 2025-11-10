@@ -29,7 +29,7 @@ Der aktuelle Build-Prozess für Voice Transcriber funktioniert grundsätzlich gu
     path: |
       build/
       .pyinstaller_cache/
-    key: ${{ runner.os }}-pyinstaller-${{ hashFiles('src/**/*.py', 'main_exe.py', 'build.py') }}
+    key: ${{ runner.os }}-pyinstaller-${{ hashFiles('src/**/*.py', 'tools/main_exe.py', 'tools/build.py') }}
     restore-keys: |
       ${{ runner.os }}-pyinstaller-
 ```
@@ -44,7 +44,7 @@ Der aktuelle Build-Prozess für Voice Transcriber funktioniert grundsätzlich gu
 - **Externe Abhängigkeiten auslagern**: Große Modelle (z.B. Whisper) als separate Downloads
 
 ```python
-# Beispiel für UPX-Komprimierung in build.py
+# Beispiel für UPX-Komprimierung in tools/build.py
 pyinstaller_cmd = [
     "pyinstaller",
     "--onefile",
@@ -87,7 +87,7 @@ jobs:
 - **Semantic Versioning Automatisierung**: Automatische Inkrementierung basierend auf Commit-Nachrichten
 
 ```python
-# Beispiel für Pre-Build Hook in build.py
+# Beispiel für Pre-Build Hook in tools/build.py
 def update_version_in_files(version):
     """Aktualisiert die Version in allen relevanten Dateien"""
     files_to_update = {
@@ -124,7 +124,7 @@ TRANSCRIPTION_IMPORTS = [
     "src.transcription", "src.local_transcription", "httpx", "requests"
 ]
 
-# In build.py zusammenführen
+# In tools/build.py zusammenführen
 all_imports = CORE_IMPORTS + AUDIO_IMPORTS + TRANSCRIPTION_IMPORTS
 ```
 

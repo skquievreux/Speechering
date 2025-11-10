@@ -66,7 +66,7 @@ Komponenten automatisch bereitstellt.
 ### Build-System
 
 ```
-build.py (erweitert)
+tools/build.py (erweitert)
 ├── PyInstaller-Build
 ├── NSIS-Installer-Generierung
 └── Automatische Tests
@@ -117,7 +117,7 @@ HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber\
 
 ### 1. PyInstaller-Updates
 
-**Datei:** `build.py`
+**Datei:** `tools/build.py`
 
 **Änderungen:**
 

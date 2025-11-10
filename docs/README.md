@@ -1,11 +1,11 @@
-# 🎤 Voice Transcriber v1.5.0
+# 🎤 Voice Transcriber v1.5.1
 
 Eine professionelle Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text
 Transkription mit KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem
 Eingabesystem.
 
-**🆕 Minor-Release**: Umfassende Validierung, Sicherheit und Benutzerfreundlichkeit
-verbessert. Neue Features für stabilere und sicherere Nutzung.
+**🐛 Bugfix-Release**: Repository-Struktur bereinigt und Pfade aktualisiert.
+Verbesserte Organisation und Maintenance.
 
 ## ✨ Features
 
@@ -180,7 +180,7 @@ voice-transcriber/
 ├── .env                   # Umgebungsvariablen
 ├── .gitignore            # Git-Ignorierungen (erweitert)
 ├── requirements.txt       # Dependencies
-├── build.py              # PyInstaller Build-Script (erweitert)
+├── tools/build.py        # PyInstaller Build-Script (erweitert)
 ├── MOUSE_WHEEL_README.md  # Neue Dokumentation (NEU)
 └── README.md
 ```

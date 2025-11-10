@@ -571,7 +571,7 @@ voice-transcriber/
 ├── .env                        # API-Keys (gitignore)
 ├── .gitignore                 # Git Ignore Rules
 ├── requirements.txt           # Python Dependencies
-├── build.py                   # Build-Script
+├── tools/build.py             # Build-Script
 ├── README.md                  # Projekt-Dokumentation
 └── ARCHITECTURE.md            # Dieses Dokument
 ```

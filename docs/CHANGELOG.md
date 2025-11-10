@@ -6,6 +6,25 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2025-11-10
+
+### 🐛 Fixed - Fehler behoben
+
+#### Repository-Struktur Bereinigung
+- **Root-Verzeichnis aufgeräumt**: Von 40+ auf 8 Dateien reduziert
+- **Neue Ordner-Struktur**:
+  - `docs/`: Alle Dokumentation (20 Dateien)
+  - `tools/`: Build-Scripts & Tools (7 Dateien)
+  - `config/`: Konfigurationsdateien (2 Dateien)
+- **Pfad-Updates**: Alle Skripte und CI-Workflows aktualisiert
+- **Dokumentation korrigiert**: Build-Pfade in allen `.md`-Dateien aktualisiert
+
+### 🔧 Changed - Geändert
+
+- **Build-Script**: `build.py` → `tools/build.py`
+- **Konfiguration**: `.cspell.json`, `.prettierrc` → `config/`
+- **CI-Workflows**: Pfad-Referenzen aktualisiert
+
 ## [1.5.0] - 2025-11-10
 
 ### ✨ Added - Erstmals hinzugefügt
