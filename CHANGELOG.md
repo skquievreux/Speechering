@@ -6,7 +6,29 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 und dieses Projekt hält sich an
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.2] - 2025-11-10
+## [1.5.0] - 2025-11-10
+
+### ✨ Added - Erstmals hinzugefügt
+
+#### Umfassende Validierung und Sicherheit
+- **Live-Eingabevalidierung**: API-Key Format und Länge werden beim Tippen geprüft
+- **Echtzeit-Feedback**: Farbkodierte Validierungsstatus (grün=OK, orange=Warnung, rot=Fehler)
+- **API-Key RAM-Cleanup**: Automatisches Löschen sensibler Daten aus dem Speicher
+- **Rate-Limiting**: 1-Sekunden Cooldown verhindert Mehrfach-Speicherung
+- **Input-Sanitization**: Automatische Bereinigung aller Benutzereingaben
+
+#### Verbesserte Benutzerfreundlichkeit
+- **Fett gedruckte Tab-Überschriften**: Klare visuelle Hierarchie
+- **Mikrofon-Deduplikation**: Alphabetische Sortierung ohne Duplikate
+- **Verbesserte Debug-Datei Funktion**: Mehrere Pfade, automatische Beispiel-Erstellung
+- **Konsistente Version-Anzeige**: Synchronisation zwischen GUI und Build
+
+### 🔧 Changed - Geändert
+
+#### Code-Qualität und Sicherheit
+- **Datenfluss-Optimierung**: Konsistente user_config Integration
+- **Exception Handling**: Robuste Fehlerbehandlung in allen Methoden
+- **Variable Redefinition behoben**: Einmalige Definition aller GUI-Variablen
 
 ### 🐛 Fixed - Behoben
 

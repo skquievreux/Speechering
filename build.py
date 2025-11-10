@@ -84,6 +84,7 @@ def build_exe():
     # Selektive Hidden Imports - nur tatsächlich benötigte Module
     hidden_imports = [
         "--hidden-import=version_manager",  # Version Management
+        "--hidden-import=version_manager",  # Version Management
         # Kern-Module (immer benötigt)
         "--hidden-import=pystray._win32",  # Windows-spezifische Imports
         "--hidden-import=winsound",        # Windows Sound-API

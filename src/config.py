@@ -69,7 +69,7 @@ class Config:
             import version_manager
             self.APP_VERSION: str = version_manager.version_manager.get_version()
         except (ImportError, AttributeError):
-            self.APP_VERSION: str = os.getenv('APP_VERSION', '1.4.2')
+            self.APP_VERSION: str = os.getenv('APP_VERSION', '1.4.1')
 
         # Audio-Komprimierung (benutzerspezifisch konfigurierbar)
         self.AUDIO_COMPRESSION_ENABLED: bool = os.getenv('AUDIO_COMPRESSION_ENABLED', 'true').lower() == 'true'
