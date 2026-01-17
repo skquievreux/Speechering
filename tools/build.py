@@ -15,7 +15,8 @@ def check_venv():
         hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix
     ):
         print("WARNUNG: Virtual Environment nicht aktiviert!")
-        print("   Bitte erst ausfuehren: venv\\Scripts\\activate")
+        print("   Bitte nutzen Sie: poetry run python tools/build.py")
+        print("   Oder aktivieren Sie die Shell: poetry shell")
         return False
     return True
 
@@ -185,7 +186,7 @@ def build_exe():
         sys.exit(1)
     except FileNotFoundError:
         print("FEHLER: PyInstaller nicht gefunden!")
-        print("   Bitte installieren: pip install pyinstaller")
+        print("   Bitte installieren: poetry install")
         sys.exit(1)
 
 def build_bootstrap_installer():
@@ -250,7 +251,7 @@ def build_bootstrap_installer():
         return False
     except FileNotFoundError:
         print("FEHLER: PyInstaller nicht gefunden!")
-        print("   Bitte installieren: pip install pyinstaller")
+        print("   Bitte installieren: poetry install")
         return False
 
     return True
