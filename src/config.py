@@ -78,7 +78,10 @@ class Config:
 
         # Local Transcription (benutzerspezifisch konfigurierbar)
         self.USE_LOCAL_TRANSCRIPTION: bool = user_config.get('transcription.use_local', False) if self.user_config_loaded else os.getenv('USE_LOCAL_TRANSCRIPTION', 'false').lower() == 'true'
-        self.WHISPER_MODEL_SIZE: str = user_config.get('transcription.whisper_model_size', 'small') if self.user_config_loaded else os.getenv('WHISPER_MODEL_SIZE', 'small')
+        self.WHISPER_MODEL_SIZE: str = user_config.get('transcription.whisper_model_size', 'base') if self.user_config_loaded else os.getenv('WHISPER_MODEL_SIZE', 'base')
+
+        # Audio Device Name (für bessere Persistenz als Index)
+        self.AUDIO_DEVICE_NAME: str = user_config.get('audio.device_name', '') if self.user_config_loaded else os.getenv('AUDIO_DEVICE_NAME', '')
 
         # Migriere bestehende .env-Werte in user config falls nötig
         self._migrate_env_to_user_config()

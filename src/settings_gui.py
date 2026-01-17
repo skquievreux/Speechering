@@ -89,10 +89,25 @@ class SettingsGUI:
 
     def show(self):
         """Zeigt das Einstellungsfenster"""
-        self.window = tk.Toplevel(self.parent) if self.parent else tk.Tk()
-        self.window.title(f"Voice Transcriber v{config.APP_VERSION} - Einstellungen")
-        self.window.geometry("500x600")
-        self.window.resizable(False, False)
+        self.window = tk.Toplevel(self.parent)        # Styles konfigurieren
+        style = ttk.Style()
+        style.configure("TButton", padding=6)
+        style.configure("TLabel", padding=2)
+        
+        # Tab-Style optimieren
+        style.configure("TNotebook", padding=5)
+        style.configure("TNotebook.Tab", 
+                       padding=[12, 4], 
+                       font=("TkDefaultFont", 10))
+        
+        # Aktiven Tab hervorheben (Fett + Dunklerer Hintergrund simulieren durch Map)
+        style.map("TNotebook.Tab",
+                 background=[("selected", "#0078D7")], # Windows Blau für aktiv
+                 foreground=[("selected", "white")],
+                 font=[("selected", ("TkDefaultFont", 10, "bold"))])
+
+        self.window.geometry("600x800")
+        self.window.resizable(True, True)
 
         self._create_widgets()
         self._load_current_settings()
@@ -126,33 +141,29 @@ class SettingsGUI:
         clear_debug_btn.pack(side='left', padx=5)
         Tooltip(clear_debug_btn, "Löscht die Debug-Datei vollständig.\nDie Datei wird bei der nächsten Aufnahme neu erstellt.")
 
-        notebook = ttk.Notebook(self.window)
-        notebook.pack(fill='both', expand=True, padx=10, pady=10)
+        self.notebook = ttk.Notebook(self.window)
+        # Mehr Abstand nach oben für bessere Sichtbarkeit der Reiter
+        self.notebook.pack(fill='both', expand=True, padx=10, pady=(15, 10))
 
-        # Tab 1: Allgemein
-        general_tab = ttk.Frame(notebook)
-        notebook.add(general_tab, text="Allgemein")
-
-        # Tab 2: Hotkeys
-        hotkey_tab = ttk.Frame(notebook)
-        notebook.add(hotkey_tab, text="Hotkeys")
-
-        # Tab 3: Audio
-        audio_tab = ttk.Frame(notebook)
-        notebook.add(audio_tab, text="Audio")
-
-        # Tab 4: Transkription
-        transcription_tab = ttk.Frame(notebook)
-        notebook.add(transcription_tab, text="Transkription")
-
-        # Tab 5: API-Schlüssel
-        api_tab = ttk.Frame(notebook)
-        notebook.add(api_tab, text="API-Schlüssel")
-
-        # Tab 6: Über
-        about_tab = ttk.Frame(notebook)
-        notebook.add(about_tab, text="Über")
-        self._create_about_tab(about_tab)
+        # Tabs erstellen
+        self.tabs = {}
+        for name, creator in [
+            ("Allgemein", self._create_general_tab),
+            ("Hotkeys", self._create_hotkey_tab),
+            ("Audio", self._create_audio_tab),
+            ("Transkription", self._create_transcription_tab),
+            ("API-Schlüssel", self._create_api_tab),
+            ("Über", self._create_about_tab)
+        ]:
+            tab_frame = ttk.Frame(self.notebook, padding=10)
+            self.notebook.add(tab_frame, text=name)
+            self.tabs[name] = tab_frame
+            
+            try:
+                creator(tab_frame)
+            except Exception as e:
+                logger.error(f"Fehler beim Erstellen des Tabs '{name}': {e}")
+                ttk.Label(tab_frame, text=f"Fehler beim Laden: {e}", foreground="red").pack()
 
         # Buttons
         button_frame = ttk.Frame(self.window)
@@ -200,6 +211,21 @@ class SettingsGUI:
         ttk.Label(recording_frame, text=f"Max. Dauer: {config.MAX_RECORDING_DURATION}s").pack(anchor='w')
         ttk.Label(recording_frame, text=f"Sample Rate: {config.SAMPLE_RATE}Hz").pack(anchor='w')
         ttk.Label(recording_frame, text=f"Kanäle: {config.CHANNELS}").pack(anchor='w')
+
+        # Datei-Verwaltung
+        files_frame = ttk.LabelFrame(parent, text="Datei-Verwaltung", padding=10)
+        files_frame.pack(fill='x', pady=5, anchor='n')  # explizit anchor n
+
+        btn_frame = ttk.Frame(files_frame)
+        btn_frame.pack(fill='x', expand=True, pady=5)
+
+        open_temp_btn = ttk.Button(btn_frame, text="📂 Temp-Ordner öffnen", command=self._open_temp_dir)
+        open_temp_btn.pack(side='left', padx=5, fill='x', expand=True)
+        Tooltip(open_temp_btn, "Öffnet den Ordner mit temporären Audiodateien.")
+
+        cleanup_btn = ttk.Button(btn_frame, text="🧹 Temp bereinigen", command=self._cleanup_temp_files)
+        cleanup_btn.pack(side='left', padx=5, fill='x', expand=True)
+        Tooltip(cleanup_btn, "Löscht alle temporären Audiodateien (.wav).")
 
     def _create_hotkey_tab(self, parent):
         """Erstellt den Hotkey-Tab"""
@@ -706,11 +732,12 @@ class SettingsGUI:
             from pathlib import Path
 
             # Versuche verschiedene mögliche Pfade
+            from .user_config import user_config
             possible_paths = [
-                Path.home() / "voice_transcriber_debug.txt",  # Home-Verzeichnis
+                user_config.get_appdata_dir() / "voice_transcriber_debug.txt",  # AppData (priorisiert)
+                Path.home() / "voice_transcriber_debug.txt",  # Home-Verzeichnis (Legacy)
                 Path.cwd() / "voice_transcriber_debug.txt",   # Arbeitsverzeichnis
-                Path.home() / "AppData" / "Roaming" / "VoiceTranscriber" / "voice_transcriber_debug.txt",  # Windows AppData
-                Path.home() / ".config" / "VoiceTranscriber" / "voice_transcriber_debug.txt",  # Linux config
+                Path.home() / "AppData" / "Roaming" / "VoiceTranscriber" / "voice_transcriber_debug.txt",  # Windows AppData explizit
             ]
 
             debug_file = None
@@ -806,6 +833,50 @@ Die Datei wird automatisch erstellt, wenn Sie eine Aufnahme machen.
         except Exception as e:
             logger.error(f"Fehler beim Exportieren: {e}")
             messagebox.showerror("Fehler", f"Export fehlgeschlagen: {e}")
+
+    def _open_temp_dir(self):
+        """Öffnet das Temp-Verzeichnis"""
+        try:
+            import os
+            import subprocess
+            temp_dir = config.get_temp_dir()
+            
+            if not temp_dir.exists():
+                temp_dir.mkdir(parents=True)
+                
+            if os.name == 'nt':
+                os.startfile(temp_dir)
+            else:
+                subprocess.run(['xdg-open', str(temp_dir)])
+                
+        except Exception as e:
+            logger.error(f"Fehler beim Öffnen des Temp-Verzeichnisses: {e}")
+            messagebox.showerror("Fehler", f"Konnte Temp-Verzeichnis nicht öffnen: {e}")
+
+    def _cleanup_temp_files(self):
+        """Bereinigt temporäre Dateien"""
+        if not messagebox.askyesno("Bereinigen", "Möchten Sie wirklich alle temporären WAV-Dateien löschen?"):
+            return
+            
+        try:
+            temp_dir = config.get_temp_dir()
+            count = 0
+            size_bytes = 0
+            
+            for wav_file in temp_dir.glob("recording_*.wav"):
+                try:
+                    size_bytes += wav_file.stat().st_size
+                    wav_file.unlink()
+                    count += 1
+                except Exception:
+                    pass
+            
+            size_mb = size_bytes / (1024 * 1024)
+            messagebox.showinfo("Bereinigung", f"Es wurden {count} Dateien gelöscht ({size_mb:.1f} MB freigegeben).")
+            
+        except Exception as e:
+            logger.error(f"Fehler beim Bereinigen: {e}")
+            messagebox.showerror("Fehler", f"Fehler beim Bereinigen: {e}")
 
     def _import_settings(self):
         """Importiert Einstellungen aus einer Datei"""

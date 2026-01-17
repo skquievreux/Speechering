@@ -59,7 +59,7 @@ class HotkeyListener:
                 keyboard.on_release_key(hotkey, self._on_release_handler)
                 self.registered_hotkeys.append(hotkey)
                 self.hotkey_registered = True
-                logger.info(f"Hotkey '{hotkey}' erfolgreich registriert")
+                logger.debug(f"Hotkey '{hotkey}' erfolgreich registriert")
                 # Registriere alle verfügbaren Hotkeys, nicht nur den ersten
             except Exception as e:
                 logger.warning(f"Hotkey '{hotkey}' nicht verfügbar: {e}")
@@ -69,7 +69,7 @@ class HotkeyListener:
             logger.error("Kein Hotkey konnte registriert werden")
             raise RuntimeError("Hotkey-Registrierung fehlgeschlagen")
 
-        logger.info(f"Insgesamt {len(self.registered_hotkeys)} Hotkeys registriert: {', '.join(self.registered_hotkeys)}")
+        logger.info(f"✓ {len(self.registered_hotkeys)} Hotkeys aktiv: {', '.join(self.registered_hotkeys).upper()}")
 
     def _on_press_handler(self, event):
         """Handler für Hotkey-Drücken mit Debouncing"""

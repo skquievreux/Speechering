@@ -121,18 +121,6 @@ poetry run python tools/build.py --installer
 poetry run python tools/build.py --help
 ```
 
-#### 7. Legacy-Methode (DEPRECATED)
-
-> ⚠️ **DEPRECATED**: Die Installation via `requirements.txt` wird in einer zukünftigen Version entfernt.  
-> Bitte nutzen Sie Poetry (siehe oben).
-
-```bash
-# ❌ Alt - Nicht mehr empfohlen
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-```
-
 ## 🎯 Verwendung
 
 ### Nach Installation:
@@ -349,7 +337,7 @@ venv\Scripts\activate
 ### "PyInstaller nicht gefunden"
 
 ```bash
-pip install pyinstaller
+poetry install
 ```
 
 ### "OpenAI API Fehler"

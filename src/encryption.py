@@ -94,7 +94,7 @@ class SecureStorage:
             try:
                 return base64.b64decode(encrypted_text.encode('utf-8')).decode('utf-8')
             except Exception as e:
-                logger.error(f"Fehler bei Fallback-Entschlüsselung: {e}")
+                logger.debug(f"Fehler bei Fallback-Entschlüsselung: {e}")
                 return encrypted_text
 
         try:

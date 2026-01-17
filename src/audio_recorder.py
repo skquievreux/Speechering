@@ -75,7 +75,20 @@ class AudioRecorder:
             self._cleanup_stream()
 
             # Stream öffnen
-            input_device_index = config.AUDIO_DEVICE_INDEX if config.AUDIO_DEVICE_INDEX >= 0 else None
+            # Input Device auswählen
+            input_device_index = None
+            
+            # 1. Versuche über Namen zu finden (zuverlässiger bei USB-Geräten)
+            if config.AUDIO_DEVICE_NAME and config.AUDIO_DEVICE_NAME != "Standard (automatisch)":
+                input_device_index = self._get_device_index_by_name(config.AUDIO_DEVICE_NAME)
+                if input_device_index is not None:
+                     logger.info(f"Verwende Audio-Gerät nach Name: {config.AUDIO_DEVICE_NAME} (Index: {input_device_index})")
+            
+            # 2. Fallback auf Index (Legacy)
+            if input_device_index is None and config.AUDIO_DEVICE_INDEX >= 0:
+                input_device_index = config.AUDIO_DEVICE_INDEX
+                logger.info(f"Verwende Audio-Gerät nach Index: {input_device_index}")
+
             self.stream = self.audio.open(  # type: ignore
                 format=pyaudio.paInt16,
                 channels=config.CHANNELS,
@@ -281,6 +294,43 @@ class AudioRecorder:
                         return f.read()
             except Exception as fallback_e:
                 logger.error(f"Fallback fehlgeschlagen: {fallback_e}")
+            return None
+
+    def _get_device_index_by_name(self, target_name: str) -> Optional[int]:
+        """Findet den Index eines Audio-Geräts anhand des Namens"""
+        try:
+            count = self.audio.get_device_count()
+            for i in range(count):
+                device_info = self.audio.get_device_info_by_index(i)
+                max_channels = device_info.get('maxInputChannels')
+                
+                if max_channels is not None and max_channels > 0:
+                    device_name = device_info.get('name')
+                    
+                    # Gleiche Bereinigungs-Logik wie in settings_gui.py anwenden
+                    try:
+                        if not isinstance(device_name, str):
+                            device_name = str(device_name)
+                        if isinstance(device_name, bytes):
+                            device_name = device_name.decode('utf-8', errors='replace')
+                        
+                        import unicodedata
+                        device_name = unicodedata.normalize('NFKD', device_name).encode('ascii', 'ignore').decode('ascii')
+                        device_name = ''.join(c for c in device_name if ord(c) >= 32 or c in '\t\n\r')
+                        device_name = device_name.strip()
+                        
+                        if not device_name:
+                            device_name = f"Audio Device {i}"
+                            
+                    except Exception:
+                        pass
+                    
+                    if device_name == target_name:
+                        return i
+            return None
+            
+        except Exception as e:
+            logger.warning(f"Fehler bei Gerätesuche nach Name: {e}")
             return None
 
     def _cleanup_stream(self):

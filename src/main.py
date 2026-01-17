@@ -553,8 +553,10 @@ class VoiceTranscriberApp:
             import os
             from pathlib import Path
 
-            # Erstelle Debug-Datei im User-Verzeichnis
-            user_dir = Path.home()
+            # Erstelle Debug-Datei im AppData-Verzeichnis (konsistent mit Logs)
+            from .user_config import user_config
+            user_dir = user_config.get_appdata_dir()
+            user_dir.mkdir(parents=True, exist_ok=True)
             self.debug_file_path = user_dir / "voice_transcriber_debug.txt"
 
             # Erstelle/überschreibe Datei mit Header
