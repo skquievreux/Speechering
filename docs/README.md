@@ -59,30 +59,33 @@ Verbesserte Organisation und Maintenance.
 
 **Vorteile**: Alles in einem Paket, Offline-Installation möglich
 
-### Option B: Manuelle Installation (für Entwickler)
+## Option B: Manuelle Installation (für Entwickler)
 
 #### 1. Repository klonen
 
 ```bash
 git clone <repository-url>
-cd voice-transcriber
+cd Speechering
 ```
 
-#### 2. Virtual Environment erstellen
+#### 2. Poetry installieren
 
 ```bash
-# Windows CMD/PowerShell
-python -m venv venv
-venv\Scripts\activate
+# Windows (PowerShell)
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
 
-# Terminal zeigt jetzt: (venv) C:\...\voice-transcriber>
+# Alternative: Via pipx
+pip install pipx
+pipx install poetry
 ```
 
 #### 3. Dependencies installieren
 
 ```bash
-pip install -r requirements.txt
+poetry install
 ```
+
+**Poetry erstellt automatisch ein Virtual Environment!**
 
 #### 4. OpenAI API-Key konfigurieren
 
@@ -94,23 +97,40 @@ OPENAI_API_KEY=sk-your-openai-api-key-here
 #### 5. Anwendung starten
 
 ```bash
+# Option A: Poetry shell (empfohlen)
+poetry shell
 python src/main.py
+
+# Option B: Direkt mit poetry run
+poetry run python src/main.py
 ```
 
 #### 6. Standalone-EXE erstellen (optional)
 
 ```bash
 # Nur EXE erstellen
-python tools/build.py
+poetry run python tools/build.py
 
 # Bootstrap-Installer erstellen (empfohlen für Distribution)
-python tools/build.py --bootstrap
+poetry run python tools/build.py --bootstrap
 
 # Vollständigen Installer erstellen
-python tools/build.py --installer
+poetry run python tools/build.py --installer
 
 # Hilfe anzeigen
-python tools/build.py --help
+poetry run python tools/build.py --help
+```
+
+#### 7. Legacy-Methode (DEPRECATED)
+
+> ⚠️ **DEPRECATED**: Die Installation via `requirements.txt` wird in einer zukünftigen Version entfernt.  
+> Bitte nutzen Sie Poetry (siehe oben).
+
+```bash
+# ❌ Alt - Nicht mehr empfohlen
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
 ## 🎯 Verwendung

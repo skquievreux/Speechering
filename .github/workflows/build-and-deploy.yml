@@ -39,48 +39,24 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install Prettier
-        run: npm install -g prettier
-
-      - name: Format code with Prettier
-        run: prettier --write "**/*.{md,yml,yaml,json,js,ts,html,css}"
-
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'poetry'
 
-      # Verbesserte Cache-Konfiguration
-      - name: Cache pip dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      # PyInstaller Cache für schnellere Builds
-      - name: Cache PyInstaller
-        uses: actions/cache@v3
-        with:
-          path: |
-            build/
-            .pyinstaller_cache/
-          key: ${{ runner.os }}-pyinstaller-${{ hashFiles('src/**/*.py', 'tools/main_exe.py', 'tools/build.py') }}
-          restore-keys: |
-            ${{ runner.os }}-pyinstaller-
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          poetry --version
 
       - name: Install dependencies
         shell: bash
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller
+        run: poetry install --no-root
 
       - name: Install NSIS
         shell: bash
-        run: |
-          choco install nsis -y
+        run: choco install nsis -y
 
       - name: Determine version
         id: version
@@ -139,16 +115,16 @@ jobs:
       - name: Build VoiceTranscriber EXE
         shell: bash
         run: |
-          # Modifizierter Build-Befehl mit UPX-Komprimierung
-          python tools/build.py --upx
+          # Build with Poetry
+          poetry run python tools/build.py --upx
 
       - name: Build Bootstrap Installer
         shell: bash
-        run: python tools/build.py --bootstrap
+        run: poetry run python tools/build.py --bootstrap
 
       - name: Build NSIS Installer
         shell: bash
-        run: python tools/build.py --installer
+        run: poetry run python tools/build.py --installer
 
       - name: Create version info
         shell: bash
@@ -259,31 +235,23 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'poetry'
 
-      # Verbesserte Cache-Konfiguration für Tests
-      - name: Cache pip dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-test-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-test-
-            ${{ runner.os }}-pip-
+      - name: Install Poetry
+        run: pipx install poetry
 
       - name: Install test dependencies
         shell: bash
-        run: |
-          pip install -r requirements.txt
-          pip install pytest pytest-cov pytest-xdist
+        run: poetry install
 
       # Parallele Testausführung für schnellere Tests
       - name: Run tests
         shell: bash
         run: |
-          pytest tests/ -v --cov=src --cov-report=xml -n auto
+          poetry run pytest tests/ -v --cov=src --cov-report=xml -n auto
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4

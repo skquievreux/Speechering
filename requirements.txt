@@ -1,3 +1,13 @@
+# ⚠️ DEPRECATED - This file is kept for legacy compatibility only
+# 
+# Please use Poetry for dependency management:
+#   poetry install
+#
+# This file will be removed in a future version.
+# See pyproject.toml for the canonical dependency list.
+#
+# ============================================================================
+
 # Core Dependencies - Neueste stabile Versionen (Januar 2025)
 pystray>=0.19.5
 pillow>=11.0.0
