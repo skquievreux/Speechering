@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/skquievreux/Speechering/compare/v1.5.3...v1.6.0) (2026-01-17)
+
+
+### Features
+
+* optimize dependencies, UX, and logging ([5249dac](https://github.com/skquievreux/Speechering/commit/5249dac696dab13d5624bd7a8d965db261467bb0))
+
 ## [1.5.3](https://github.com/skquievreux/Speechering/compare/v1.5.2...v1.5.3) (2026-01-17)
 
 
