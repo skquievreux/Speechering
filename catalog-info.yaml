@@ -6,6 +6,7 @@ metadata:
     Speechering ist eine plattformübergreifende Anwendung für Spracherkennung und -verarbeitung, entwickelt mit Node.js und Python, mit Installation und Automation über NSIS und AutoHotkey.
   annotations:
     github.com/project-slug: skquievreux/Speechering
+    backstage.io/techdocs-ref: dir:.
 spec:
   type: service
   lifecycle: experimental
