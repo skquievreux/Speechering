@@ -27,6 +27,16 @@ jobs:
           node-version: "lts/*"
           # cache: npm  # Disabled - Python project has no package.json
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          poetry --version
+
       - name: Install Semantic Release & Plugins
         run: |
           npm install --no-save \
