@@ -23,6 +23,11 @@ class TextProcessor:
 
     def process_text(self, raw_text: str) -> Optional[str]:
         """Verarbeitet und korrigiert den transkribierten Text"""
+        # API-Key Validierung vorab - prüfe ob Key im OpenAI-Format ist
+        if not config.OPENAI_API_KEY or not config.OPENAI_API_KEY.startswith("sk-"):
+            logger.info("Kein gültiger OpenAI API-Key konfiguriert - überspringe Text-Korrektur")
+            return raw_text
+
         if not self._validate_input_text(raw_text):
             return None
 

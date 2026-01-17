@@ -135,7 +135,6 @@ def build_exe():
         "--name=VoiceTranscriber",     # Name der EXE
         "--add-data=assets:assets",    # Assets einbinden
         "--add-data=scripts:scripts",  # AHK-Skript einbinden
-        "--add-data=MOUSE_WHEEL_README.md:.",  # Dokumentation einbinden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
         # Performance-Optimierungen
         "--optimize=1",                # Bytecode optimieren

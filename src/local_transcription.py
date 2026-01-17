@@ -54,7 +54,7 @@ class LocalTranscriptionService:
     def _load_model(self):
         """Lädt das Whisper-Modell"""
         try:
-            logger.info(f"Lade lokales Whisper-Modell: {self.model_size}")
+            logger.info(f"Lade lokales Whisper-Modell: '{self.model_size}'")
 
             # Prüfe GPU-Verfügbarkeit
             device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -74,7 +74,7 @@ class LocalTranscriptionService:
                     download_root=str(config.get_temp_dir() / "whisper_models")
                 )
 
-            logger.info(f"Whisper-Modell {self.model_size} erfolgreich geladen")
+            logger.info(f"✓ Whisper-Modell '{self.model_size}' erfolgreich geladen (Device: {device}, App v{config.APP_VERSION})")
 
         except Exception as e:
             logger.error(f"Fehler beim Laden des Whisper-Modells: {e}")
@@ -91,7 +91,7 @@ class LocalTranscriptionService:
             return None
 
         try:
-            logger.info("Starte lokale Transkription")
+            logger.info(f"Starte lokale Transkription mit Modell '{self.model_size}'")
 
             start_time = time.time()
 
@@ -109,7 +109,7 @@ class LocalTranscriptionService:
             transcript = " ".join([segment.text for segment in segments])
 
             duration = time.time() - start_time
-            logger.info(".2f")
+            logger.info(f"Transkription abgeschlossen in {duration:.2f}s")
 
             # Validiere Ergebnis
             if self._validate_transcript(transcript):
