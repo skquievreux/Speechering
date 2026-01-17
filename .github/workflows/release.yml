@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
-          cache: npm
+          # cache: npm  # Disabled - Python project has no package.json
 
       - name: Install Semantic Release & Plugins
         run: |

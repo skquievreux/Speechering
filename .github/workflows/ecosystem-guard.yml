@@ -1,11 +1,11 @@
-name: Ecosystem Guard
+name: Ecosystem Guard (DISABLED for Python Project)
+
+# This workflow is disabled for Python projects
+# It only enforces Node.js/TypeScript/Next.js standards
+# Python projects use pyproject.toml instead of package.json
 
 on:
-  push:
-    branches: [ main, master ]
-  schedule:
-    - cron: '0 0 * * 1' # Weekly on Mondays
-  workflow_dispatch:
+  workflow_dispatch:  # Manual only, disabled automatic triggers
 
 jobs:
   standardize:
