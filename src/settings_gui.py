@@ -155,15 +155,39 @@ class SettingsGUI:
             ("API-Schlüssel", self._create_api_tab),
             ("Über", self._create_about_tab)
         ]:
-            tab_frame = ttk.Frame(self.notebook, padding=10)
-            self.notebook.add(tab_frame, text=name)
-            self.tabs[name] = tab_frame
+            # Erstelle Tab-Frame mit Canvas für Scrolling
+            tab_outer_frame = ttk.Frame(self.notebook)
+            self.notebook.add(tab_outer_frame, text=name)
+            
+            # Canvas + Scrollbar (mit sichtbarem Hintergrund)
+            canvas = tk.Canvas(tab_outer_frame, highlightthickness=0, bg='SystemButtonFace')
+            scrollbar = ttk.Scrollbar(tab_outer_frame, orient="vertical", command=canvas.yview)
+            scrollable_frame = ttk.Frame(canvas, padding=10)
+            
+            scrollable_frame.bind(
+                "<Configure>",
+                lambda e, c=canvas: c.configure(scrollregion=c.bbox("all"))
+            )
+            
+            canvas.create_window((0, 0), window=scrollable_frame, anchor="nw", width=canvas.winfo_reqwidth())
+            canvas.configure(yscrollcommand=scrollbar.set)
+            
+            # Mausrad-Unterstützung
+            def _on_mousewheel(event, c=canvas):
+                c.yview_scroll(int(-1*(event.delta/120)), "units")
+            canvas.bind_all("<MouseWheel>", _on_mousewheel)
+            
+            # Pack canvas and scrollbar
+            canvas.pack(side="left", fill="both", expand=True)
+            scrollbar.pack(side="right", fill="y")
+            
+            self.tabs[name] = scrollable_frame
             
             try:
-                creator(tab_frame)
+                creator(scrollable_frame)
             except Exception as e:
                 logger.error(f"Fehler beim Erstellen des Tabs '{name}': {e}")
-                ttk.Label(tab_frame, text=f"Fehler beim Laden: {e}", foreground="red").pack()
+                ttk.Label(scrollable_frame, text=f"Fehler beim Laden: {e}", foreground="red").pack()
 
         # Buttons
         button_frame = ttk.Frame(self.window)
@@ -975,3 +999,55 @@ Die Datei wird automatisch erstellt, wenn Sie eine Aufnahme machen.
     def get_selected_hotkey(self):
         """Gibt den ausgewählten Hotkey zurück"""
         return self.hotkey_var.get()
+
+    def _create_about_tab(self, parent):
+        """Erstellt den Über-Tab (parent ist bereits scrollbar)"""
+        # Icon (Mikrofon-Emoji als Text)
+        icon_label = ttk.Label(parent, text="🎤", font=("Segoe UI Emoji", 48))
+        icon_label.pack(pady=(20, 10))
+
+        # App Name
+        ttk.Label(parent, text="Voice Transcriber", 
+                 font=("TkDefaultFont", 16, "bold")).pack()
+
+        # Version
+        ttk.Label(parent, text=f"Version {config.APP_VERSION}", 
+                 font=("TkDefaultFont", 10)).pack(pady=5)
+
+        # Beschreibung
+        ttk.Label(parent, text="Push-to-Talk Sprach-zu-Text Transkription", 
+                 font=("TkDefaultFont", 9)).pack(pady=10)
+
+        # Technologien
+        tech_frame = ttk.LabelFrame(parent, text="Technologien", padding=15)
+        tech_frame.pack(fill='x', padx=20, pady=10)
+
+        technologies = [
+            "• Whisper AI (OpenAI) - Lokale Transkription",
+            "• PyAudio - Audio-Aufnahme",
+            "• PyTorch (CPU) - ML-Framework",
+            "• Tkinter - Benutzeroberfläche",
+            "• Python 3.13 - Programmiersprache"
+        ]
+
+        for tech in technologies:
+            ttk.Label(tech_frame, text=tech, font=("TkDefaultFont", 9)).pack(anchor='w', pady=2)
+
+        # Features
+        features_frame = ttk.LabelFrame(parent, text="Features", padding=15)
+        features_frame.pack(fill='x', padx=20, pady=10)
+
+        features = [
+            "✓ Lokale Whisper-Transkription (offline)",
+            "✓ Mehrere Hotkeys (F12, F11, F10)",
+            "✓ Persistente Geräteauswahl",
+            "✓ Temp-Datei-Verwaltung",
+            "✓ Debug-Logging"
+        ]
+
+        for feature in features:
+            ttk.Label(features_frame, text=feature, font=("TkDefaultFont", 9)).pack(anchor='w', pady=2)
+
+        # Copyright
+        ttk.Label(parent, text="© 2026 Quievreux", 
+                 font=("TkDefaultFont", 8)).pack(pady=(20, 10))
