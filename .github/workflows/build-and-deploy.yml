@@ -34,11 +34,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js for Prettier
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
