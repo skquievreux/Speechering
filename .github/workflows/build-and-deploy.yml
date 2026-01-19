@@ -82,15 +82,15 @@ jobs:
           fi
 
           # Update installer script
-          sed -i "s/Name \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/Name \"Voice Transcriber v$VERSION\"/" installer.nsi
-          sed -i "s/OutFile \"VoiceTranscriber_Installer_v[0-9]\+\.[0-9]\+\.[0-9]\+\.exe\"/OutFile \"VoiceTranscriber_Installer_v$VERSION.exe\"/" installer.nsi
-          sed -i "s/DisplayName \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber v$VERSION\"/" installer.nsi
-          sed -i "s/DisplayVersion \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayVersion \"$VERSION\"/" installer.nsi
+          sed -i "s/Name \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/Name \"Voice Transcriber v$VERSION\"/" tools/installer.nsi
+          sed -i "s/OutFile \"VoiceTranscriber_Installer_v[0-9]\+\.[0-9]\+\.[0-9]\+\.exe\"/OutFile \"VoiceTranscriber_Installer_v$VERSION.exe\"/" tools/installer.nsi
+          sed -i "s/DisplayName \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber v$VERSION\"/" tools/installer.nsi
+          sed -i "s/DisplayVersion \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayVersion \"$VERSION\"/" tools/installer.nsi
 
           # Update bootstrap installer
-          sed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_installer.nsi
-          sed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" bootstrap_installer.nsi
-          sed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_installer.nsi
+          sed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_tools/installer.nsi
+          sed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" bootstrap_tools/installer.nsi
+          sed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_tools/installer.nsi
 
       # Icon already exists in assets/icon.ico - no generation needed
 
