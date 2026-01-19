@@ -61,9 +61,8 @@ jobs:
           elif [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION="${GITHUB_REF#refs/tags/v}"
           else
-            # Use automated version management
-            python scripts/version_manager.py > version.txt
-            VERSION=$(cat version.txt)
+            # Get version from pyproject.toml using poetry
+            VERSION=$(poetry version -s)
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "version=$VERSION" >> $GITHUB_OUTPUT
