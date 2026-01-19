@@ -504,41 +504,53 @@ class SettingsGUI:
         api_key = self.api_key_var.get().strip()
 
         if not api_key:
-            self.api_key_validation_label.config(text="", foreground="red")
+            self._update_validation_label("", "red")
             return
 
         # Länge prüfen (OpenAI Keys sind ~51 Zeichen)
         if len(api_key) < 20:
-            self.api_key_validation_label.config(
-                text="❌ Zu kurz (OpenAI Keys sind ~51 Zeichen)",
-                foreground="red"
+            self._update_validation_label(
+                "❌ Zu kurz (OpenAI Keys sind ~51 Zeichen)",
+                "red"
             )
             return
 
         # Format prüfen (muss mit sk- beginnen)
         if not api_key.startswith('sk-'):
-            self.api_key_validation_label.config(
-                text="❌ Muss mit 'sk-' beginnen",
-                foreground="red"
+            self._update_validation_label(
+                "❌ Muss mit 'sk-' beginnen",
+                "red"
             )
             return
 
         # Länge für vollständigen Key prüfen
         if len(api_key) > 10 and len(api_key) < 50:
-            self.api_key_validation_label.config(
-                text="⚠️ Unvollständig (OpenAI Keys sind ~51 Zeichen)",
-                foreground="orange"
+            self._update_validation_label(
+                "⚠️ Unvollständig (OpenAI Keys sind ~51 Zeichen)",
+                "orange"
             )
             return
 
         # Erfolgreich
         if len(api_key) >= 50:
-            self.api_key_validation_label.config(
-                text="✅ Format korrekt",
-                foreground="green"
+            self._update_validation_label(
+                "✅ Format korrekt",
+                "green"
             )
         else:
-            self.api_key_validation_label.config(text="", foreground="red")
+            self._update_validation_label("", "red")
+
+    def _update_validation_label(self, text, color):
+        """Thread-safe update of validation label"""
+        try:
+            if hasattr(self, 'api_key_validation_label') and self.api_key_validation_label.winfo_exists():
+                # Use after() to ensure we're in the main thread
+                self.api_key_validation_label.after(0, lambda: self.api_key_validation_label.config(
+                    text=text,
+                    foreground=color
+                ))
+        except Exception as e:
+            logger.warning(f"Could not update validation label: {e}")
 
     def _create_about_tab(self, parent):
         """Erstellt den Über-Tab"""

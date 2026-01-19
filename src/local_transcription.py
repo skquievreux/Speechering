@@ -6,10 +6,12 @@ Transkribiert Audio-Dateien lokal mittels faster-whisper Modell.
 import logging
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
-import torch
-from faster_whisper import WhisperModel
+# Lazy imports - nur laden wenn tatsächlich verwendet
+if TYPE_CHECKING:
+    import torch
+    from faster_whisper import WhisperModel
 
 from src.config import config
 
@@ -54,6 +56,10 @@ class LocalTranscriptionService:
     def _load_model(self):
         """Lädt das Whisper-Modell"""
         try:
+            # Lazy imports - nur hier laden wenn tatsächlich benötigt
+            import torch
+            from faster_whisper import WhisperModel
+            
             logger.info(f"Lade lokales Whisper-Modell: '{self.model_size}'")
 
             # Prüfe GPU-Verfügbarkeit
@@ -197,9 +203,17 @@ class LocalTranscriptionService:
         if not self.model:
             return {"available": False}
 
+        try:
+            import torch
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            compute_type = "float16" if device == "cuda" else "int8"
+        except ImportError:
+            device = "unknown"
+            compute_type = "unknown"
+
         return {
             "available": True,
             "model_size": self.model_size,
-            "device": "cuda" if torch.cuda.is_available() else "cpu",
-            "compute_type": "float16" if torch.cuda.is_available() else "int8"
+            "device": device,
+            "compute_type": compute_type
         }
