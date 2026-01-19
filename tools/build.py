@@ -109,6 +109,12 @@ def build_exe():
         # GUI-Automation (nur für Settings)
         "--hidden-import=pyautogui",       # GUI-Automation
 
+        # pkg_resources Dependencies (für PyInstaller)
+        "--hidden-import=pkg_resources",
+        "--hidden-import=jaraco.text",
+        "--hidden-import=jaraco.functools",
+        "--hidden-import=jaraco.context",
+
         # Projekt-spezifische Module
         "--hidden-import=version_manager", # Version Management
         "--hidden-import=user_config",     # Benutzerspezifische Konfiguration
@@ -283,7 +289,7 @@ def build_bootstrap_installer_nsis():
         return False
 
     # Prüfe ob bootstrap_installer.nsi existiert
-    installer_script = Path("bootstrap_installer.nsi")
+    installer_script = Path("tools/bootstrap_installer.nsi")
     if not installer_script.exists():
         print(f"FEHLER: Bootstrap-Installer-Skript nicht gefunden: {installer_script}")
         return False
@@ -357,7 +363,7 @@ def build_installer():
         return False
 
     # Prüfe ob installer.nsi existiert
-    installer_script = Path("installer.nsi")
+    installer_script = Path("tools/installer.nsi")
     if not installer_script.exists():
         print(f"FEHLER: Installer-Skript nicht gefunden: {installer_script}")
         return False
