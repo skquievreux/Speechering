@@ -92,12 +92,7 @@ jobs:
           sed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" bootstrap_installer.nsi
           sed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_installer.nsi
 
-      - name: Generate icon
-        shell: bash
-        run: |
-          cd assets
-          python icon_generator.py
-          cd ..
+      # Icon already exists in assets/icon.ico - no generation needed
 
       # Optimierte PyInstaller-Konfiguration mit UPX-Komprimierung
       - name: Install UPX
@@ -181,7 +176,7 @@ jobs:
           RETRY_COUNT=0
           
           while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-            if python scripts/deploy_to_r2.py; then
+            if python tools/deploy_to_r2.py; then
               echo "✅ Deployment erfolgreich!"
               break
             else
@@ -231,7 +226,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'poetry'
 
       - name: Install Poetry
         run: pipx install poetry
