@@ -88,9 +88,9 @@ jobs:
           sed -i "s/DisplayVersion \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayVersion \"$VERSION\"/" tools/installer.nsi
 
           # Update bootstrap installer
-          sed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_tools/installer.nsi
-          sed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" bootstrap_tools/installer.nsi
-          sed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_tools/installer.nsi
+          sed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" tools/bootstrap_installer.nsi
+          sed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" tools/bootstrap_installer.nsi
+          sed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" tools/bootstrap_installer.nsi
 
       # Icon already exists in assets/icon.ico - no generation needed
 
