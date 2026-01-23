@@ -1,3 +1,15 @@
+# [1.9.0](https://github.com/skquievreux/Speechering/compare/v1.8.3...v1.9.0) (2026-01-23)
+
+
+### Bug Fixes
+
+* revert invalid action versions to stable releases ([4b8d320](https://github.com/skquievreux/Speechering/commit/4b8d3202a96c49b80425352b4a89fb778f93a520))
+
+
+### Features
+
+* professionalize installer with nsis, autostart, and clean build flow ([603cdd5](https://github.com/skquievreux/Speechering/commit/603cdd5f90bc2181b6415059fdacf9fbf8c4d8ba))
+
 ## [1.8.3](https://github.com/skquievreux/Speechering/compare/v1.8.2...v1.8.3) (2026-01-23)
 
 
