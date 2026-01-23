@@ -220,6 +220,7 @@ def build_bootstrap_installer():
         "--hidden-import=urllib.error",     # HTTP-Fehlerbehandlung
         "--hidden-import=ssl",              # SSL für HTTPS
         "--hidden-import=hashlib",          # Hashing für Verifikation
+        "--paths=src",                      # src-Verzeichnis zum Python-Pfad hinzufügen
         "bootstrap_installer.py"      # Einstiegspunkt
     ]
 
