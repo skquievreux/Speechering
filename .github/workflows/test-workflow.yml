@@ -100,7 +100,7 @@ jobs:
 
       # Test der GitHub Release-Erstellung mit der neuen Action
       - name: Create GitHub Release (New Method)
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           name: Test Release ${{ needs.build.outputs.version }}
           tag_name: test-v${{ needs.build.outputs.version }}
@@ -110,7 +110,7 @@ jobs:
             Dies ist ein Test-Release zur Überprüfung der Workflow-Optimierungen.
             
             ### Änderungen
-            - Verwendung von softprops/action-gh-release@v1
+            - Verwendung von softprops/action-gh-release@v2
             - Explizite Permissions-Konfiguration
             - Vereinfachter Workflow für schnellere Tests
           files: |
