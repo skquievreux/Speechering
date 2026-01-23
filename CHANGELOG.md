@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/skquievreux/Speechering/compare/v1.8.0...v1.8.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* **config:** aggressively auto-repair corrupt R2 URL in user config ([592c368](https://github.com/skquievreux/Speechering/commit/592c36885d6b4ce2bd842f6efeea3185099f6c39))
+
 # [1.8.0](https://github.com/skquievreux/Speechering/compare/v1.7.0...v1.8.0) (2026-01-23)
 
 
