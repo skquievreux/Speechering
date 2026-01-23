@@ -38,10 +38,15 @@ class Config:
         default_r2_url = 'https://pub-fce2dd545d3648c38571dc323c7b403d.r2.dev'
         self.R2_BASE_URL: str = user_config.get_decrypted('r2.base_url', os.getenv('R2_BASE_URL', default_r2_url))
         
-        # Sanity Check: Falls die Entschlüsselung fehlschlug oder Müll im Config steht
-        if not self.R2_BASE_URL.startswith('http'):
-            logger.warning(f"Ungültige R2_BASE_URL gefunden, setze auf Default zurück: {self.R2_BASE_URL[:20]}...")
+        # Aggressive Sanity Check:
+        # 1. Muss mit http starten
+        # 2. Darf NICHT mit dem Fernet-Header 'gAAAAA' starten (das wäre verschlüsselter Müll)
+        if not self.R2_BASE_URL.startswith('http') or self.R2_BASE_URL.startswith('gAAAAA'):
+            logger.warning(f"Korrupte R2_BASE_URL erkannt ({self.R2_BASE_URL[:15]}...), erzwinge Default.")
             self.R2_BASE_URL = default_r2_url
+            # Repariere config sofort
+            user_config.set('r2.base_url', default_r2_url)
+            user_config.save()
 
         self.R2_ACCESS_TOKEN: str = user_config.get_decrypted('r2.access_token', os.getenv('R2_ACCESS_TOKEN', ''))
 
