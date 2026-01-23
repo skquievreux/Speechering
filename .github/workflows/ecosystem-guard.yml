@@ -90,7 +90,7 @@ jobs:
           '
 
       - name: Commit Changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: standardize ecosystem versions (Node 20, Supabase, TS)"
           branch: ${{ github.head_ref }}
