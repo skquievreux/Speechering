@@ -35,7 +35,14 @@ class Config:
         self.OPENAI_API_KEY: str = user_config.get_decrypted('api.openai_key', os.getenv('OPENAI_API_KEY', ''))
 
         # Cloudflare R2 Storage (aus sicherer User-Konfiguration oder .env Fallback)
-        self.R2_BASE_URL: str = user_config.get_decrypted('r2.base_url', os.getenv('R2_BASE_URL', 'https://pub-fce2dd545d3648c38571dc323c7b403d.r2.dev'))
+        default_r2_url = 'https://pub-fce2dd545d3648c38571dc323c7b403d.r2.dev'
+        self.R2_BASE_URL: str = user_config.get_decrypted('r2.base_url', os.getenv('R2_BASE_URL', default_r2_url))
+        
+        # Sanity Check: Falls die Entschlüsselung fehlschlug oder Müll im Config steht
+        if not self.R2_BASE_URL.startswith('http'):
+            logger.warning(f"Ungültige R2_BASE_URL gefunden, setze auf Default zurück: {self.R2_BASE_URL[:20]}...")
+            self.R2_BASE_URL = default_r2_url
+
         self.R2_ACCESS_TOKEN: str = user_config.get_decrypted('r2.access_token', os.getenv('R2_ACCESS_TOKEN', ''))
 
         # Recording Settings (benutzerspezifisch konfigurierbar)
@@ -117,18 +124,14 @@ class Config:
                 user_config.set_encrypted('api.openai_key', api_key)
                 logger.info("OpenAI API-Key erfolgreich migriert und verschlüsselt")
 
-        # Migriere R2 Storage Konfiguration (verschlüsselt)
         if os.getenv('R2_ACCESS_TOKEN') and not user_config.get('r2.access_token'):
             r2_token = os.getenv('R2_ACCESS_TOKEN', '')
             if r2_token:
                 user_config.set_encrypted('r2.access_token', r2_token)
                 logger.info("R2 Access Token erfolgreich migriert und verschlüsselt")
 
-        if os.getenv('R2_BASE_URL') and not user_config.get('r2.base_url'):
-            r2_url = os.getenv('R2_BASE_URL', '')
-            if r2_url:
-                user_config.set_encrypted('r2.base_url', r2_url)
-                logger.info("R2 Base URL erfolgreich migriert und verschlüsselt")
+        # R2_BASE_URL Migration entfernt, da es eine öffentliche URL ist. 
+        # Verschlüsselung führt bei Key-Wechsel zu Installationsproblemen.
 
         # Speichere migrierte Werte
         user_config.save()

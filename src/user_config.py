@@ -154,6 +154,8 @@ class UserConfig:
 
         try:
             decrypted_value = secure_storage.decrypt(encrypted_value)
+            if decrypted_value is None:
+                return default
             return decrypted_value
         except Exception as e:
             logger.error(f"Fehler bei Entschlüsselung von '{key}': {e}")
