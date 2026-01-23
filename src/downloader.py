@@ -36,7 +36,7 @@ class R2Downloader:
         self.max_retries = 3
         self.retry_delay = 2  # Sekunden
 
-    def download_file(self, remote_path: str, local_path: str, expected_size: Optional[int] = None) -> bool:
+    def download_file(self, remote_path: str, local_path: str, expected_size: Optional[int] = None, raise_on_error: bool = False) -> bool:
         """Lädt eine Datei von R2 Storage herunter"""
         remote_url = f"{self.base_url}/{remote_path.lstrip('/')}"
 
@@ -46,6 +46,7 @@ class R2Downloader:
             # Erstelle Verzeichnis falls nötig
             Path(local_path).parent.mkdir(parents=True, exist_ok=True)
 
+            last_error = None
             # Download mit Retry-Logik
             for attempt in range(self.max_retries):
                 try:
@@ -80,15 +81,20 @@ class R2Downloader:
                         return True
 
                 except (URLError, HTTPError, OSError) as e:
+                    last_error = e
                     logger.warning(f"Download-Versuch {attempt + 1} fehlgeschlagen: {e}")
                     if attempt < self.max_retries - 1:
                         time.sleep(self.retry_delay * (2 ** attempt))  # Exponential backoff
                     else:
                         logger.error(f"Alle Download-Versuche fehlgeschlagen für {remote_url}")
+                        if raise_on_error:
+                            raise last_error or e
                         return False
 
         except Exception as e:
             logger.error(f"Unerwarteter Fehler beim Download: {e}")
+            if raise_on_error:
+                raise
             return False
 
         return False  # Fallback für unerwartete Fälle
@@ -166,7 +172,7 @@ class R2Downloader:
             logger.error(f"Fehler bei Dateiverifikation: {e}")
             return False
 
-def download_voice_transcriber(target_dir: Optional[str] = None, version: str = "latest") -> bool:
+def download_voice_transcriber(target_dir: Optional[str] = None, version: str = "latest", raise_on_error: bool = False) -> bool:
     """Lädt die VoiceTranscriber EXE von R2 Storage"""
     if target_dir is None:
         # Standard-Installationsverzeichnis
@@ -211,7 +217,7 @@ def download_voice_transcriber(target_dir: Optional[str] = None, version: str = 
         return True
 
     # Download
-    if downloader.download_file(remote_path, str(local_path), expected_size):
+    if downloader.download_file(remote_path, str(local_path), expected_size, raise_on_error=raise_on_error):
         # Verifiziere Download
         checksum = downloader.calculate_checksum(str(local_path))
         if downloader.verify_file(str(local_path), expected_size):
@@ -220,14 +226,19 @@ def download_voice_transcriber(target_dir: Optional[str] = None, version: str = 
             logger.info("VoiceTranscriber erfolgreich heruntergeladen und verifiziert")
             return True
         else:
-            logger.error("Download-Verifikation fehlgeschlagen")
+            msg = "Download-Verifikation fehlgeschlagen"
+            logger.error(msg)
             # Versuche Backup wiederherzustellen
             if backup_path and backup_path.exists():
                 backup_path.replace(local_path)
                 logger.info("Backup wiederhergestellt")
+            
+            if raise_on_error:
+                raise Exception(msg)
             return False
     else:
         logger.error("Download fehlgeschlagen")
+        # raise_on_error wird bereits in download_file behandelt
         return False
 
 def download_update_package(target_dir: Optional[str] = None, version: str = "latest") -> bool:

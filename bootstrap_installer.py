@@ -101,26 +101,28 @@ class BootstrapInstaller:
                 install_dir = Path(os.environ.get('PROGRAMFILES', 'C:\\Program Files')) / "Voice Transcriber"
 
             self.update_status("Lade VoiceTranscriber.exe herunter...")
+            logger.info(f"Installiere nach: {install_dir}")
 
             # Download durchführen
-            if download_voice_transcriber(str(install_dir)):
+            if download_voice_transcriber(str(install_dir), raise_on_error=True):
                 self.update_status("Installation erfolgreich abgeschlossen!")
 
                 # Erfolgsmeldung
                 if self.root:
                     self.root.after(1000, lambda: self.show_success_message(install_dir))
             else:
+                # Sollte durch raise_on_error nicht erreicht werden, aber als Fallback
                 self.update_status("Installation fehlgeschlagen!")
                 if self.root:
-                    self.root.after(1000, lambda: self.show_error_message())
-
-        # Exception handling wird bereits in der äußeren try-except behandelt
+                    self.root.after(1000, lambda: self.show_error_message("Unbekannter Fehler (Download lieferte False)"))
 
         except Exception as e:
-            logger.error(f"Fehler während der Installation: {e}")
-            self.update_status("Unerwarteter Fehler!")
+            logger.error(f"Fehler während der Installation: {e}", exc_info=True)
+            self.update_status("Fehler aufgetreten!")
             if self.root:
-                self.root.after(1000, lambda: self.show_error_message(str(e)))
+                # Entferne technische Details für User, außer sie sind wichtig
+                error_msg = str(e)
+                self.root.after(1000, lambda: self.show_error_message(error_msg))
 
     def update_status(self, text: str):
         """Aktualisiert den Status-Text"""
@@ -142,9 +144,18 @@ class BootstrapInstaller:
         """Zeigt Fehlermeldung"""
         if self.progress_var:
             self.progress_var.stop()
-        error_text = f"Bei der Installation ist ein Fehler aufgetreten:\n\n{error}" if error else \
-                    "Bei der Installation ist ein Fehler aufgetreten.\n\n" \
-                    "Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut."
+        
+        log_file = Path(os.environ.get('TEMP', '')) / "VoiceTranscriber_Bootstrap.log"
+        
+        error_text = "Bei der Installation ist ein Fehler aufgetreten:\n\n"
+        if error:
+            error_text += f"{error}\n\n"
+        else:
+            error_text += "Unbekannter Fehler.\n\n"
+            
+        error_text += "Bitte überprüfen Sie Ihre Internetverbindung.\n"
+        error_text += f"Details finden Sie im Log: {log_file}"
+        
         messagebox.showerror("Installationsfehler", error_text)
         if self.root:
             self.root.quit()
@@ -171,7 +182,7 @@ class BootstrapInstaller:
             logger.info("Lade VoiceTranscriber.exe von R2 Storage herunter...")
 
             # Download durchführen
-            if download_voice_transcriber(str(install_dir)):
+            if download_voice_transcriber(str(install_dir), raise_on_error=True):
                 logger.info("✅ Installation erfolgreich abgeschlossen!")
                 logger.info(f"VoiceTranscriber.exe wurde nach {install_dir} installiert")
                 return 0
@@ -214,11 +225,25 @@ def main():
 
     # Logging konfigurieren
     log_level = logging.DEBUG if args.verbose else logging.INFO
+    
+    # Log-Datei im Temp-Verzeichnis
+    log_file = Path(os.environ.get('TEMP', '')) / "VoiceTranscriber_Bootstrap.log"
+    
+    handlers = [logging.StreamHandler(sys.stdout)]
+    try:
+        file_handler = logging.FileHandler(str(log_file), mode='w', encoding='utf-8')
+        handlers.append(file_handler)
+    except Exception as e:
+        print(f"Warnung: Konnte Log-Datei nicht erstellen: {e}")
+
     logging.basicConfig(
         level=log_level,
         format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
-        datefmt='%H:%M:%S'
+        datefmt='%H:%M:%S',
+        handlers=handlers
     )
+    
+    logger.info(f"Logging gestartet: {log_file}")
 
     if args.silent:
         logger.info("Starte im Silent-Mode (keine GUI)")
