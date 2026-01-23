@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/skquievreux/Speechering/compare/v1.7.0...v1.8.0) (2026-01-23)
+
+
+### Features
+
+* **bootstrap:** add comprehensive diagnostics and detailed error reporting ([#16](https://github.com/skquievreux/Speechering/issues/16)) ([7c73928](https://github.com/skquievreux/Speechering/commit/7c7392857bb770876f1206c12ac5a90cfed101d9))
+
 # [1.7.0](https://github.com/skquievreux/Speechering/compare/v1.6.0...v1.7.0) (2026-01-23)
 
 
