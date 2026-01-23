@@ -95,19 +95,19 @@ class SecureStorage:
                 return base64.b64decode(encrypted_text.encode('utf-8')).decode('utf-8')
             except Exception as e:
                 logger.debug(f"Fehler bei Fallback-Entschlüsselung: {e}")
-                return encrypted_text
+                return None
 
         try:
             decrypted = self._fernet.decrypt(encrypted_text.encode('utf-8'))
             return decrypted.decode('utf-8')
         except Exception as e:
             logger.error(f"Fehler bei Entschlüsselung: {e}")
-            # Versuche Fallback
+            # Versuche Fallback (Base64)
             try:
                 return base64.b64decode(encrypted_text.encode('utf-8')).decode('utf-8')
             except Exception:
                 logger.error("Auch Fallback-Entschlüsselung fehlgeschlagen")
-                return encrypted_text
+                return None  # WICHTIG: None zurückgeben, nicht den verschlüsselten Text!
 
     def is_encryption_available(self) -> bool:
         """Prüft ob echte Verschlüsselung verfügbar ist"""
