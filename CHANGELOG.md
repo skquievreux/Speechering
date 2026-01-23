@@ -1,3 +1,24 @@
+# [1.7.0](https://github.com/skquievreux/Speechering/compare/v1.6.0...v1.7.0) (2026-01-23)
+
+
+### Bug Fixes
+
+* **build:** correct NSIS script paths to tools/ directory ([f64995e](https://github.com/skquievreux/Speechering/commit/f64995edf679fa7a740e8fb395112be26d4914e3))
+* **build:** correct README.md path in NSIS scripts ([5917392](https://github.com/skquievreux/Speechering/commit/59173920228a373337d521e47e1e1b2d6d37bb87))
+* **build:** correct relative paths in NSIS scripts for CI ([7f0e19b](https://github.com/skquievreux/Speechering/commit/7f0e19bd6a115fbc27852f16a6e07d11aab1bb26))
+* **ci:** comprehensive workflow fixes ([e016163](https://github.com/skquievreux/Speechering/commit/e0161638820e89979a3d341ccf03a487865d51b5))
+* **ci:** correct all bootstrap_tools references to tools/bootstrap_installer.nsi ([6843ada](https://github.com/skquievreux/Speechering/commit/6843ada0dff8aa50d5838784e730160f6508467e))
+* **ci:** correct NSIS file paths to tools/ directory ([aa7ce2a](https://github.com/skquievreux/Speechering/commit/aa7ce2a5265f9f29a23603567eefe3c5b9cedbb3))
+* **ci:** remove poetry cache to fix installation ([6129faf](https://github.com/skquievreux/Speechering/commit/6129faf0d9a3c4efad7abe7905b42805ee2591c5))
+* **ci:** use poetry version instead of non-existent script ([a60be8b](https://github.com/skquievreux/Speechering/commit/a60be8b8f3838e85186833dadb64a8b437b0d267))
+* resolve build failures and optimize startup performance ([0587fe8](https://github.com/skquievreux/Speechering/commit/0587fe8d9342a1575ed1c94c59d3b5c47f6ebc7d))
+
+
+### Features
+
+* add scrollable tabs to Settings GUI ([0c45be3](https://github.com/skquievreux/Speechering/commit/0c45be3ce9a0bd99f4ffc42e8a0f13cba67451ce))
+* **gui:** improve scrollbars, add vocabulary tab and fix shutdown/Python 3.13 issues ([2c87cd5](https://github.com/skquievreux/Speechering/commit/2c87cd5e6466caf33586765ec1ee9dd3745b73e4))
+
 # [1.6.0](https://github.com/skquievreux/Speechering/compare/v1.5.3...v1.6.0) (2026-01-17)
 
 
