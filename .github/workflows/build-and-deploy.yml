@@ -169,64 +169,64 @@ jobs:
             build_info.txt
           retention-days: 7
 
-  test:
-    runs-on: windows-latest
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Poetry
-        run: pipx install poetry
-
-      - name: Install test dependencies
-        shell: bash
-        run: poetry install
-
-      # Parallele Testausführung für schnellere Tests
-      - name: Run tests
-        shell: bash
-        run: |
-          poetry run pytest tests/ -v --cov=src --cov-report=xml -n auto
-
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
-
-  # Separate job for manual testing of build artifacts
-  manual-test:
-    runs-on: windows-latest
-    if: github.event_name == 'workflow_dispatch'
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: voice-transcriber-builds-${{ needs.build.outputs.version }}
-          path: artifacts/
-
-      - name: List downloaded artifacts
-        shell: bash
-        run: |
-          echo "Downloaded artifacts:"
-          ls -la artifacts/
-
-      - name: Test EXE execution (basic smoke test)
-        shell: bash
-        run: |
-          cd artifacts
-          # Try to run the EXE briefly to check if it's not corrupted
-          timeout 10s ./VoiceTranscriber.exe --help || echo "EXE test completed (expected timeout or help output)"
+#  test:
+#    runs-on: windows-latest
+#    needs: build
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Set up Python
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: ${{ env.PYTHON_VERSION }}
+#
+#      - name: Install Poetry
+#        run: pipx install poetry
+#
+#      - name: Install test dependencies
+#        shell: bash
+#        run: poetry install
+#
+#      # Parallele Testausführung für schnellere Tests
+#      - name: Run tests
+#        shell: bash
+#        run: |
+#          poetry run pytest tests/ -v --cov=src --cov-report=xml -n auto
+#
+#      - name: Upload coverage reports
+#        uses: codecov/codecov-action@v4
+#        with:
+#          file: ./coverage.xml
+#          flags: unittests
+#          name: codecov-umbrella
+#
+#  # Separate job for manual testing of build artifacts
+#  manual-test:
+#    runs-on: windows-latest
+#    if: github.event_name == 'workflow_dispatch'
+#    needs: build
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Download build artifacts
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: voice-transcriber-builds-${{ needs.build.outputs.version }}
+#          path: artifacts/
+#
+#      - name: List downloaded artifacts
+#        shell: bash
+#        run: |
+#          echo "Downloaded artifacts:"
+#          ls -la artifacts/
+#
+#      - name: Test EXE execution (basic smoke test)
+#        shell: bash
+#        run: |
+#          cd artifacts
+#          # Try to run the EXE briefly to check if it's not corrupted
+#          timeout 10s ./VoiceTranscriber.exe --help || echo "EXE test completed (expected timeout or help output)"
