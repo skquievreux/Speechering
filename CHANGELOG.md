@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/skquievreux/Speechering/compare/v1.8.2...v1.8.3) (2026-01-23)
+
+
+### Bug Fixes
+
+* **build:** disable UPX compression to resolve 'Failed to load Python DLL' error ([4f228a6](https://github.com/skquievreux/Speechering/commit/4f228a6a4ccd9b8827721720230c045a1e5975ba))
+
 ## [1.8.2](https://github.com/skquievreux/Speechering/compare/v1.8.1...v1.8.2) (2026-01-23)
 
 
