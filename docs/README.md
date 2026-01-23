@@ -1,11 +1,13 @@
-# 🎤 Voice Transcriber v1.5.1
+# 🎤 Voice Transcriber v1.8.0
+
+[![Latest Release](https://img.shields.io/github/v/release/skquievreux/Speechering?label=Latest%20Version&style=flat-square)](https://github.com/skquievreux/Speechering/releases/latest)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/skquievreux/Speechering/build-and-deploy.yml?branch=main&label=Build&style=flat-square)](https://github.com/skquievreux/Speechering/actions)
 
 Eine professionelle Windows Desktop-Anwendung für Push-to-Talk Sprach-zu-Text
 Transkription mit KI-Unterstützung, optimierter Audio-Verarbeitung und flexiblem
 Eingabesystem.
 
-**🐛 Bugfix-Release**: Repository-Struktur bereinigt und Pfade aktualisiert.
-Verbesserte Organisation und Maintenance.
+**🚀 Aktuelles Release:** Verbesserte Installer-Routine, Sicherheitsupdates für Konfigurationsverschlüsselung und Performance-Optimierungen.
 
 ## ✨ Features
 
@@ -41,7 +43,7 @@ Verbesserte Organisation und Maintenance.
 
 ### Option A: Bootstrap-Installer (Empfohlen - nur 15 MB!)
 
-1. **Download**: `VoiceTranscriber_Bootstrap_Installer_v1.5.0.exe` herunterladen
+1. **Download**: [`VoiceTranscriber_Bootstrap.exe`](https://github.com/skquievreux/Speechering/releases/latest/download/VoiceTranscriber_Bootstrap_Installer.exe) von den Releases herunterladen
 2. **Installieren**: Doppelklick → Installer lädt **vollautomatisch** die App (220 MB) von Cloudflare R2 herunter
 3. **Fertig**: Desktop-Verknüpfung "Voice Transcriber" klicken und loslegen!
 
@@ -53,7 +55,7 @@ Verbesserte Organisation und Maintenance.
 
 ### Option B: Vollständiger Installer (220 MB)
 
-1. **Download**: `VoiceTranscriber_Installer_v1.5.0.exe` herunterladen
+1. **Download**: [`VoiceTranscriber_Installer.exe`](https://github.com/skquievreux/Speechering/releases/latest/download/VoiceTranscriber_Installer.exe) herunterladen
 2. **Installieren**: Doppelklick und Anweisungen folgen
 3. **Fertig**: Anwendung ist installiert und bereit!
 
