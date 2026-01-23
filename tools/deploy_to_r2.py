@@ -149,8 +149,11 @@ def main():
     # Deployer initialisieren
     deployer = R2Deployer(access_key_id, secret_access_key, account_id, bucket_name)
 
-    # Artifacts-Verzeichnis
+    # Artifacts-Verzeichnis bestimmen
     artifacts_dir = Path("artifacts")
+    if not artifacts_dir.exists() or not list(artifacts_dir.glob("*")):
+        logger.info("Verzeichnis 'artifacts/' nicht gefunden oder leer, verwende aktuelles Verzeichnis '.'")
+        artifacts_dir = Path(".")
 
     success = True
 

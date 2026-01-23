@@ -83,12 +83,16 @@ class TranscriptionService:
 
                 start_time = time.time()
 
+                # Vokabular (Prompt) laden
+                vocabulary = config.get_vocabulary()
+                
                 with open(audio_path, 'rb') as audio_file:
                     transcript = self.client.audio.transcriptions.create(
                         model="whisper-1",
                         file=audio_file,
                         language="de",  # Deutsche Sprache priorisieren
-                        response_format="text"
+                        response_format="text",
+                        prompt=vocabulary if vocabulary else None
                     )
 
                 duration = time.time() - start_time

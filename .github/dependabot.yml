@@ -1,49 +1,33 @@
 version: 2
 
 updates:
-  - package-ecosystem: "npm"
+  # Python dependencies via Poetry
+  - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 12
+    open-pull-requests-limit: 10
+    # Group related dependencies
     groups:
-      security-and-critical:
+      ai-dependencies:
         patterns:
-          - "*eslint*"
-          - "*prettier*"
-          - "*typescript*"
-          - "@types/*"
-        update-types: ["patch", "minor"]
-        dependency-type: "production"
-
-      nextjs-ecosystem:
+          - "openai"
+          - "faster-whisper"
+          - "torch"
+      dev-dependencies:
         patterns:
-          - "next"
-          - "react"
-          - "react-dom"
-          - "@next/*"
-          - "@sentry/nextjs"
-        update-types: ["minor", "patch"]
-
-      tooling-and-dev-deps:
-        dependency-type: "development"
-        update-types: ["minor", "patch"]
-        exclude-patterns:
-          - "*eslint*"
-          - "*prettier*"
-          - "typescript"
-
-      major-updates:
-        update-types: ["major"]
-
-    rebase-strategy: "auto"
-    labels:
-      - "dependencies"
-      - "autorebase-safe"
-    commit-message:
-      prefix: "chore(deps)"
-      prefix-development: "chore(deps-dev)"
-      include: "scope"
-
-    pull-request-branch-name:
-      separator: "-"
+          - "pytest*"
+          - "black"
+          - "ruff"
+          - "mypy"
+    # Ignore major version updates (require manual review)
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5

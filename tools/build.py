@@ -109,12 +109,19 @@ def build_exe():
         # GUI-Automation (nur für Settings)
         "--hidden-import=pyautogui",       # GUI-Automation
 
+        # pkg_resources Dependencies (für PyInstaller)
+        "--hidden-import=pkg_resources",
+        "--hidden-import=jaraco.text",
+        "--hidden-import=jaraco.functools",
+        "--hidden-import=jaraco.context",
+
         # Projekt-spezifische Module
         "--hidden-import=version_manager", # Version Management
         "--hidden-import=user_config",     # Benutzerspezifische Konfiguration
         "--hidden-import=mouse_integration", # AHK-Integration
         "--hidden-import=exceptions",      # Custom Exceptions
         "--hidden-import=notification",    # Notification Service
+        "--hidden-import=src.model_manager", # Model Manager
     ]
 
     # Automatisch nur produktive src-Module hinzufügen (keine Tests)
@@ -124,7 +131,8 @@ def build_exe():
         for py_file in src_dir.glob("*.py"):
             if py_file.name != "__init__.py" and not py_file.name.startswith("test_"):
                 module_name = f"src.{py_file.stem}"
-                hidden_imports.append(f"--hidden-import={module_name}")
+                if module_name not in hidden_imports:
+                    hidden_imports.append(f"--hidden-import={module_name}")
 
     # PyInstaller-Befehl - Optimiert für Performance und Größe
     pyinstaller_cmd = [
@@ -137,15 +145,22 @@ def build_exe():
         "--add-data=scripts:scripts",  # AHK-Skript einbinden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
         # Performance-Optimierungen
-        "--optimize=1",                # Bytecode optimieren
+        "--optimize=2",                # Höhere Bytecode-Optimierung
         "--strip",                     # Debug-Info entfernen
-        "--noupx",                     # UPX-Komprimierung deaktivieren (schneller)
-        # Modul-Excludes für kleinere EXE
+        # Modul-Excludes für kleinere EXE - EXTREM WICHTIG
+        "--exclude-module=torch",      # PyTorch ausschließen (~150MB)
+        "--exclude-module=faster_whisper", # Whisper ausschließen (~50MB)
+        "--exclude-module=ctranslate2", 
+        "--exclude-module=numpy",      # Numpy ausschließen (wird bei Bedarf geladen)
+        "--exclude-module=huggingface_hub",
         "--exclude-module=matplotlib", # Nicht benötigte Module ausschließen
         "--exclude-module=unittest",   # Test-Module entfernen
         "--exclude-module=doctest",    # Doctest entfernen
         "--exclude-module=pytest",     # Test-Framework entfernen
         "--exclude-module=setuptools", # Build-Tools entfernen
+        "--exclude-module=IPython",
+        "--exclude-module=PIL.ImageQt",
+        "--exclude-module=PIL.ImageTk",
         # ffmpeg ist bereits im PATH verfügbar - kein Bündeln nötig
     ] + hidden_imports + [
         "main_exe.py"                  # Einstiegspunkt (PyInstaller-optimiert)
@@ -283,7 +298,7 @@ def build_bootstrap_installer_nsis():
         return False
 
     # Prüfe ob bootstrap_installer.nsi existiert
-    installer_script = Path("bootstrap_installer.nsi")
+    installer_script = Path("tools/bootstrap_installer.nsi")
     if not installer_script.exists():
         print(f"FEHLER: Bootstrap-Installer-Skript nicht gefunden: {installer_script}")
         return False
@@ -357,7 +372,7 @@ def build_installer():
         return False
 
     # Prüfe ob installer.nsi existiert
-    installer_script = Path("installer.nsi")
+    installer_script = Path("tools/installer.nsi")
     if not installer_script.exists():
         print(f"FEHLER: Installer-Skript nicht gefunden: {installer_script}")
         return False

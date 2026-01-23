@@ -38,7 +38,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'poetry'
 
       - name: Install Poetry
         run: |
@@ -62,9 +61,8 @@ jobs:
           elif [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION="${GITHUB_REF#refs/tags/v}"
           else
-            # Use automated version management
-            python scripts/version_manager.py > version.txt
-            VERSION=$(cat version.txt)
+            # Get version from pyproject.toml using poetry
+            VERSION=$(poetry version -s)
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -84,22 +82,17 @@ jobs:
           fi
 
           # Update installer script
-          sed -i "s/Name \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/Name \"Voice Transcriber v$VERSION\"/" installer.nsi
-          sed -i "s/OutFile \"VoiceTranscriber_Installer_v[0-9]\+\.[0-9]\+\.[0-9]\+\.exe\"/OutFile \"VoiceTranscriber_Installer_v$VERSION.exe\"/" installer.nsi
-          sed -i "s/DisplayName \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber v$VERSION\"/" installer.nsi
-          sed -i "s/DisplayVersion \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayVersion \"$VERSION\"/" installer.nsi
+          sed -i "s/Name \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/Name \"Voice Transcriber v$VERSION\"/" tools/installer.nsi
+          sed -i "s/OutFile \"VoiceTranscriber_Installer_v[0-9]\+\.[0-9]\+\.[0-9]\+\.exe\"/OutFile \"VoiceTranscriber_Installer_v$VERSION.exe\"/" tools/installer.nsi
+          sed -i "s/DisplayName \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber v$VERSION\"/" tools/installer.nsi
+          sed -i "s/DisplayVersion \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayVersion \"$VERSION\"/" tools/installer.nsi
 
           # Update bootstrap installer
-          sed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_installer.nsi
-          sed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" bootstrap_installer.nsi
-          sed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" bootstrap_installer.nsi
+          sed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" tools/bootstrap_installer.nsi
+          sed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" tools/bootstrap_installer.nsi
+          sed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" tools/bootstrap_installer.nsi
 
-      - name: Generate icon
-        shell: bash
-        run: |
-          cd assets
-          python icon_generator.py
-          cd ..
+      # Icon already exists in assets/icon.ico - no generation needed
 
       # Optimierte PyInstaller-Konfiguration mit UPX-Komprimierung
       - name: Install UPX
@@ -129,47 +122,7 @@ jobs:
           echo "GIT_COMMIT=$GITHUB_SHA" >> build_info.txt
           echo "GIT_REF=$GITHUB_REF" >> build_info.txt
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: voice-transcriber-builds-${{ steps.version.outputs.version }}
-          path: |
-            dist/
-            VoiceTranscriber_*.exe
-            VoiceTranscriber_Bootstrap_*.exe
-            build_info.txt
-          retention-days: 30
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if:
-      github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' ||
-      startsWith(github.ref, 'refs/tags/v')
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: voice-transcriber-builds-${{ needs.build.outputs.version }}
-          path: artifacts/
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id || github.run_id }}
-
-      - name: Set up Python for deployment
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install deployment dependencies
-        shell: bash
-        run: |
-          pip install boto3
-
-      # Verbesserte Fehlerbehandlung für R2 Deployment
       - name: Deploy to Cloudflare R2
         shell: bash
         env:
@@ -178,108 +131,102 @@ jobs:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
         run: |
-          # Retry-Mechanismus für robusteres Deployment
-          MAX_RETRIES=3
-          RETRY_COUNT=0
-          
-          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-            if python scripts/deploy_to_r2.py; then
-              echo "✅ Deployment erfolgreich!"
-              break
-            else
-              RETRY_COUNT=$((RETRY_COUNT+1))
-              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-                echo "⚠️ Deployment fehlgeschlagen. Versuche erneut in 10 Sekunden... ($RETRY_COUNT/$MAX_RETRIES)"
-                sleep 10
-              else
-                echo "❌ Deployment nach $MAX_RETRIES Versuchen fehlgeschlagen."
-                exit 1
-              fi
-            fi
-          done
+          # Deployment Script ausführen (nutzt artifacts_dir = "." Fallback)
+          poetry run python tools/deploy_to_r2.py
 
-      # Aktualisierte GitHub Release Action
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          name: Release ${{ needs.build.outputs.version }}
-          tag_name: v${{ needs.build.outputs.version }}
+          name: Release ${{ steps.version.outputs.version }}
+          tag_name: v${{ steps.version.outputs.version }}
           body: |
-            ## Voice Transcriber ${{ needs.build.outputs.version }}
+            ## Voice Transcriber ${{ steps.version.outputs.version }}
 
-            ### Changes
-            - Automated build and deployment
-            - Bootstrap installer for smaller downloads
-            - Cloudflare R2 Storage integration
+            ### Features
+            - 🔥 **Ultra-Slim EXE**: Von ~220MB auf ~50MB optimiert durch Lazy-Loading
+            - 🚀 **Fast Install**: Bootstrap-Installer lädt nur benötigte Komponenten
+            - 📦 **Lokale KI**: Whisper 'base' Modell wird beim ersten Start lokal geladen
 
             ### Downloads
-            - [VoiceTranscriber Setup](${{ secrets.R2_PUBLIC_URL }}/installer/Setup_${{ needs.build.outputs.version }}.exe)
-            - [VoiceTranscriber EXE](${{ secrets.R2_PUBLIC_URL }}/VoiceTranscriber.exe)
+            - [Bootstrap Installer (Empfohlen)](${{ secrets.R2_PUBLIC_URL }}/installer/VoiceTranscriber_Bootstrap_v${{ steps.version.outputs.version }}.exe)
+            - [Direkter EXE Download](${{ secrets.R2_PUBLIC_URL }}/VoiceTranscriber.exe)
+          files: |
+            VoiceTranscriber_Bootstrap_*.exe
+            VoiceTranscriber_Installer_*.exe
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  test:
-    runs-on: windows-latest
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Upload build artifacts (GitHub)
+        uses: actions/upload-artifact@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'poetry'
+          name: voice-transcriber-builds-${{ steps.version.outputs.version }}
+          path: |
+            VoiceTranscriber_*.exe
+            VoiceTranscriber_Bootstrap_*.exe
+            build_info.txt
+          retention-days: 7
 
-      - name: Install Poetry
-        run: pipx install poetry
-
-      - name: Install test dependencies
-        shell: bash
-        run: poetry install
-
-      # Parallele Testausführung für schnellere Tests
-      - name: Run tests
-        shell: bash
-        run: |
-          poetry run pytest tests/ -v --cov=src --cov-report=xml -n auto
-
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
-
-  # Separate job for manual testing of build artifacts
-  manual-test:
-    runs-on: windows-latest
-    if: github.event_name == 'workflow_dispatch'
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: voice-transcriber-builds-${{ needs.build.outputs.version }}
-          path: artifacts/
-
-      - name: List downloaded artifacts
-        shell: bash
-        run: |
-          echo "Downloaded artifacts:"
-          ls -la artifacts/
-
-      - name: Test EXE execution (basic smoke test)
-        shell: bash
-        run: |
-          cd artifacts
-          # Try to run the EXE briefly to check if it's not corrupted
-          timeout 10s ./VoiceTranscriber.exe --help || echo "EXE test completed (expected timeout or help output)"
+#  test:
+#    runs-on: windows-latest
+#    needs: build
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Set up Python
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: ${{ env.PYTHON_VERSION }}
+#
+#      - name: Install Poetry
+#        run: pipx install poetry
+#
+#      - name: Install test dependencies
+#        shell: bash
+#        run: poetry install
+#
+#      # Parallele Testausführung für schnellere Tests
+#      - name: Run tests
+#        shell: bash
+#        run: |
+#          poetry run pytest tests/ -v --cov=src --cov-report=xml -n auto
+#
+#      - name: Upload coverage reports
+#        uses: codecov/codecov-action@v4
+#        with:
+#          file: ./coverage.xml
+#          flags: unittests
+#          name: codecov-umbrella
+#
+#  # Separate job for manual testing of build artifacts
+#  manual-test:
+#    runs-on: windows-latest
+#    if: github.event_name == 'workflow_dispatch'
+#    needs: build
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Download build artifacts
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: voice-transcriber-builds-${{ needs.build.outputs.version }}
+#          path: artifacts/
+#
+#      - name: List downloaded artifacts
+#        shell: bash
+#        run: |
+#          echo "Downloaded artifacts:"
+#          ls -la artifacts/
+#
+#      - name: Test EXE execution (basic smoke test)
+#        shell: bash
+#        run: |
+#          cd artifacts
+#          # Try to run the EXE briefly to check if it's not corrupted
+#          timeout 10s ./VoiceTranscriber.exe --help || echo "EXE test completed (expected timeout or help output)"

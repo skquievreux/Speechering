@@ -242,6 +242,12 @@ class Config:
             return user_config.get_input_method()
         return 'hotkey'
 
+    def get_vocabulary(self) -> str:
+        """Gibt das benutzerspezifische Vokabular (AI-Prompt) zurück"""
+        if self.user_config_loaded:
+            return user_config.get('transcription.vocabulary', '')
+        return ""
+
 def load_config() -> Config:
     """Lädt und validiert die Konfiguration"""
     config_instance = Config()

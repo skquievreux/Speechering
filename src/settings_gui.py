@@ -4,6 +4,7 @@ Zeigt App-Info und ermöglicht Hotkey-Auswahl
 """
 
 import logging
+import sys
 import tkinter as tk
 from tkinter import messagebox, ttk
 
@@ -152,18 +153,44 @@ class SettingsGUI:
             ("Hotkeys", self._create_hotkey_tab),
             ("Audio", self._create_audio_tab),
             ("Transkription", self._create_transcription_tab),
+            ("Vokabular", self._create_vocabulary_tab),
             ("API-Schlüssel", self._create_api_tab),
             ("Über", self._create_about_tab)
         ]:
-            tab_frame = ttk.Frame(self.notebook, padding=10)
-            self.notebook.add(tab_frame, text=name)
-            self.tabs[name] = tab_frame
+            # Erstelle Tab-Frame mit Canvas für Scrolling
+            tab_outer_frame = ttk.Frame(self.notebook)
+            self.notebook.add(tab_outer_frame, text=name)
+            
+            # Canvas + Scrollbar (deutlichere Darstellung)
+            canvas = tk.Canvas(tab_outer_frame, highlightthickness=0, bg='SystemButtonFace')
+            # Verwende tk.Scrollbar für bessere Sichtbarkeit und Breite
+            scrollbar = tk.Scrollbar(tab_outer_frame, orient="vertical", command=canvas.yview, width=16)
+            scrollable_frame = ttk.Frame(canvas, padding=15)
+            
+            scrollable_frame.bind(
+                "<Configure>",
+                lambda e, c=canvas: c.configure(scrollregion=c.bbox("all"))
+            )
+            
+            canvas.create_window((0, 0), window=scrollable_frame, anchor="nw", width=canvas.winfo_reqwidth())
+            canvas.configure(yscrollcommand=scrollbar.set)
+            
+            # Mausrad-Unterstützung
+            def _on_mousewheel(event, c=canvas):
+                c.yview_scroll(int(-1*(event.delta/120)), "units")
+            canvas.bind_all("<MouseWheel>", _on_mousewheel)
+            
+            # Pack canvas and scrollbar
+            canvas.pack(side="left", fill="both", expand=True)
+            scrollbar.pack(side="right", fill="y")
+            
+            self.tabs[name] = scrollable_frame
             
             try:
-                creator(tab_frame)
+                creator(scrollable_frame)
             except Exception as e:
                 logger.error(f"Fehler beim Erstellen des Tabs '{name}': {e}")
-                ttk.Label(tab_frame, text=f"Fehler beim Laden: {e}", foreground="red").pack()
+                ttk.Label(scrollable_frame, text=f"Fehler beim Laden: {e}", foreground="red").pack()
 
         # Buttons
         button_frame = ttk.Frame(self.window)
@@ -397,6 +424,69 @@ class SettingsGUI:
             rb.pack(anchor='w', pady=1)
             Tooltip(rb, f"Wählt das {value.upper()} Modell.\n{text.split('(')[1].rstrip(')')}\nGrößere Modelle sind genauer aber langsamer.")
 
+        # Status und Download Button
+        status_frame = ttk.Frame(model_frame)
+        status_frame.pack(fill='x', pady=10)
+        
+        self.model_status_label = ttk.Label(status_frame, text="Status: Prüfe...")
+        self.model_status_label.pack(side='left', padx=(0, 10))
+        
+        self.download_btn = ttk.Button(status_frame, text="Modell herunterladen", command=self._download_model_gui)
+        self.download_btn.pack(side='left')
+        Tooltip(self.download_btn, "Lädt das ausgewählte Whisper-Modell herunter.\nDies kann je nach Größe einige Minuten dauern.")
+        
+        # Initialen Status prüfen
+        self.window.after(500, self._update_model_status)
+        
+    def _update_model_status(self):
+        """Aktualisiert den Status des aktuell ausgewählten Modells"""
+        try:
+            from src.model_manager import get_model_path
+            model_size = self.model_size_var.get()
+            path = get_model_path(model_size)
+            
+            if path:
+                self.model_status_label.config(text=f"Status: ✅ Installiert", foreground="green")
+                self.download_btn.config(text="Erneut herunterladen")
+            else:
+                self.model_status_label.config(text=f"Status: ❌ Nicht installiert", foreground="red")
+                self.download_btn.config(text="Modell herunterladen")
+        except Exception as e:
+            logger.error(f"Fehler beim Modell-Status-Update: {e}")
+
+    def _download_model_gui(self):
+        """Startet den Model-Download aus der GUI"""
+        import threading
+        model_size = self.model_size_var.get()
+        
+        if not messagebox.askyesno("Download bestätigen", 
+                                  f"Möchten Sie das Whisper-Modell '{model_size}' herunterladen?\n\n"
+                                  "Dies kann einige Zeit in Anspruch nehmen."):
+            return
+            
+        self.download_btn.config(state="disabled", text="Lädt herunter...")
+        self.model_status_label.config(text="Status: ⏳ Download läuft...", foreground="orange")
+        
+        def download_thread():
+            try:
+                from src.model_manager import download_whisper_model
+                success = download_whisper_model(model_size)
+                
+                if success:
+                    self.window.after(0, lambda: messagebox.showinfo("Download erfolgreich", 
+                                                                    f"Das Modell '{model_size}' wurde erfolgreich installiert."))
+                else:
+                    self.window.after(0, lambda: messagebox.showerror("Download fehlgeschlagen", 
+                                                                     "Der Download ist fehlgeschlagen. Bitte prüfen Sie Ihre Verbindung."))
+            except Exception as e:
+                logger.error(f"Download-Fehler: {e}")
+                self.window.after(0, lambda: messagebox.showerror("Fehler", f"Unerwarteter Fehler: {e}"))
+            finally:
+                self.window.after(0, self._update_model_status)
+                self.window.after(0, lambda: self.download_btn.config(state="normal"))
+
+        threading.Thread(target=download_thread, daemon=True).start()
+
         # Info-Text
         info_frame = ttk.Frame(transcription_frame)
         info_frame.pack(fill='x', pady=10)
@@ -407,6 +497,37 @@ class SettingsGUI:
 • Bei Problemen mit lokalem Modell wechselt die App automatisch zur API"""
 
         ttk.Label(info_frame, text=info_text, foreground="blue", justify="left").pack(anchor='w')
+
+    def _create_vocabulary_tab(self, parent):
+        """Erstellt den Vokabular-Tab für AI-Prompts"""
+        ttk.Label(parent, text="VOKABULAR & KONTEXT", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
+        
+        vocab_frame = ttk.LabelFrame(parent, text="Individuelles AI-Vokabular", padding=10)
+        vocab_frame.pack(fill='both', expand=True, pady=5)
+        
+        info_label = ttk.Label(vocab_frame, text="Hier kannst du Fachbegriffe, Eigennamen oder Abkürzungen hinterlegen,\ndie das KI-Modell besser erkennen soll (Prompting).", justify="left")
+        info_label.pack(anchor='w', pady=(0, 10))
+        
+        # Textfeld für Vokabular
+        self.vocab_text = tk.Text(vocab_frame, height=10, width=40, font=("TkDefaultFont", 9))
+        self.vocab_text.pack(fill='both', expand=True, pady=5)
+        
+        # Scrollbar für Textfeld
+        vocab_scroll = tk.Scrollbar(self.vocab_text, orient="vertical", command=self.vocab_text.yview, width=16)
+        vocab_scroll.pack(side='right', fill='y')
+        self.vocab_text.configure(yscrollcommand=vocab_scroll.set)
+        
+        # Beispiel laden
+        example_text = "Tipp: Trenne Begriffe einfach durch Kommata oder Leerzeichen.\nBeispiel: Speechering, Quievreux, Python, API, JSON"
+        Tooltip(self.vocab_text, example_text)
+
+        # Aktuelles Vokabular laden
+        try:
+            from src.user_config import user_config
+            current_vocab = user_config.get('transcription.vocabulary', '')
+            self.vocab_text.insert('1.0', current_vocab)
+        except Exception as e:
+            logger.error(f"Fehler beim Laden des Vokabulars: {e}")
 
     def _create_api_tab(self, parent):
         """Erstellt den API-Schlüssel-Tab"""
@@ -480,63 +601,54 @@ class SettingsGUI:
         api_key = self.api_key_var.get().strip()
 
         if not api_key:
-            self.api_key_validation_label.config(text="", foreground="red")
+            self._update_validation_label("", "red")
             return
 
         # Länge prüfen (OpenAI Keys sind ~51 Zeichen)
         if len(api_key) < 20:
-            self.api_key_validation_label.config(
-                text="❌ Zu kurz (OpenAI Keys sind ~51 Zeichen)",
-                foreground="red"
+            self._update_validation_label(
+                "❌ Zu kurz (OpenAI Keys sind ~51 Zeichen)",
+                "red"
             )
             return
 
         # Format prüfen (muss mit sk- beginnen)
         if not api_key.startswith('sk-'):
-            self.api_key_validation_label.config(
-                text="❌ Muss mit 'sk-' beginnen",
-                foreground="red"
+            self._update_validation_label(
+                "❌ Muss mit 'sk-' beginnen",
+                "red"
             )
             return
 
         # Länge für vollständigen Key prüfen
         if len(api_key) > 10 and len(api_key) < 50:
-            self.api_key_validation_label.config(
-                text="⚠️ Unvollständig (OpenAI Keys sind ~51 Zeichen)",
-                foreground="orange"
+            self._update_validation_label(
+                "⚠️ Unvollständig (OpenAI Keys sind ~51 Zeichen)",
+                "orange"
             )
             return
 
         # Erfolgreich
         if len(api_key) >= 50:
-            self.api_key_validation_label.config(
-                text="✅ Format korrekt",
-                foreground="green"
+            self._update_validation_label(
+                "✅ Format korrekt",
+                "green"
             )
         else:
-            self.api_key_validation_label.config(text="", foreground="red")
+            self._update_validation_label("", "red")
 
-    def _create_about_tab(self, parent):
-        """Erstellt den Über-Tab"""
-        # Fett gedruckte Überschrift
-        ttk.Label(parent, text="ÜBER", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
+    def _update_validation_label(self, text, color):
+        """Thread-safe update of validation label"""
+        try:
+            if hasattr(self, 'api_key_validation_label') and self.api_key_validation_label.winfo_exists():
+                # Use after() to ensure we're in the main thread
+                self.api_key_validation_label.after(0, lambda: self.api_key_validation_label.config(
+                    text=text,
+                    foreground=color
+                ))
+        except Exception as e:
+            logger.warning(f"Could not update validation label: {e}")
 
-        about_frame = ttk.LabelFrame(parent, text="Voice Transcriber", padding=10)
-        about_frame.pack(fill='x', pady=5)
-
-        # Logo/Icon Platzhalter
-        ttk.Label(about_frame, text="🎤", font=("Arial", 48)).pack(pady=10)
-
-        ttk.Label(about_frame, text="Voice Transcriber", font=("Arial", 16, "bold")).pack(pady=5)
-        ttk.Label(about_frame, text=f"Version {config.APP_VERSION}").pack()
-        ttk.Label(about_frame, text="Push-to-Talk Sprach-zu-Text Transkription").pack(pady=5)
-
-        ttk.Label(about_frame, text="Technologien:").pack(anchor='w', pady=5)
-        ttk.Label(about_frame, text="• OpenAI Whisper + GPT-4").pack(anchor='w')
-        ttk.Label(about_frame, text="• Python mit tkinter GUI").pack(anchor='w')
-        ttk.Label(about_frame, text="• PyAudio für Audio-Aufnahme").pack(anchor='w')
-
-        ttk.Label(about_frame, text="© 2025 Voice Transcriber Team").pack(pady=10)
 
     def _get_audio_devices(self):
         """Holt verfügbare Audio-Geräte"""
@@ -637,6 +749,9 @@ class SettingsGUI:
 
             model_size = user_config.get('transcription.whisper_model_size', 'small')
             self.model_size_var.set(model_size)
+            
+            # Trace hinzufügen für Modell-Wechsel
+            self.model_size_var.trace_add("write", lambda *args: self._update_model_status())
 
             # API-Key Status (nicht laden, nur Status anzeigen)
             has_key = bool(config.OPENAI_API_KEY and config.OPENAI_API_KEY != 'sk-your-openai-api-key-here')
@@ -659,9 +774,11 @@ class SettingsGUI:
         try:
             from src.user_config import user_config
 
-            # API-Key Validierung
+            # API-Key Validierung (nur wenn geändert und nicht Platzhalter)
             api_key = self.api_key_var.get().strip()
-            if api_key:
+            placeholder = "*** API-Key ist gesetzt ***"
+            
+            if api_key and api_key != placeholder:
                 if not api_key.startswith('sk-'):
                     messagebox.showerror("Fehler", "Ungültiger API-Key Format. Muss mit 'sk-' beginnen.")
                     return
@@ -670,9 +787,9 @@ class SettingsGUI:
                     return
                 user_config.set_encrypted('api.openai_key', api_key)
                 logger.info("API-Key erfolgreich verschlüsselt gespeichert")
-
+                
                 # API-Key aus RAM löschen für Sicherheit
-                self.api_key_var.set("")
+                self.api_key_var.set(placeholder)
                 self.api_key_validation_label.config(text="", foreground="red")
 
             # Audio-Gerät speichern
@@ -693,6 +810,14 @@ class SettingsGUI:
             user_config.set('transcription.use_local', use_local)
             user_config.set('transcription.whisper_model_size', model_size)
             logger.info(f"Transkriptions-Einstellungen gespeichert: use_local={use_local}, model_size={model_size}")
+
+            # Vokabular speichern
+            try:
+                if hasattr(self, 'vocab_text'):
+                    vocabulary = self.vocab_text.get('1.0', 'end-1c').strip()
+                    user_config.set('transcription.vocabulary', vocabulary)
+            except Exception as e:
+                logger.error(f"Fehler beim Speichern des Vokabulars: {e}")
 
             # Hotkey speichern mit Sanitization
             selected_hotkey = self.hotkey_var.get().strip().lower()
@@ -975,3 +1100,56 @@ Die Datei wird automatisch erstellt, wenn Sie eine Aufnahme machen.
     def get_selected_hotkey(self):
         """Gibt den ausgewählten Hotkey zurück"""
         return self.hotkey_var.get()
+
+    def _create_about_tab(self, parent):
+        """Erstellt den Über-Tab (parent ist bereits scrollbar)"""
+        # Icon (Mikrofon-Emoji als Text)
+        icon_label = ttk.Label(parent, text="🎤", font=("Segoe UI Emoji", 48))
+        icon_label.pack(pady=(20, 10))
+
+        # App Name
+        ttk.Label(parent, text="Voice Transcriber", 
+                 font=("TkDefaultFont", 16, "bold")).pack()
+
+        # Version
+        ttk.Label(parent, text=f"Version {config.APP_VERSION}", 
+                 font=("TkDefaultFont", 10)).pack(pady=5)
+
+        # Beschreibung
+        ttk.Label(parent, text="Push-to-Talk Sprach-zu-Text Transkription", 
+                 font=("TkDefaultFont", 9)).pack(pady=10)
+
+        # Technologien
+        tech_frame = ttk.LabelFrame(parent, text="Technologien", padding=15)
+        tech_frame.pack(fill='x', padx=20, pady=10)
+
+        technologies = [
+            "• Faster-Whisper - Hocheffiziente lokale Transkription",
+            "• OpenAI Whisper API - Cloud-basierte AI-Modelle",
+            "• PyAudio - Professionelle Audio-Verarbeitung",
+            "• PyTorch (CPU) - Neural Network Backend",
+            "• Tkinter - Native Desktop Benutzeroberfläche",
+            f"• Python {sys.version.split(' ')[0]} - Laufzeitumgebung"
+        ]
+
+        for tech in technologies:
+            ttk.Label(tech_frame, text=tech, font=("TkDefaultFont", 9)).pack(anchor='w', pady=2)
+
+        # Features
+        features_frame = ttk.LabelFrame(parent, text="Features", padding=15)
+        features_frame.pack(fill='x', padx=20, pady=10)
+
+        features = [
+            "✓ Lokale Whisper-Transkription (offline)",
+            "✓ Mehrere Hotkeys (F12, F11, F10)",
+            "✓ Persistente Geräteauswahl",
+            "✓ Temp-Datei-Verwaltung",
+            "✓ Debug-Logging"
+        ]
+
+        for feature in features:
+            ttk.Label(features_frame, text=feature, font=("TkDefaultFont", 9)).pack(anchor='w', pady=2)
+
+        # Copyright
+        ttk.Label(parent, text="© 2026 Quievreux", 
+                 font=("TkDefaultFont", 8)).pack(pady=(20, 10))

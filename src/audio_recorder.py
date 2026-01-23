@@ -270,12 +270,13 @@ class AudioRecorder:
             # Prüfe Mindestdauer (0.5 Sekunden für zuverlässige Transkription)
             audio_duration = len(self.frames) * 1024 / config.SAMPLE_RATE
             if audio_duration < 0.5:
-                logger.warning(".2f")
+                logger.warning(f"Aufnahme zu kurz ({audio_duration:.2f}s) - mindestens 0.5s erforderlich")
                 # Cleanup
-                Path(final_wav_path).unlink(missing_ok=True)
+                if Path(final_wav_path).exists():
+                    Path(final_wav_path).unlink(missing_ok=True)
                 return None
 
-            logger.info(".2f")
+            logger.info(f"Aufzeichnung abgeschlossen ({audio_duration:.2f}s)")
 
             # Komprimierung
             compressed_data = self.compress_audio(final_wav_path)
