@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/skquievreux/Speechering/compare/v1.8.1...v1.8.2) (2026-01-23)
+
+
+### Bug Fixes
+
+* **deploy:** correctly detect 'dist' directory for artifacts upload ([879e4b2](https://github.com/skquievreux/Speechering/commit/879e4b2c1cf1e84d615ba414ae882415028acc98))
+
 ## [1.8.1](https://github.com/skquievreux/Speechering/compare/v1.8.0...v1.8.1) (2026-01-23)
 
 
