@@ -649,27 +649,6 @@ class SettingsGUI:
         except Exception as e:
             logger.warning(f"Could not update validation label: {e}")
 
-    def _create_about_tab(self, parent):
-        """Erstellt den Über-Tab"""
-        # Fett gedruckte Überschrift
-        ttk.Label(parent, text="ÜBER", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
-
-        about_frame = ttk.LabelFrame(parent, text="Voice Transcriber", padding=10)
-        about_frame.pack(fill='x', pady=5)
-
-        # Logo/Icon Platzhalter
-        ttk.Label(about_frame, text="🎤", font=("Arial", 48)).pack(pady=10)
-
-        ttk.Label(about_frame, text="Voice Transcriber", font=("Arial", 16, "bold")).pack(pady=5)
-        ttk.Label(about_frame, text=f"Version {config.APP_VERSION}").pack()
-        ttk.Label(about_frame, text="Push-to-Talk Sprach-zu-Text Transkription").pack(pady=5)
-
-        ttk.Label(about_frame, text="Technologien:").pack(anchor='w', pady=5)
-        ttk.Label(about_frame, text="• OpenAI Whisper + GPT-4").pack(anchor='w')
-        ttk.Label(about_frame, text="• Python mit tkinter GUI").pack(anchor='w')
-        ttk.Label(about_frame, text="• PyAudio für Audio-Aufnahme").pack(anchor='w')
-
-        ttk.Label(about_frame, text="© 2025 Voice Transcriber Team").pack(pady=10)
 
     def _get_audio_devices(self):
         """Holt verfügbare Audio-Geräte"""
