@@ -139,6 +139,7 @@ def build_exe():
         "pyinstaller",
         "--onefile",                    # Einzelne EXE-Datei
         "--windowed",                  # Kein Konsolenfenster
+        "--noupx",                     # UPX deaktivieren (verhindert DLL-Korruption)
         "--icon=assets/icon.ico",      # Icon für EXE
         "--name=VoiceTranscriber",     # Name der EXE
         "--add-data=assets:assets",    # Assets einbinden
@@ -212,6 +213,7 @@ def build_bootstrap_installer():
         "pyinstaller",
         "--onefile",                    # Einzelne EXE-Datei
         "--windowed",                  # Kein Konsolenfenster
+        "--noupx",                     # UPX deaktivieren (verhindert DLL-Korruption)
         "--icon=assets/icon.ico",      # Icon für EXE
         "--name=BootstrapInstaller",   # Name der EXE
         "--add-data=assets;assets",    # Assets einbinden
