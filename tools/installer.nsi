@@ -16,7 +16,7 @@ RequestExecutionLevel admin
 
 ; Seiten definieren
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "LICENSE"
+!insertmacro MUI_PAGE_LICENSE "..\LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -64,18 +64,18 @@ Section "Voice Transcriber" SecApp
 
     ; Hauptprogrammdateien kopieren
     DetailPrint "Installiere Voice Transcriber..."
-    File "dist\VoiceTranscriber.exe"
+    File "..\dist\VoiceTranscriber.exe"
 
     ; AHK-Skript kopieren
     DetailPrint "Installiere AutoHotkey-Skript..."
-    File "scripts\mouse_toggle.ahk"
+    File "..\scripts\mouse_toggle.ahk"
 
     ; Dokumentation kopieren
     DetailPrint "Installiere Dokumentation..."
-    File "MOUSE_WHEEL_README.md"
-    File "README.md"
-    File "LICENSE"
-    File "CHANGELOG.txt"
+    File "..\docs\MOUSE_WHEEL_README.md"
+    File "..\README.md"
+    File "..\LICENSE"
+    File "..\CHANGELOG.md"
 
     ; AHK automatisch installieren falls nicht vorhanden
     Call CheckAndInstallAHK

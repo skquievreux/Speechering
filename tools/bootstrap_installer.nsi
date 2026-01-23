@@ -16,7 +16,7 @@ RequestExecutionLevel admin
 
 ; Seiten definieren
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "LICENSE"
+!insertmacro MUI_PAGE_LICENSE "..\LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -50,12 +50,12 @@ Section "Voice Transcriber Bootstrap" SecApp
 
     ; Bootstrap-Installer kopieren (temporär für Download)
     DetailPrint "Installiere Bootstrap-Installer..."
-    File "dist\BootstrapInstaller.exe"
+    File "..\dist\BootstrapInstaller.exe"
 
     ; Dokumentation kopieren
     DetailPrint "Installiere Dokumentation..."
-    File "README.md"
-    File "LICENSE"
+    File "..\README.md"
+    File "..\LICENSE"
 
     ; Registry-Einträge
     DetailPrint "Registriere Programm..."
