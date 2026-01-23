@@ -151,8 +151,15 @@ def main():
 
     # Artifacts-Verzeichnis bestimmen
     artifacts_dir = Path("artifacts")
-    if not artifacts_dir.exists() or not list(artifacts_dir.glob("*")):
-        logger.info("Verzeichnis 'artifacts/' nicht gefunden oder leer, verwende aktuelles Verzeichnis '.'")
+    dist_dir = Path("dist")
+    
+    if artifacts_dir.exists() and list(artifacts_dir.glob("*")):
+        logger.info(f"Verwende 'artifacts/' Verzeichnis")
+    elif dist_dir.exists() and list(dist_dir.glob("*")):
+        logger.info(f"Verwende 'dist/' Verzeichnis")
+        artifacts_dir = dist_dir
+    else:
+        logger.info("Kein Build-Verzeichnis gefunden, verwende aktuelles Verzeichnis '.'")
         artifacts_dir = Path(".")
 
     success = True
