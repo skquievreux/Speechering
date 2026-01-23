@@ -73,7 +73,7 @@ Section "Voice Transcriber" SecApp
     ; Dokumentation kopieren
     DetailPrint "Installiere Dokumentation..."
     File "..\docs\MOUSE_WHEEL_README.md"
-    File "..\README.md"
+    File "..\docs\README.md"
     File "..\LICENSE"
     File "..\CHANGELOG.md"
 
@@ -114,7 +114,7 @@ Section "Voice Transcriber" SecApp
     CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe"
     CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe"
     CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\MOUSE_WHEEL_README.md"
-    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Versionshinweise.lnk" "$INSTDIR\CHANGELOG.txt"
+    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Versionshinweise.lnk" "$INSTDIR\CHANGELOG.md"
 
     ; Installationsdatum setzen
     ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "InstallDate"
@@ -144,7 +144,7 @@ Section "Uninstall"
     Delete "$INSTDIR\MOUSE_WHEEL_README.md"
     Delete "$INSTDIR\README.md"
     Delete "$INSTDIR\LICENSE"
-    Delete "$INSTDIR\CHANGELOG.txt"
+    Delete "$INSTDIR\CHANGELOG.md"
     Delete "$INSTDIR\uninstall.exe"
 
     ; Verzeichnis entfernen (nur wenn leer)

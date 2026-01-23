@@ -54,7 +54,7 @@ Section "Voice Transcriber Bootstrap" SecApp
 
     ; Dokumentation kopieren
     DetailPrint "Installiere Dokumentation..."
-    File "..\README.md"
+    File "..\docs\README.md"
     File "..\LICENSE"
 
     ; Registry-Einträge
