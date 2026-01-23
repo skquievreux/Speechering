@@ -20,19 +20,23 @@ pyperclip = "^1.9.0"
 pyautogui = "^0.9.54"
 python-dotenv = "^1.0.1"
 pydub = "^0.25.1"
+audioop-lts = { version = "^0.2.1", markers = "python_version >= '3.13'" }
 
-# AI/ML Dependencies
-faster-whisper = "*"
-ctranslate2 = "*" 
-torch = {version = "*", source = "pytorch-cpu"}
-numpy = "*"
-huggingface-hub = "*"
+# AI/ML Dependencies (Optional)
+faster-whisper = {version = "*", optional = true}
+ctranslate2 = {version = "*", optional = true} 
+torch = {version = "*", source = "pytorch-cpu", optional = true}
+numpy = {version = "*", optional = true}
+huggingface-hub = {version = "*", optional = true}
 
 # Windows-specific
 win10toast = {version = "^0.9", markers = "platform_system == 'Windows'"}
 
 # Deployment
 boto3 = "^1.34.0"
+
+[tool.poetry.extras]
+ai = ["faster-whisper", "ctranslate2", "torch", "numpy", "huggingface-hub"]
 
 [[tool.poetry.source]]
 name = "pytorch-cpu"

@@ -405,6 +405,9 @@ class VoiceTranscriberApp:
             # Debug-Eintrag schreiben
             self._write_debug_entry(f"Transkript: {corrected_text}")
 
+            # Kurze Pause damit OS Tasten-Release verarbeitet
+            time.sleep(0.2)
+            
             # Text einfügen
             try:
                 success = self.clipboard_injector.inject_text(corrected_text)  # type: ignore
@@ -545,7 +548,7 @@ class VoiceTranscriberApp:
         self.cleanup()
         if self.tray_icon:
             self.tray_icon.stop()
-        sys.exit(0)
+        # Kein sys.exit() hier, damit pystray sauber beendet ohne Traceback
 
     def _init_debug_file(self):
         """Initialisiert die Debug-Datei für Transkriptionsergebnisse"""

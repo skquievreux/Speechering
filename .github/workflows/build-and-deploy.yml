@@ -122,47 +122,7 @@ jobs:
           echo "GIT_COMMIT=$GITHUB_SHA" >> build_info.txt
           echo "GIT_REF=$GITHUB_REF" >> build_info.txt
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: voice-transcriber-builds-${{ steps.version.outputs.version }}
-          path: |
-            dist/
-            VoiceTranscriber_*.exe
-            VoiceTranscriber_Bootstrap_*.exe
-            build_info.txt
-          retention-days: 30
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if:
-      github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' ||
-      startsWith(github.ref, 'refs/tags/v')
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: voice-transcriber-builds-${{ needs.build.outputs.version }}
-          path: artifacts/
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id || github.run_id }}
-
-      - name: Set up Python for deployment
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install deployment dependencies
-        shell: bash
-        run: |
-          pip install boto3
-
-      # Verbesserte Fehlerbehandlung für R2 Deployment
       - name: Deploy to Cloudflare R2
         shell: bash
         env:
@@ -171,48 +131,43 @@ jobs:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
         run: |
-          # Retry-Mechanismus für robusteres Deployment
-          MAX_RETRIES=3
-          RETRY_COUNT=0
-          
-          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-            if python tools/deploy_to_r2.py; then
-              echo "✅ Deployment erfolgreich!"
-              break
-            else
-              RETRY_COUNT=$((RETRY_COUNT+1))
-              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-                echo "⚠️ Deployment fehlgeschlagen. Versuche erneut in 10 Sekunden... ($RETRY_COUNT/$MAX_RETRIES)"
-                sleep 10
-              else
-                echo "❌ Deployment nach $MAX_RETRIES Versuchen fehlgeschlagen."
-                exit 1
-              fi
-            fi
-          done
+          # Deployment Script ausführen (nutzt artifacts_dir = "." Fallback)
+          poetry run python tools/deploy_to_r2.py
 
-      # Aktualisierte GitHub Release Action
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          name: Release ${{ needs.build.outputs.version }}
-          tag_name: v${{ needs.build.outputs.version }}
+          name: Release ${{ steps.version.outputs.version }}
+          tag_name: v${{ steps.version.outputs.version }}
           body: |
-            ## Voice Transcriber ${{ needs.build.outputs.version }}
+            ## Voice Transcriber ${{ steps.version.outputs.version }}
 
-            ### Changes
-            - Automated build and deployment
-            - Bootstrap installer for smaller downloads
-            - Cloudflare R2 Storage integration
+            ### Features
+            - 🔥 **Ultra-Slim EXE**: Von ~220MB auf ~50MB optimiert durch Lazy-Loading
+            - 🚀 **Fast Install**: Bootstrap-Installer lädt nur benötigte Komponenten
+            - 📦 **Lokale KI**: Whisper 'base' Modell wird beim ersten Start lokal geladen
 
             ### Downloads
-            - [VoiceTranscriber Setup](${{ secrets.R2_PUBLIC_URL }}/installer/Setup_${{ needs.build.outputs.version }}.exe)
-            - [VoiceTranscriber EXE](${{ secrets.R2_PUBLIC_URL }}/VoiceTranscriber.exe)
+            - [Bootstrap Installer (Empfohlen)](${{ secrets.R2_PUBLIC_URL }}/installer/VoiceTranscriber_Bootstrap_v${{ steps.version.outputs.version }}.exe)
+            - [Direkter EXE Download](${{ secrets.R2_PUBLIC_URL }}/VoiceTranscriber.exe)
+          files: |
+            VoiceTranscriber_Bootstrap_*.exe
+            VoiceTranscriber_Installer_*.exe
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload build artifacts (GitHub)
+        uses: actions/upload-artifact@v4
+        with:
+          name: voice-transcriber-builds-${{ steps.version.outputs.version }}
+          path: |
+            VoiceTranscriber_*.exe
+            VoiceTranscriber_Bootstrap_*.exe
+            build_info.txt
+          retention-days: 7
 
   test:
     runs-on: windows-latest
