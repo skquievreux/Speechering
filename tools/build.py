@@ -245,8 +245,9 @@ def build_bootstrap_installer():
                 # Kopiere Bootstrap-Installer als Standard-Installer
                 bootstrap_installer = Path("VoiceTranscriber_Bootstrap_Installer.exe")
                 try:
-                    exe_path.replace(bootstrap_installer)
-                    print(f"Datei: Finaler Installer: {bootstrap_installer}")
+                    import shutil
+                    shutil.copy2(exe_path, bootstrap_installer)
+                    print(f"Datei: Finaler Installer (Copy): {bootstrap_installer}")
                 except Exception as e:
                     print(f"WARNUNG:  Konnte Bootstrap-Installer nicht kopieren: {e}")
 

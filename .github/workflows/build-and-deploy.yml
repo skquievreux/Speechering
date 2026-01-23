@@ -108,7 +108,7 @@ jobs:
 
       - name: Build Bootstrap Installer
         shell: bash
-        run: poetry run python tools/build.py --bootstrap
+        run: poetry run python tools/build.py --bootstrap --bootstrap-nsis
 
       - name: Build NSIS Installer
         shell: bash

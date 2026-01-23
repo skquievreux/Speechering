@@ -17,6 +17,7 @@ RequestExecutionLevel admin
 ; Seiten definieren
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "..\LICENSE"
+!insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -34,6 +35,8 @@ RequestExecutionLevel admin
 ; Spracheinstellungen
 LangString DESC_SecApp ${LANG_GERMAN} "Voice Transcriber Bootstrap-Installer"
 LangString DESC_SecApp ${LANG_ENGLISH} "Voice Transcriber Bootstrap Installer"
+LangString DESC_SecAutostart ${LANG_GERMAN} "Mit Windows starten"
+LangString DESC_SecAutostart ${LANG_ENGLISH} "Start with Windows"
 
 ; Versionsinformationen
 VIProductVersion "1.4.1.0"
@@ -159,6 +162,11 @@ Section "Voice Transcriber Bootstrap" SecApp
 
 SectionEnd
 
+Section "Autostart" SecAutostart
+    ; Autostart
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "VoiceTranscriber" "$INSTDIR\VoiceTranscriber.exe"
+SectionEnd
+
 Section "Uninstall"
     ; Deinstallation
 
@@ -189,6 +197,7 @@ Section "Uninstall"
     DetailPrint "Bereinige Registry..."
     DeleteRegKey HKLM "Software\VoiceTranscriber"
     DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber"
+    DeleteRegValue HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "VoiceTranscriber"
 
     ; Verknüpfungen entfernen
     DetailPrint "Entferne Verknüpfungen..."
@@ -213,7 +222,8 @@ FunctionEnd
 ; Beschreibungen
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 !insertmacro MUI_DESCRIPTION_TEXT ${SecApp} $(DESC_SecApp)
-!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+!insertmacro MUI_DESCRIPTION_TEXT ${SecAutostart} $(DESC_SecAutostart)
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ; Callbacks
 Function .onInit
