@@ -43,7 +43,7 @@ Eingabesystem.
 
 ### Option A: Bootstrap-Installer (Empfohlen - nur 15 MB!)
 
-1. **Download**: [`VoiceTranscriber_Bootstrap.exe`](https://github.com/skquievreux/Speechering/releases/latest/download/VoiceTranscriber_Bootstrap_Installer.exe) von den Releases herunterladen
+1. **Download**: [`VoiceTranscriber_Bootstrap.exe`](https://cdn.unlock-your-song.de/speechering/installer/VoiceTranscriber_Bootstrap_Installer.exe) von den Releases herunterladen
 2. **Installieren**: Doppelklick → Installer lädt **vollautomatisch** die App (220 MB) von Cloudflare R2 herunter
 3. **Fertig**: Desktop-Verknüpfung "Voice Transcriber" klicken und loslegen!
 
