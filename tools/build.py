@@ -460,7 +460,7 @@ def build_installer():
 
         if result.returncode == 0:
             # Finde die erstellte Installer-Datei
-            installer_files = list(Path(".").glob("VoiceTranscriber_*.exe"))
+            installer_files = list(Path(".").glob("VoiceTranscriber_Installer_*.exe"))
             if installer_files:
                 installer_file = max(installer_files, key=lambda x: x.stat().st_mtime)
                 size_mb = installer_file.stat().st_size / (1024 * 1024)
