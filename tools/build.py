@@ -118,10 +118,7 @@ def build_exe(mode="onedir", skip_cleanup=False):
         "--hidden-import=pyautogui",       # GUI-Automation
 
         # pkg_resources Side-fix (from main)
-        "--hidden-import=pkg_resources",
-        # jaraco dependencies (now explicitly installed)
-        "--collect-all=jaraco",           # Namespace-Paket: alle jaraco Module sammeln
-        # Explizite jaraco imports als Fallback
+        "--hidden-import=pkg_resources",        # jaraco dependencies (explicit safe imports)
         "--hidden-import=jaraco",
         "--hidden-import=jaraco.text",
         "--hidden-import=jaraco.classes",
