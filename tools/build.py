@@ -119,9 +119,7 @@ def build_exe(mode="onedir", skip_cleanup=False):
 
         # pkg_resources Dependencies (für PyInstaller)
         "--hidden-import=pkg_resources",
-        "--hidden-import=jaraco.text",
-        "--hidden-import=jaraco.functools",
-        "--hidden-import=jaraco.context",
+        "--collect-all=jaraco",           # Namespace-Paket: alle jaraco Module sammeln
 
         # Projekt-spezifische Module
         "--hidden-import=version_manager", # Version Management
