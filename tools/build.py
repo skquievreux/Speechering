@@ -120,7 +120,7 @@ def build_exe(mode="onedir", skip_cleanup=False):
         # pkg_resources Dependencies (für PyInstaller)
         "--hidden-import=pkg_resources",
         "--collect-all=jaraco",           # Namespace-Paket: alle jaraco Module sammeln
-        "--copy-metadata=jaraco",         # Metadata für pkg_resources
+        # Metadata NUR für Subpakete (jaraco selbst ist nur ein Namespace ohne Metadaten)
         "--copy-metadata=jaraco.text",
         "--copy-metadata=jaraco.functools",
         "--copy-metadata=jaraco.context",
