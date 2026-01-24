@@ -3,7 +3,7 @@
 
 ; Allgemeine Einstellungen
 Name "Voice Transcriber Bootstrap"
-OutFile "VoiceTranscriber_Bootstrap_Installer.exe"
+OutFile "..\VoiceTranscriber_Bootstrap_Installer.exe"
 Unicode True
 InstallDir "$PROGRAMFILES\Voice Transcriber"
 InstallDirRegKey HKLM "Software\VoiceTranscriber" ""
