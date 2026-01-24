@@ -117,16 +117,7 @@ def build_exe(mode="onedir", skip_cleanup=False):
         # GUI-Automation (nur für Settings)
         "--hidden-import=pyautogui",       # GUI-Automation
 
-        # pkg_resources Dependencies (für PyInstaller)
-        "--hidden-import=pkg_resources",
-        # jaraco wird von pkg_resources benötigt, aber nicht direkt installiert
-        # Verwende nur --collect-all ohne --copy-metadata (Pakete nicht in Build-Env)
-        "--collect-all=jaraco",
-        # Explizite jaraco imports als Fallback
-        "--hidden-import=jaraco",
-        "--hidden-import=jaraco.text",
-        "--hidden-import=jaraco.functools",
-        "--hidden-import=jaraco.context",
+
 
         # Projekt-spezifische Module
         "--hidden-import=version_manager", # Version Management
