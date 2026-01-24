@@ -78,7 +78,26 @@ class Config:
 
         # Version aus version_manager laden für Konsistenz
         # Temporär deaktiviert nach Struktur-Änderung
-        self.APP_VERSION: str = os.getenv('APP_VERSION', '1.5.1')
+        # Version Loading Strategy:
+        # 1. Try importing from _version.py (generated during build)
+        # 2. Fallback to pyproject.toml (dev environment)
+        # 3. Fallback to default
+        try:
+            from ._version import __version__
+            self.APP_VERSION = __version__
+        except ImportError:
+            try:
+                # Try reading pyproject.toml in dev mode
+                import tomllib
+                pyproject = Path(__file__).parent.parent / "pyproject.toml"
+                if pyproject.exists():
+                    with open(pyproject, "rb") as f:
+                        data = tomllib.load(f)
+                        self.APP_VERSION = data["tool"]["poetry"]["version"]
+                else:
+                    self.APP_VERSION = os.getenv('APP_VERSION', '1.9.3')
+            except Exception:
+                self.APP_VERSION = os.getenv('APP_VERSION', '1.9.3')
 
         # Audio-Komprimierung (benutzerspezifisch konfigurierbar)
         self.AUDIO_COMPRESSION_ENABLED: bool = os.getenv('AUDIO_COMPRESSION_ENABLED', 'true').lower() == 'true'

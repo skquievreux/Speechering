@@ -2,8 +2,12 @@
 ; Erstellt einen minimalen Installer der nur den Bootstrap-Installer enthält
 
 ; Allgemeine Einstellungen
-Name "Voice Transcriber Bootstrap"
-OutFile "..\VoiceTranscriber_Bootstrap_Installer.exe"
+; Allgemeine Einstellungen
+!ifndef VERSION
+  !define VERSION "1.5.0"
+!endif
+Name "Voice Transcriber Bootstrap v${VERSION}"
+OutFile "..\VoiceTranscriber_Bootstrap_Installer_v${VERSION}.exe"
 Unicode True
 InstallDir "$PROGRAMFILES\Voice Transcriber"
 InstallDirRegKey HKLM "Software\VoiceTranscriber" ""
@@ -39,11 +43,11 @@ LangString DESC_SecAutostart ${LANG_GERMAN} "Mit Windows starten"
 LangString DESC_SecAutostart ${LANG_ENGLISH} "Start with Windows"
 
 ; Versionsinformationen
-VIProductVersion "1.4.1.0"
+VIProductVersion "${VERSION}.0"
 VIAddVersionKey "ProductName" "Voice Transcriber Bootstrap"
 VIAddVersionKey "CompanyName" "Voice Transcriber Team"
-VIAddVersionKey "FileVersion" "1.4.1.0"
-VIAddVersionKey "ProductVersion" "1.4.1.0"
+VIAddVersionKey "FileVersion" "${VERSION}.0"
+VIAddVersionKey "ProductVersion" "${VERSION}.0"
 VIAddVersionKey "FileDescription" "Voice Transcriber Bootstrap Installer"
 
 Section "Voice Transcriber Bootstrap" SecApp
@@ -63,7 +67,7 @@ Section "Voice Transcriber Bootstrap" SecApp
     ; Registry-Einträge
     DetailPrint "Registriere Programm..."
     WriteRegStr HKLM "Software\VoiceTranscriber" "" $INSTDIR
-    WriteRegStr HKLM "Software\VoiceTranscriber" "Version" "1.5.0"
+    WriteRegStr HKLM "Software\VoiceTranscriber" "Version" "${VERSION}"
     WriteRegStr HKLM "Software\VoiceTranscriber" "InstallDate" "$0"
     WriteRegStr HKLM "Software\VoiceTranscriber" "BootstrapMode" "1"
 
@@ -101,11 +105,11 @@ Section "Voice Transcriber Bootstrap" SecApp
     after_download_check:
 
     ; Windows-Programme-Liste
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayName" "Voice Transcriber v1.5.0"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayName" "Voice Transcriber v${VERSION}"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "UninstallString" "$INSTDIR\uninstall.exe"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "InstallLocation" "$INSTDIR"
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "Publisher" "Voice Transcriber Team"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayVersion" "1.5.0"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "DisplayVersion" "${VERSION}"
     WriteRegDWord HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "NoModify" 1
     WriteRegDWord HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "NoRepair" 1
 
