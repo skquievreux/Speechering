@@ -372,7 +372,7 @@ def build_bootstrap_installer_nsis():
     print(f"NSIS: Führe NSIS aus: {' '.join(nsis_cmd)}")
 
     try:
-        result = subprocess.run(nsis_cmd, check=True, capture_output=True, text=True)
+        result = subprocess.run(nsis_cmd, check=True, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
         if result.returncode == 0:
             # Finde die erstellte Installer-Datei
@@ -456,7 +456,7 @@ def build_installer():
     print(f"NSIS: Führe NSIS aus: {' '.join(nsis_cmd)}")
 
     try:
-        result = subprocess.run(nsis_cmd, check=True, capture_output=True, text=True)
+        result = subprocess.run(nsis_cmd, check=True, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
         if result.returncode == 0:
             # Finde die erstellte Installer-Datei
