@@ -117,6 +117,9 @@ def build_exe(mode="onedir", skip_cleanup=False):
         # GUI-Automation (nur für Settings)
         "--hidden-import=pyautogui",       # GUI-Automation
 
+        # pkg_resources Side-fix (from main)
+        "--hidden-import=pkg_resources",
+        
         # jaraco dependencies (now explicitly installed)
         "--collect-all=jaraco",
         "--hidden-import=jaraco",
@@ -124,7 +127,6 @@ def build_exe(mode="onedir", skip_cleanup=False):
         "--hidden-import=jaraco.classes",
         "--hidden-import=jaraco.context",
         "--hidden-import=jaraco.functools",
-
 
         # Projekt-spezifische Module
         "--hidden-import=version_manager", # Version Management
