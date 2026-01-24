@@ -119,11 +119,9 @@ def build_exe(mode="onedir", skip_cleanup=False):
 
         # pkg_resources Dependencies (für PyInstaller)
         "--hidden-import=pkg_resources",
-        "--collect-all=jaraco",           # Namespace-Paket: alle jaraco Module sammeln
-        # Metadata NUR für Subpakete (jaraco selbst ist nur ein Namespace ohne Metadaten)
-        "--copy-metadata=jaraco.text",
-        "--copy-metadata=jaraco.functools",
-        "--copy-metadata=jaraco.context",
+        # jaraco wird von pkg_resources benötigt, aber nicht direkt installiert
+        # Verwende nur --collect-all ohne --copy-metadata (Pakete nicht in Build-Env)
+        "--collect-all=jaraco",
         # Explizite jaraco imports als Fallback
         "--hidden-import=jaraco",
         "--hidden-import=jaraco.text",
