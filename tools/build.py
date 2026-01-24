@@ -63,8 +63,12 @@ def generate_icon():
         print("OK: Icon bereits vorhanden")
     return True
 
-def build_exe():
-    """EXE erstellen"""
+def build_exe(mode="onedir"):
+    """EXE erstellen
+
+    Args:
+        mode: 'onedir' für Verzeichnis-Modus (stabiler) oder 'onefile' für einzelne EXE
+    """
     # venv-Prüfung für lokale Entwicklung überspringen
     # if not check_venv():
     #     sys.exit(1)
@@ -134,17 +138,27 @@ def build_exe():
                 if module_name not in hidden_imports:
                     hidden_imports.append(f"--hidden-import={module_name}")
 
-    # PyInstaller-Befehl - Optimiert für Performance und Größe
+    # Modus bestimmen
+    mode_flag = "--onedir" if mode == "onedir" else "--onefile"
+    mode_desc = "Verzeichnis-Modus (verhindert DLL-Fehler)" if mode == "onedir" else "Einzelne EXE-Datei"
+
+    print(f"Build-Modus: {mode} ({mode_desc})")
+
+    # PyInstaller-Befehl - Optimiert für Stabilität und Performance
     pyinstaller_cmd = [
         "pyinstaller",
-        "--onefile",                    # Einzelne EXE-Datei
+        mode_flag,                     # Verzeichnis oder Einzeldatei
         "--windowed",                  # Kein Konsolenfenster
         "--noupx",                     # UPX deaktivieren (verhindert DLL-Korruption)
         "--icon=assets/icon.ico",      # Icon für EXE
+        "--manifest=assets/VoiceTranscriber.manifest",  # Windows-Manifest für UAC/Kompatibilität
         "--name=VoiceTranscriber",     # Name der EXE
         "--add-data=assets:assets",    # Assets einbinden
         "--add-data=scripts:scripts",  # AHK-Skript einbinden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
+        # Windows-spezifische Optimierungen
+        "--win-private-assemblies",    # Verhindert DLL-Konflikte
+        "--win-no-prefer-redirects",   # Nutzt gebündelte DLLs statt System-DLLs
         # Performance-Optimierungen
         "--optimize=2",                # Höhere Bytecode-Optimierung
         "--strip",                     # Debug-Info entfernen
@@ -182,13 +196,28 @@ def build_exe():
 
         if result.returncode == 0:
             print("OK: Build erfolgreich abgeschlossen!")
-            print("Datei: EXE-Datei: dist/VoiceTranscriber.exe")
 
-            # Dateigröße anzeigen
-            exe_path = Path("dist/VoiceTranscriber.exe")
-            if exe_path.exists():
-                size_mb = exe_path.stat().st_size / (1024 * 1024)
-                print(f"Groesse: Dateigröße: {size_mb:.1f} MB")
+            if mode == "onedir":
+                print("Datei: EXE-Datei: dist/VoiceTranscriber/VoiceTranscriber.exe")
+
+                # Verzeichnisgröße anzeigen
+                dist_dir = Path("dist/VoiceTranscriber")
+                if dist_dir.exists():
+                    total_size = sum(f.stat().st_size for f in dist_dir.rglob('*') if f.is_file())
+                    size_mb = total_size / (1024 * 1024)
+                    print(f"Groesse: Gesamtgröße: {size_mb:.1f} MB")
+
+                    # Anzahl der Dateien
+                    file_count = len([f for f in dist_dir.rglob('*') if f.is_file()])
+                    print(f"Dateien: {file_count} Dateien im Verzeichnis")
+            else:
+                print("Datei: EXE-Datei: dist/VoiceTranscriber.exe")
+
+                # Dateigröße anzeigen
+                exe_path = Path("dist/VoiceTranscriber.exe")
+                if exe_path.exists():
+                    size_mb = exe_path.stat().st_size / (1024 * 1024)
+                    print(f"Groesse: Dateigröße: {size_mb:.1f} MB")
 
             print("\nBereit: Bereit zur Verwendung!")
             print("   Hinweis: OpenAI API-Key in .env erforderlich")
@@ -222,8 +251,12 @@ def build_bootstrap_installer():
         "--windowed",                  # Kein Konsolenfenster
         "--noupx",                     # UPX deaktivieren (verhindert DLL-Korruption)
         "--icon=assets/icon.ico",      # Icon für EXE
+        "--manifest=assets/VoiceTranscriber.manifest",  # Windows-Manifest
         "--name=BootstrapInstaller",   # Name der EXE
         "--add-data=assets;assets",    # Assets einbinden
+        # Windows-spezifische Optimierungen
+        "--win-private-assemblies",    # Verhindert DLL-Konflikte
+        "--win-no-prefer-redirects",   # Nutzt gebündelte DLLs statt System-DLLs
         "--hidden-import=src.downloader",  # Downloader-Modul
         "--hidden-import=urllib.request",   # HTTP-Requests
         "--hidden-import=urllib.error",     # HTTP-Fehlerbehandlung
@@ -438,6 +471,7 @@ def main():
     build_installer_flag = "--installer" in sys.argv
     build_bootstrap_flag = "--bootstrap" in sys.argv
     build_bootstrap_nsis_flag = "--bootstrap-nsis" in sys.argv
+    build_onefile_flag = "--onefile" in sys.argv  # Für R2-Deployment
     help_flag = "--help" in sys.argv or "-h" in sys.argv
 
     # Hilfe anzeigen
@@ -445,22 +479,33 @@ def main():
         print("Verwendung: python build.py [OPTIONEN]")
         print("")
         print("Optionen:")
-        print("  --installer      Erstellt vollständigen NSIS-Installer")
+        print("  --installer      Erstellt vollständigen NSIS-Installer (--onedir)")
         print("  --bootstrap      Erstellt kleinen Bootstrap-Installer (PyInstaller)")
         print("  --bootstrap-nsis Erstellt kleinen Bootstrap-Installer (NSIS)")
+        print("  --onefile        Erstellt zusätzlich eine --onefile Version für R2")
         print("  --help, -h       Diese Hilfe anzeigen")
         print("")
+        print("Build-Modi:")
+        print("  --onedir (Standard)  Stabiler, verhindert DLL-Fehler")
+        print("  --onefile            Einzelne EXE, für R2-Download")
+        print("")
         print("Beispiele:")
-        print("  python build.py                           # Nur EXE erstellen")
+        print("  python build.py                           # Nur EXE erstellen (onedir)")
         print("  python build.py --installer              # EXE + vollständiger Installer")
-        print("  python build.py --bootstrap              # EXE + Bootstrap-Installer")
+        print("  python build.py --onefile                # Zusätzlich onefile für R2")
         print("  python build.py --bootstrap-nsis         # EXE + Bootstrap-Installer (NSIS)")
         print("  python build.py --installer --bootstrap  # Alles erstellen")
         return
 
     try:
-        # Immer EXE bauen
-        build_exe()
+        # Standardmäßig --onedir bauen (stabiler!)
+        build_exe(mode="onedir")
+
+        # Optional: --onefile für R2-Deployment bauen
+        if build_onefile_flag or build_bootstrap_nsis_flag:
+            print("\n" + "=" * 50)
+            print("Erstelle zusätzlich --onefile Version für R2-Deployment...")
+            build_exe(mode="onefile")
 
         # Optional Bootstrap-Installer (PyInstaller) bauen
         if build_bootstrap_flag:
