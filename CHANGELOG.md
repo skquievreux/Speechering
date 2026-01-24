@@ -1,3 +1,10 @@
+## [1.9.5](https://github.com/skquievreux/Speechering/compare/v1.9.4...v1.9.5) (2026-01-24)
+
+
+### Bug Fixes
+
+* resolve syntax errors and add build system learnings ([#38](https://github.com/skquievreux/Speechering/issues/38)) ([6a37544](https://github.com/skquievreux/Speechering/commit/6a37544d62641f961a2a6b9beb35c5669509c356))
+
 ## [1.9.4](https://github.com/skquievreux/Speechering/compare/v1.9.3...v1.9.4) (2026-01-24)
 
 
