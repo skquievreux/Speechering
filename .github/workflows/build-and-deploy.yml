@@ -94,17 +94,13 @@ jobs:
 
       # Icon already exists in assets/icon.ico - no generation needed
 
-      # Optimierte PyInstaller-Konfiguration mit UPX-Komprimierung
-      - name: Install UPX
-        shell: bash
-        run: |
-          choco install upx -y
+
 
       - name: Build VoiceTranscriber EXE
         shell: bash
         run: |
           # Build with Poetry
-          poetry run python tools/build.py --upx
+          poetry run python tools/build.py
 
       - name: Build Bootstrap Installer
         shell: bash
