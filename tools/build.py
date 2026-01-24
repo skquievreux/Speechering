@@ -8,6 +8,48 @@ import subprocess
 import sys
 from pathlib import Path
 
+def get_version():
+    """Liest die Version aus pyproject.toml"""
+    try:
+        import tomllib
+    except ImportError:
+        try:
+            import tomli as tomllib
+        except ImportError:
+            print("WARNUNG: tomllib/tomli nicht gefunden, fallback zu manueller Suche")
+            tomllib = None
+
+    try:
+        pyproject = Path("pyproject.toml")
+        if pyproject.exists():
+            if tomllib:
+                with open(pyproject, "rb") as f:
+                    data = tomllib.load(f)
+                    return data["tool"]["poetry"]["version"]
+            else:
+                # Fallback: Einfaches String-Parsing
+                with open(pyproject, "r", encoding="utf-8") as f:
+                    for line in f:
+                        if line.strip().startswith('version = "'):
+                            return line.split('"')[1]
+    except Exception as e:
+        print(f"WARNUNG: Konnte Version nicht lesen: {e}")
+    
+    return "1.9.3" # Fallback
+
+def create_version_file():
+    """Erstellt src/_version.py mit der aktuellen Version"""
+    version = get_version()
+    version_file = Path("src/_version.py")
+    try:
+        with open(version_file, "w", encoding="utf-8") as f:
+            f.write(f'__version__ = "{version}"\n')
+        print(f"Version file created: {version_file} ({version})")
+        return True
+    except Exception as e:
+        print(f"FEHLER: Konnte _version.py nicht erstellen: {e}")
+        return False
+
 
 def check_venv():
     """Prüft ob Virtual Environment aktiv ist"""
@@ -117,14 +159,13 @@ def build_exe(mode="onedir", skip_cleanup=False):
         # GUI-Automation (nur für Settings)
         "--hidden-import=pyautogui",       # GUI-Automation
 
-        # jaraco dependencies (now explicitly installed)
-        "--collect-all=jaraco",
+        # pkg_resources Side-fix (from main)
+        "--hidden-import=pkg_resources",        # jaraco dependencies (explicit safe imports)
         "--hidden-import=jaraco",
         "--hidden-import=jaraco.text",
         "--hidden-import=jaraco.classes",
         "--hidden-import=jaraco.context",
         "--hidden-import=jaraco.functools",
-
 
         # Projekt-spezifische Module
         "--hidden-import=version_manager", # Version Management
@@ -151,6 +192,9 @@ def build_exe(mode="onedir", skip_cleanup=False):
 
     print(f"Build-Modus: {mode} ({mode_desc})")
 
+    # Version File erstellen
+    create_version_file()
+
     # PyInstaller-Befehl - Optimiert für Stabilität und Performance
     pyinstaller_cmd = [
         "pyinstaller",
@@ -163,15 +207,23 @@ def build_exe(mode="onedir", skip_cleanup=False):
         "--add-data=assets:assets",    # Assets einbinden
         "--add-data=scripts:scripts",  # AHK-Skript einbinden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
+        
+        # AI/ML modules for Local Transcription (REQUIRED)
+        "--hidden-import=faster_whisper",
+        "--hidden-import=ctranslate2",
+        "--hidden-import=huggingface_hub",
+        "--hidden-import=tokenizers",
+        "--hidden-import=numpy",
+
         # Performance-Optimierungen (KONSERVATIV - verhindert DLL-Korruption)
         # ENTFERNT: --optimize=2 (zu aggressiv, kann DLLs beschädigen)
         # ENTFERNT: --strip (kann wichtige DLL-Informationen entfernen)
-        # Modul-Excludes für kleinere EXE - EXTREM WICHTIG
-        "--exclude-module=torch",      # PyTorch ausschließen (~150MB)
-        "--exclude-module=faster_whisper", # Whisper ausschließen (~50MB)
-        "--exclude-module=ctranslate2",
-        "--exclude-module=numpy",      # Numpy ausschließen (wird bei Bedarf geladen)
-        "--exclude-module=huggingface_hub",
+        # Modul-Excludes für kleinere EXE
+        "--exclude-module=torch",      # PyTorch ausschließen (~150MB) - ctranslate2 reicht oft
+        # "--exclude-module=faster_whisper", # Benötigt für lokal
+        # "--exclude-module=ctranslate2",    # Benötigt für lokal
+        # "--exclude-module=numpy",          # Benötigt
+        # "--exclude-module=huggingface_hub",# Benötigt
         "--exclude-module=matplotlib", # Nicht benötigte Module ausschließen
         "--exclude-module=unittest",   # Test-Module entfernen
         "--exclude-module=doctest",    # Doctest entfernen
@@ -369,10 +421,15 @@ def build_bootstrap_installer_nsis():
         print(f"FEHLER: Bootstrap-Installer-Skript nicht gefunden: {installer_script}")
         return False
 
+    # Lade Version
+    version = get_version()
+    print(f"Build: Verwende Version {version}")
+
     # NSIS-Befehl ausführen
     nsis_cmd = [
         nsis_path,
         "/V4",  # Verbose output
+        f"/DVERSION={version}", # Version übergeben
         str(installer_script)
     ]
 
@@ -443,11 +500,22 @@ def build_installer():
 
     for path in possible_nsis_paths:
         try:
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a7dd59c (fix(ci): prevent Git Bash path conversion for NSIS commands)
             # Test if makensis executable exists (avoid /VERSION which Git Bash might convert)
             if Path(path).exists() or Path(path).name == 'makensis.exe':
                 # Try to run makensis with a simple test
                 result = subprocess.run([path, '--'], capture_output=True, text=True, timeout=5, encoding='utf-8', errors='replace')
                 # makensis returns non-zero for invalid args, but that proves it exists
+<<<<<<< HEAD
+=======
+            result = subprocess.run([path, '/VERSION'], capture_output=True, text=True, timeout=10, encoding='utf-8', errors='replace')
+            if result.returncode == 0:
+>>>>>>> 4826c34 (fix(ci): improve NSIS installation and detection)
+=======
+>>>>>>> a7dd59c (fix(ci): prevent Git Bash path conversion for NSIS commands)
                 nsis_path = path
                 print(f"OK: NSIS gefunden: {path}")
                 break
@@ -466,17 +534,8 @@ def build_installer():
         print(f"FEHLER: Installer-Skript nicht gefunden: {installer_script}")
         return False
 
-    # Lade Version aus pyproject.toml
-    version = "1.0.0" # Fallback
-    try:
-        with open("pyproject.toml", "r", encoding="utf-8") as f:
-            for line in f:
-                if line.strip().startswith('version = "'):
-                    version = line.split('"')[1]
-                    break
-    except Exception as e:
-        print(f"WARNUNG: Konnte Version nicht aus pyproject.toml lesen: {e}")
-        
+    # Lade Version
+    version = get_version() 
     print(f"Build: Verwende Version {version}")
 
     # NSIS-Befehl ausführen
