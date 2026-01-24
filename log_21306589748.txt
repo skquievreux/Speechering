@@ -1,0 +1,796 @@
+build	Set up job	﻿2026-01-24T01:16:11.2748386Z Current runner version: '2.331.0'
+build	Set up job	2026-01-24T01:16:11.2859506Z ##[group]Runner Image Provisioner
+build	Set up job	2026-01-24T01:16:11.2860296Z Hosted Compute Agent
+build	Set up job	2026-01-24T01:16:11.2860743Z Version: 20260115.477
+build	Set up job	2026-01-24T01:16:11.2861228Z Commit: 4b342d620503cbe250a3154040964899ea7c9b00
+build	Set up job	2026-01-24T01:16:11.2861809Z Build Date: 2026-01-15T22:32:41Z
+build	Set up job	2026-01-24T01:16:11.2862338Z Worker ID: {5f722e35-c919-424f-97ef-0ac3637d4c20}
+build	Set up job	2026-01-24T01:16:11.2862925Z Azure Region: westus3
+build	Set up job	2026-01-24T01:16:11.2863360Z ##[endgroup]
+build	Set up job	2026-01-24T01:16:11.2864801Z ##[group]Operating System
+build	Set up job	2026-01-24T01:16:11.2865390Z Microsoft Windows Server 2025
+build	Set up job	2026-01-24T01:16:11.2865850Z 10.0.26100
+build	Set up job	2026-01-24T01:16:11.2866679Z Datacenter
+build	Set up job	2026-01-24T01:16:11.2867062Z ##[endgroup]
+build	Set up job	2026-01-24T01:16:11.2867474Z ##[group]Runner Image
+build	Set up job	2026-01-24T01:16:11.2867950Z Image: windows-2025
+build	Set up job	2026-01-24T01:16:11.2868384Z Version: 20260119.4.1
+build	Set up job	2026-01-24T01:16:11.2869238Z Included Software: https://github.com/actions/runner-images/blob/win25/20260119.4/images/windows/Windows2025-Readme.md
+build	Set up job	2026-01-24T01:16:11.2870830Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20260119.4
+build	Set up job	2026-01-24T01:16:11.2871838Z ##[endgroup]
+build	Set up job	2026-01-24T01:16:11.2872874Z ##[group]GITHUB_TOKEN Permissions
+build	Set up job	2026-01-24T01:16:11.2874801Z Contents: write
+build	Set up job	2026-01-24T01:16:11.2875312Z Metadata: read
+build	Set up job	2026-01-24T01:16:11.2875727Z Packages: read
+build	Set up job	2026-01-24T01:16:11.2876179Z ##[endgroup]
+build	Set up job	2026-01-24T01:16:11.2878487Z Secret source: Actions
+build	Set up job	2026-01-24T01:16:11.2879091Z Prepare workflow directory
+build	Set up job	2026-01-24T01:16:11.3297610Z Prepare all required actions
+build	Set up job	2026-01-24T01:16:11.3335459Z Getting action download info
+build	Set up job	2026-01-24T01:16:11.7131495Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build	Set up job	2026-01-24T01:16:11.8219248Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+build	Set up job	2026-01-24T01:16:11.9393568Z Download action repository 'softprops/action-gh-release@v2' (SHA:a06a81a03ee405af7f2048a818ed3f03bbf83c7b)
+build	Set up job	2026-01-24T01:16:12.6820562Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+build	Set up job	2026-01-24T01:16:13.4445876Z Complete job name: build
+build	Checkout code	﻿2026-01-24T01:16:13.6399129Z ##[group]Run actions/checkout@v4
+build	Checkout code	2026-01-24T01:16:13.6400640Z with:
+build	Checkout code	2026-01-24T01:16:13.6401304Z   fetch-depth: 0
+build	Checkout code	2026-01-24T01:16:13.6402425Z   repository: skquievreux/Speechering
+build	Checkout code	2026-01-24T01:16:13.6403575Z   token: ***
+build	Checkout code	2026-01-24T01:16:13.6404228Z   ssh-strict: true
+build	Checkout code	2026-01-24T01:16:13.6404905Z   ssh-user: git
+build	Checkout code	2026-01-24T01:16:13.6405587Z   persist-credentials: true
+build	Checkout code	2026-01-24T01:16:13.6406340Z   clean: true
+build	Checkout code	2026-01-24T01:16:13.6407026Z   sparse-checkout-cone-mode: true
+build	Checkout code	2026-01-24T01:16:13.6407844Z   fetch-tags: false
+build	Checkout code	2026-01-24T01:16:13.6408534Z   show-progress: true
+build	Checkout code	2026-01-24T01:16:13.6409215Z   lfs: false
+build	Checkout code	2026-01-24T01:16:13.6409855Z   submodules: false
+build	Checkout code	2026-01-24T01:16:13.6410561Z   set-safe-directory: true
+build	Checkout code	2026-01-24T01:16:13.6411655Z env:
+build	Checkout code	2026-01-24T01:16:13.6412280Z   PYTHON_VERSION: 3.11
+build	Checkout code	2026-01-24T01:16:13.6412977Z ##[endgroup]
+build	Checkout code	2026-01-24T01:16:13.8057975Z Syncing repository: skquievreux/Speechering
+build	Checkout code	2026-01-24T01:16:13.8060323Z ##[group]Getting Git version info
+build	Checkout code	2026-01-24T01:16:13.8061436Z Working directory is 'D:\a\Speechering\Speechering'
+build	Checkout code	2026-01-24T01:16:13.8768636Z [command]"C:\Program Files\Git\bin\git.exe" version
+build	Checkout code	2026-01-24T01:16:14.4448041Z git version 2.52.0.windows.1
+build	Checkout code	2026-01-24T01:16:14.4498340Z ##[endgroup]
+build	Checkout code	2026-01-24T01:16:14.4518817Z Temporarily overriding HOME='D:\a\_temp\a18aae6b-d8c0-422b-990b-32a8c51af238' before making global git config changes
+build	Checkout code	2026-01-24T01:16:14.4520833Z Adding repository directory to the temporary git global config as a safe directory
+build	Checkout code	2026-01-24T01:16:14.4530253Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Speechering\Speechering
+build	Checkout code	2026-01-24T01:16:14.5372943Z Deleting the contents of 'D:\a\Speechering\Speechering'
+build	Checkout code	2026-01-24T01:16:14.5380198Z ##[group]Initializing the repository
+build	Checkout code	2026-01-24T01:16:14.5390245Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Speechering\Speechering
+build	Checkout code	2026-01-24T01:16:14.6633548Z Initialized empty Git repository in D:/a/Speechering/Speechering/.git/
+build	Checkout code	2026-01-24T01:16:14.6690641Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/skquievreux/Speechering
+build	Checkout code	2026-01-24T01:16:14.7392601Z ##[endgroup]
+build	Checkout code	2026-01-24T01:16:14.7393908Z ##[group]Disabling automatic garbage collection
+build	Checkout code	2026-01-24T01:16:14.7395443Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+build	Checkout code	2026-01-24T01:16:14.7683157Z ##[endgroup]
+build	Checkout code	2026-01-24T01:16:14.7684483Z ##[group]Setting up auth
+build	Checkout code	2026-01-24T01:16:14.7697055Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+build	Checkout code	2026-01-24T01:16:14.8012111Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+build	Checkout code	2026-01-24T01:16:16.8733019Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Checkout code	2026-01-24T01:16:16.9121730Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+build	Checkout code	2026-01-24T01:16:17.4444715Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Checkout code	2026-01-24T01:16:17.4851221Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+build	Checkout code	2026-01-24T01:16:18.0173505Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+build	Checkout code	2026-01-24T01:16:18.0539922Z ##[endgroup]
+build	Checkout code	2026-01-24T01:16:18.0540734Z ##[group]Fetching the repository
+build	Checkout code	2026-01-24T01:16:18.0554657Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+build	Checkout code	2026-01-24T01:16:19.7590162Z From https://github.com/skquievreux/Speechering
+build	Checkout code	2026-01-24T01:16:19.7590802Z  * [new branch]      main        -> origin/main
+build	Checkout code	2026-01-24T01:16:19.7591134Z  * [new tag]         v1.0.0-test -> v1.0.0-test
+build	Checkout code	2026-01-24T01:16:19.7591416Z  * [new tag]         v1.4.2      -> v1.4.2
+build	Checkout code	2026-01-24T01:16:19.7591677Z  * [new tag]         v1.5.0      -> v1.5.0
+build	Checkout code	2026-01-24T01:16:19.7591917Z  * [new tag]         v1.5.1      -> v1.5.1
+build	Checkout code	2026-01-24T01:16:19.7592245Z  * [new tag]         v1.5.1-test -> v1.5.1-test
+build	Checkout code	2026-01-24T01:16:19.7592613Z  * [new tag]         v1.5.2      -> v1.5.2
+build	Checkout code	2026-01-24T01:16:19.7592860Z  * [new tag]         v1.5.3      -> v1.5.3
+build	Checkout code	2026-01-24T01:16:19.7593138Z  * [new tag]         v1.6.0      -> v1.6.0
+build	Checkout code	2026-01-24T01:16:19.7593664Z  * [new tag]         v1.7.0      -> v1.7.0
+build	Checkout code	2026-01-24T01:16:19.7594104Z  * [new tag]         v1.8.0      -> v1.8.0
+build	Checkout code	2026-01-24T01:16:19.7594383Z  * [new tag]         v1.8.1      -> v1.8.1
+build	Checkout code	2026-01-24T01:16:19.7594622Z  * [new tag]         v1.8.2      -> v1.8.2
+build	Checkout code	2026-01-24T01:16:19.7594873Z  * [new tag]         v1.8.3      -> v1.8.3
+build	Checkout code	2026-01-24T01:16:19.7595110Z  * [new tag]         v1.9.0      -> v1.9.0
+build	Checkout code	2026-01-24T01:16:19.7945835Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/main
+build	Checkout code	2026-01-24T01:16:19.8216964Z   origin/main
+build	Checkout code	2026-01-24T01:16:19.8263600Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/main
+build	Checkout code	2026-01-24T01:16:19.8521721Z d949fe67f509f198bfab53dd56f0923501913121
+build	Checkout code	2026-01-24T01:16:19.8553814Z ##[endgroup]
+build	Checkout code	2026-01-24T01:16:19.8554257Z ##[group]Determining the checkout info
+build	Checkout code	2026-01-24T01:16:19.8555663Z ##[endgroup]
+build	Checkout code	2026-01-24T01:16:19.8566131Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+build	Checkout code	2026-01-24T01:16:19.8880511Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+build	Checkout code	2026-01-24T01:16:19.9167368Z ##[group]Checking out the ref
+build	Checkout code	2026-01-24T01:16:19.9177145Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+build	Checkout code	2026-01-24T01:16:19.9824469Z branch 'main' set up to track 'origin/main'.
+build	Checkout code	2026-01-24T01:16:19.9831660Z Switched to a new branch 'main'
+build	Checkout code	2026-01-24T01:16:19.9884449Z ##[endgroup]
+build	Checkout code	2026-01-24T01:16:20.0228004Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+build	Checkout code	2026-01-24T01:16:20.0490144Z d949fe67f509f198bfab53dd56f0923501913121
+build	Set up Python	﻿2026-01-24T01:16:20.0896311Z ##[group]Run actions/setup-python@v5
+build	Set up Python	2026-01-24T01:16:20.0896644Z with:
+build	Set up Python	2026-01-24T01:16:20.0896835Z   python-version: 3.11
+build	Set up Python	2026-01-24T01:16:20.0897038Z   check-latest: false
+build	Set up Python	2026-01-24T01:16:20.0897381Z   token: ***
+build	Set up Python	2026-01-24T01:16:20.0897569Z   update-environment: true
+build	Set up Python	2026-01-24T01:16:20.0897788Z   allow-prereleases: false
+build	Set up Python	2026-01-24T01:16:20.0898024Z   freethreaded: false
+build	Set up Python	2026-01-24T01:16:20.0898206Z env:
+build	Set up Python	2026-01-24T01:16:20.0898368Z   PYTHON_VERSION: 3.11
+build	Set up Python	2026-01-24T01:16:20.0898540Z ##[endgroup]
+build	Set up Python	2026-01-24T01:16:20.3040013Z ##[group]Installed versions
+build	Set up Python	2026-01-24T01:16:20.3147902Z Successfully set up CPython (3.11.9)
+build	Set up Python	2026-01-24T01:16:20.3148674Z ##[endgroup]
+build	Install Poetry	﻿2026-01-24T01:16:20.3397706Z ##[group]Run pipx install poetry
+build	Install Poetry	2026-01-24T01:16:20.3398113Z [36;1mpipx install poetry[0m
+build	Install Poetry	2026-01-24T01:16:20.3398350Z [36;1mpoetry --version[0m
+build	Install Poetry	2026-01-24T01:16:20.3949532Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+build	Install Poetry	2026-01-24T01:16:20.3949887Z env:
+build	Install Poetry	2026-01-24T01:16:20.3950079Z   PYTHON_VERSION: 3.11
+build	Install Poetry	2026-01-24T01:16:20.3950361Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install Poetry	2026-01-24T01:16:20.3950804Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Install Poetry	2026-01-24T01:16:20.3951211Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install Poetry	2026-01-24T01:16:20.3951586Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install Poetry	2026-01-24T01:16:20.3951972Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install Poetry	2026-01-24T01:16:20.3952257Z ##[endgroup]
+build	Install Poetry	2026-01-24T01:16:27.3825435Z Found a space in the pipx home path. We heavily discourage this, due to
+build	Install Poetry	2026-01-24T01:16:27.3826362Z     multiple incompatibilities. Please check our docs for more information on
+build	Install Poetry	2026-01-24T01:16:27.3827273Z     this, as well as some pointers on how to migrate to a different home path.
+build	Install Poetry	2026-01-24T01:16:28.0217243Z creating virtual environment...
+build	Install Poetry	2026-01-24T01:16:28.2758638Z installing poetry...
+build	Install Poetry	2026-01-24T01:16:43.0894605Z done! 
+build	Install Poetry	2026-01-24T01:16:43.0897186Z   installed package poetry 2.3.1, installed using Python 3.12.10
+build	Install Poetry	2026-01-24T01:16:43.0897847Z   These apps are now globally available
+build	Install Poetry	2026-01-24T01:16:43.0898313Z     - poetry.exe
+build	Install Poetry	2026-01-24T01:16:44.3322058Z Poetry (version 2.3.1)
+build	Install dependencies	﻿2026-01-24T01:16:44.9117475Z ##[group]Run poetry install --no-root
+build	Install dependencies	2026-01-24T01:16:44.9117889Z [36;1mpoetry install --no-root[0m
+build	Install dependencies	2026-01-24T01:16:44.9134330Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Install dependencies	2026-01-24T01:16:44.9134707Z env:
+build	Install dependencies	2026-01-24T01:16:44.9134886Z   PYTHON_VERSION: 3.11
+build	Install dependencies	2026-01-24T01:16:44.9135176Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install dependencies	2026-01-24T01:16:44.9135594Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Install dependencies	2026-01-24T01:16:44.9136011Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install dependencies	2026-01-24T01:16:44.9136387Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install dependencies	2026-01-24T01:16:44.9136761Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install dependencies	2026-01-24T01:16:44.9137047Z ##[endgroup]
+build	Install dependencies	2026-01-24T01:16:46.3505201Z Creating virtualenv ***-VHie70zz-py3.11 in C:\Users\runneradmin\AppData\Local\pypoetry\Cache\virtualenvs
+build	Install dependencies	2026-01-24T01:16:48.2193395Z Installing dependencies from lock file
+build	Install dependencies	2026-01-24T01:16:48.4589159Z 
+build	Install dependencies	2026-01-24T01:16:48.4590279Z Package operations: 71 installs, 0 updates, 0 removals
+build	Install dependencies	2026-01-24T01:16:48.4590603Z 
+build	Install dependencies	2026-01-24T01:16:48.4596776Z   - Installing altgraph (0.17.5)
+build	Install dependencies	2026-01-24T01:16:48.4609356Z   - Installing annotated-types (0.7.0)
+build	Install dependencies	2026-01-24T01:16:48.4615411Z   - Installing anyio (4.12.1)
+build	Install dependencies	2026-01-24T01:16:48.4621426Z   - Installing astroid (3.3.11)
+build	Install dependencies	2026-01-24T01:16:48.4636422Z   - Installing black (23.12.1)
+build	Install dependencies	2026-01-24T01:16:48.4641148Z   - Installing boto3 (1.42.34)
+build	Install dependencies	2026-01-24T01:16:48.4645001Z   - Installing botocore (1.42.34)
+build	Install dependencies	2026-01-24T01:16:48.4652492Z   - Installing certifi (2026.1.4)
+build	Install dependencies	2026-01-24T01:16:50.4997831Z   - Installing click (8.3.1)
+build	Install dependencies	2026-01-24T01:16:50.5604940Z   - Installing colorama (0.4.6)
+build	Install dependencies	2026-01-24T01:16:50.7012014Z   - Installing coverage (7.13.1)
+build	Install dependencies	2026-01-24T01:16:50.7781709Z   - Installing dill (0.4.1)
+build	Install dependencies	2026-01-24T01:16:50.8350804Z   - Installing distro (1.9.0)
+build	Install dependencies	2026-01-24T01:16:50.8565186Z   - Installing execnet (2.1.2)
+build	Install dependencies	2026-01-24T01:16:50.9352661Z   - Installing h11 (0.16.0)
+build	Install dependencies	2026-01-24T01:16:50.9512839Z   - Installing httpcore (1.0.9)
+build	Install dependencies	2026-01-24T01:16:51.0318634Z   - Installing httpx (0.28.1)
+build	Install dependencies	2026-01-24T01:16:51.0469271Z   - Installing idna (3.11)
+build	Install dependencies	2026-01-24T01:16:51.0654819Z   - Installing iniconfig (2.3.0)
+build	Install dependencies	2026-01-24T01:16:51.1031238Z   - Installing isort (5.13.2)
+build	Install dependencies	2026-01-24T01:16:51.1540025Z   - Installing jiter (0.12.0)
+build	Install dependencies	2026-01-24T01:16:51.1599733Z   - Installing jmespath (1.0.1)
+build	Install dependencies	2026-01-24T01:16:51.1636382Z   - Installing keyboard (0.13.5)
+build	Install dependencies	2026-01-24T01:16:51.1709557Z   - Installing librt (0.7.8)
+build	Install dependencies	2026-01-24T01:16:51.1966821Z   - Installing mccabe (0.7.0)
+build	Install dependencies	2026-01-24T01:16:51.2195789Z   - Installing mouseinfo (0.1.3)
+build	Install dependencies	2026-01-24T01:16:51.2959256Z   - Installing mypy (1.19.1)
+build	Install dependencies	2026-01-24T01:16:51.3139012Z   - Installing mypy-extensions (1.1.0)
+build	Install dependencies	2026-01-24T01:16:51.3260449Z   - Installing openai (1.109.1)
+build	Install dependencies	2026-01-24T01:16:51.3268699Z   - Installing packaging (25.0)
+build	Install dependencies	2026-01-24T01:16:51.4202001Z   - Installing pathspec (1.0.3)
+build	Install dependencies	2026-01-24T01:16:51.4212751Z   - Installing pefile (2024.8.26)
+build	Install dependencies	2026-01-24T01:16:51.4302280Z   - Installing pillow (11.3.0)
+build	Install dependencies	2026-01-24T01:16:52.0672467Z   - Installing platformdirs (4.5.1)
+build	Install dependencies	2026-01-24T01:16:52.1120748Z   - Installing pluggy (1.6.0)
+build	Install dependencies	2026-01-24T01:16:52.1920731Z   - Installing pyaudio (0.2.14)
+build	Install dependencies	2026-01-24T01:16:52.1976020Z   - Installing pyautogui (0.9.54)
+build	Install dependencies	2026-01-24T01:16:52.2222233Z   - Installing pydantic (2.12.5)
+build	Install dependencies	2026-01-24T01:16:52.7478767Z   - Installing pydantic-core (2.41.5)
+build	Install dependencies	2026-01-24T01:16:53.2912114Z   - Installing pydub (0.25.1)
+build	Install dependencies	2026-01-24T01:16:53.3392968Z   - Installing pygetwindow (0.0.9)
+build	Install dependencies	2026-01-24T01:16:53.4294111Z   - Installing pyinstaller (6.18.0)
+build	Install dependencies	2026-01-24T01:16:53.4516484Z   - Installing pyinstaller-hooks-contrib (2025.11)
+build	Install dependencies	2026-01-24T01:16:56.3659795Z   - Installing pylint (3.3.9)
+build	Install dependencies	2026-01-24T01:16:56.5220379Z   - Installing pymsgbox (2.0.1)
+build	Install dependencies	2026-01-24T01:16:56.6738440Z   - Installing pyperclip (1.11.0)
+build	Install dependencies	2026-01-24T01:16:56.7351873Z   - Installing pypiwin32 (223)
+build	Install dependencies	2026-01-24T01:16:56.7775953Z   - Installing pyrect (0.2.0)
+build	Install dependencies	2026-01-24T01:16:56.8781710Z   - Installing pyscreeze (1.0.1)
+build	Install dependencies	2026-01-24T01:16:57.5432976Z   - Installing pystray (0.19.5)
+build	Install dependencies	2026-01-24T01:16:57.7021305Z   - Installing pytest (7.4.4)
+build	Install dependencies	2026-01-24T01:16:57.9328879Z   - Installing pytest-cov (4.1.0)
+build	Install dependencies	2026-01-24T01:16:58.0468861Z   - Installing pytest-mock (3.15.1)
+build	Install dependencies	2026-01-24T01:16:58.1329609Z   - Installing pytest-xdist (3.8.0)
+build	Install dependencies	2026-01-24T01:16:58.2117714Z   - Installing python-dateutil (2.9.0.post0)
+build	Install dependencies	2026-01-24T01:16:58.3039506Z   - Installing python-dotenv (1.2.1)
+build	Install dependencies	2026-01-24T01:16:58.7094495Z   - Installing pytweening (1.2.0)
+build	Install dependencies	2026-01-24T01:16:58.8904345Z   - Installing pywin32 (311)
+build	Install dependencies	2026-01-24T01:17:01.8086261Z   - Installing pywin32-ctypes (0.2.3)
+build	Install dependencies	2026-01-24T01:17:01.9157352Z   - Installing ruff (0.14.14)
+build	Install dependencies	2026-01-24T01:17:02.9255381Z   - Installing s3transfer (0.16.0)
+build	Install dependencies	2026-01-24T01:17:02.9934386Z   - Installing setuptools (80.9.0)
+build	Install dependencies	2026-01-24T01:17:03.7361398Z   - Installing six (1.17.0)
+build	Install dependencies	2026-01-24T01:17:03.7472992Z   - Installing sniffio (1.3.1)
+build	Install dependencies	2026-01-24T01:17:03.8399947Z   - Installing tomlkit (0.14.0)
+build	Install dependencies	2026-01-24T01:17:04.4124491Z   - Installing tqdm (4.67.1)
+build	Install dependencies	2026-01-24T01:17:04.4171125Z   - Installing typing-extensions (4.15.0)
+build	Install dependencies	2026-01-24T01:17:04.4214757Z   - Installing typing-inspection (0.4.2)
+build	Install dependencies	2026-01-24T01:17:04.4479315Z   - Installing urllib3 (2.6.3)
+build	Install dependencies	2026-01-24T01:17:04.4653343Z   - Installing watchdog (3.0.0)
+build	Install dependencies	2026-01-24T01:17:04.4910225Z   - Installing win10toast (0.9)
+build	Install NSIS	﻿2026-01-24T01:17:06.1295992Z ##[group]Run choco install nsis -y
+build	Install NSIS	2026-01-24T01:17:06.1296432Z [36;1mchoco install nsis -y[0m
+build	Install NSIS	2026-01-24T01:17:06.1309674Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Install NSIS	2026-01-24T01:17:06.1310062Z env:
+build	Install NSIS	2026-01-24T01:17:06.1310248Z   PYTHON_VERSION: 3.11
+build	Install NSIS	2026-01-24T01:17:06.1310933Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install NSIS	2026-01-24T01:17:06.1311382Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Install NSIS	2026-01-24T01:17:06.1311797Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install NSIS	2026-01-24T01:17:06.1312212Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install NSIS	2026-01-24T01:17:06.1312596Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Install NSIS	2026-01-24T01:17:06.1312902Z ##[endgroup]
+build	Install NSIS	2026-01-24T01:17:09.8316848Z Chocolatey v2.6.0
+build	Install NSIS	2026-01-24T01:17:10.2434206Z Installing the following packages:
+build	Install NSIS	2026-01-24T01:17:10.2440473Z nsis
+build	Install NSIS	2026-01-24T01:17:10.2445191Z By installing, you accept licenses for the packages.
+build	Install NSIS	2026-01-24T01:17:17.3158763Z Downloading package from source 'https://community.chocolatey.org/api/v2/'
+build	Install NSIS	2026-01-24T01:17:18.2627539Z 
+build	Install NSIS	2026-01-24T01:17:18.2629383Z Progress: Downloading nsis.install 3.11.0... %
+build	Install NSIS	2026-01-24T01:17:18.2630001Z Progress: Downloading nsis.install 3.11.0... %
+build	Install NSIS	2026-01-24T01:17:18.2631337Z Progress: Downloading nsis.install 3.11.0... %
+build	Install NSIS	2026-01-24T01:17:18.2633608Z Progress: Downloading nsis.install 3.11.0... %
+build	Install NSIS	2026-01-24T01:17:18.2634288Z Progress: Downloading nsis.install 3.11.0... %
+build	Install NSIS	2026-01-24T01:17:18.2637650Z Progress: Downloading nsis.install 3.11.0... %
+build	Install NSIS	2026-01-24T01:17:18.2638169Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2639056Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2639691Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2640269Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2640816Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2641395Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2641943Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2642815Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2643326Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2643838Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.2644309Z Progress: Downloading nsis.install 3.11.0... 1%
+build	Install NSIS	2026-01-24T01:17:18.3224158Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3224985Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3225531Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3226443Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3227362Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3227988Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3228591Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3229185Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3229759Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3230317Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3230878Z Progress: Downloading nsis.install 3.11.0... 2%
+build	Install NSIS	2026-01-24T01:17:18.3231454Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3231957Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3232463Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3234348Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3234854Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3235360Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3235853Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3236335Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3236805Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3239745Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3240236Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3240709Z Progress: Downloading nsis.install 3.11.0... 3%
+build	Install NSIS	2026-01-24T01:17:18.3241160Z Progress: Downloading nsis.install 3.11.0... 4%
+build	Install NSIS	2026-01-24T01:17:18.3241623Z Progress: Downloading nsis.install 3.11.0... 4%
+build	Install NSIS	2026-01-24T01:17:18.3242081Z Progress: Downloading nsis.install 3.11.0... 4%
+build	Install NSIS	2026-01-24T01:17:18.3242543Z Progress: Downloading nsis.install 3.11.0... 4%
+build	Install NSIS	2026-01-24T01:17:18.3242910Z Progress: Downloading nsis.install 3.11.0... 5%
+build	Install NSIS	2026-01-24T01:17:18.3243193Z Progress: Downloading nsis.install 3.11.0... 5%
+build	Install NSIS	2026-01-24T01:17:18.3243483Z Progress: Downloading nsis.install 3.11.0... 5%
+build	Install NSIS	2026-01-24T01:17:18.3243765Z Progress: Downloading nsis.install 3.11.0... 5%
+build	Install NSIS	2026-01-24T01:17:18.3865374Z Progress: Downloading nsis.install 3.11.0... 6%
+build	Install NSIS	2026-01-24T01:17:18.3865988Z Progress: Downloading nsis.install 3.11.0... 6%
+build	Install NSIS	2026-01-24T01:17:18.3866854Z Progress: Downloading nsis.install 3.11.0... 6%
+build	Install NSIS	2026-01-24T01:17:18.3871165Z Progress: Downloading nsis.install 3.11.0... 6%
+build	Install NSIS	2026-01-24T01:17:18.3871753Z Progress: Downloading nsis.install 3.11.0... 7%
+build	Install NSIS	2026-01-24T01:17:18.3876084Z Progress: Downloading nsis.install 3.11.0... 7%
+build	Install NSIS	2026-01-24T01:17:18.3877084Z Progress: Downloading nsis.install 3.11.0... 7%
+build	Install NSIS	2026-01-24T01:17:18.3877587Z Progress: Downloading nsis.install 3.11.0... 8%
+build	Install NSIS	2026-01-24T01:17:18.3882847Z Progress: Downloading nsis.install 3.11.0... 8%
+build	Install NSIS	2026-01-24T01:17:18.3883556Z Progress: Downloading nsis.install 3.11.0... 8%
+build	Install NSIS	2026-01-24T01:17:18.3887974Z Progress: Downloading nsis.install 3.11.0... 8%
+build	Install NSIS	2026-01-24T01:17:18.3889251Z Progress: Downloading nsis.install 3.11.0... 9%
+build	Install NSIS	2026-01-24T01:17:18.3889941Z Progress: Downloading nsis.install 3.11.0... 9%
+build	Install NSIS	2026-01-24T01:17:18.3893933Z Progress: Downloading nsis.install 3.11.0... 9%
+build	Install NSIS	2026-01-24T01:17:18.3894402Z Progress: Downloading nsis.install 3.11.0... 9%
+build	Install NSIS	2026-01-24T01:17:18.4517364Z Progress: Downloading nsis.install 3.11.0... 10%
+build	Install NSIS	2026-01-24T01:17:18.4518306Z Progress: Downloading nsis.install 3.11.0... 10%
+build	Install NSIS	2026-01-24T01:17:18.4518953Z Progress: Downloading nsis.install 3.11.0... 10%
+build	Install NSIS	2026-01-24T01:17:18.4520906Z Progress: Downloading nsis.install 3.11.0... 11%
+build	Install NSIS	2026-01-24T01:17:18.4522179Z Progress: Downloading nsis.install 3.11.0... 11%
+build	Install NSIS	2026-01-24T01:17:18.4522775Z Progress: Downloading nsis.install 3.11.0... 11%
+build	Install NSIS	2026-01-24T01:17:18.4523362Z Progress: Downloading nsis.install 3.11.0... 11%
+build	Install NSIS	2026-01-24T01:17:18.4523970Z Progress: Downloading nsis.install 3.11.0... 12%
+build	Install NSIS	2026-01-24T01:17:18.4527584Z Progress: Downloading nsis.install 3.11.0... 12%
+build	Install NSIS	2026-01-24T01:17:18.5205641Z Progress: Downloading nsis.install 3.11.0... 12%
+build	Install NSIS	2026-01-24T01:17:18.5206519Z Progress: Downloading nsis.install 3.11.0... 12%
+build	Install NSIS	2026-01-24T01:17:18.5207832Z Progress: Downloading nsis.install 3.11.0... 13%
+build	Install NSIS	2026-01-24T01:17:18.5208570Z Progress: Downloading nsis.install 3.11.0... 13%
+build	Install NSIS	2026-01-24T01:17:18.5209290Z Progress: Downloading nsis.install 3.11.0... 13%
+build	Install NSIS	2026-01-24T01:17:18.5210043Z Progress: Downloading nsis.install 3.11.0... 14%
+build	Install NSIS	2026-01-24T01:17:18.5210773Z Progress: Downloading nsis.install 3.11.0... 14%
+build	Install NSIS	2026-01-24T01:17:18.5212363Z Progress: Downloading nsis.install 3.11.0... 14%
+build	Install NSIS	2026-01-24T01:17:18.5213233Z Progress: Downloading nsis.install 3.11.0... 14%
+build	Install NSIS	2026-01-24T01:17:18.5213979Z Progress: Downloading nsis.install 3.11.0... 15%
+build	Install NSIS	2026-01-24T01:17:18.5214709Z Progress: Downloading nsis.install 3.11.0... 15%
+build	Install NSIS	2026-01-24T01:17:18.5215809Z Progress: Downloading nsis.install 3.11.0... 16%
+build	Install NSIS	2026-01-24T01:17:18.5216802Z Progress: Downloading nsis.install 3.11.0... 16%
+build	Install NSIS	2026-01-24T01:17:18.5218382Z Progress: Downloading nsis.install 3.11.0... 17%
+build	Install NSIS	2026-01-24T01:17:18.5219399Z Progress: Downloading nsis.install 3.11.0... 18%
+build	Install NSIS	2026-01-24T01:17:18.5220134Z Progress: Downloading nsis.install 3.11.0... 18%
+build	Install NSIS	2026-01-24T01:17:18.5220676Z Progress: Downloading nsis.install 3.11.0... 19%
+build	Install NSIS	2026-01-24T01:17:18.5221175Z Progress: Downloading nsis.install 3.11.0... 19%
+build	Install NSIS	2026-01-24T01:17:18.5222443Z Progress: Downloading nsis.install 3.11.0... 19%
+build	Install NSIS	2026-01-24T01:17:18.5222896Z Progress: Downloading nsis.install 3.11.0... 20%
+build	Install NSIS	2026-01-24T01:17:18.5838249Z Progress: Downloading nsis.install 3.11.0... 20%
+build	Install NSIS	2026-01-24T01:17:18.5838921Z Progress: Downloading nsis.install 3.11.0... 21%
+build	Install NSIS	2026-01-24T01:17:18.5843724Z Progress: Downloading nsis.install 3.11.0... 21%
+build	Install NSIS	2026-01-24T01:17:18.5844765Z Progress: Downloading nsis.install 3.11.0... 22%
+build	Install NSIS	2026-01-24T01:17:18.5845399Z Progress: Downloading nsis.install 3.11.0... 22%
+build	Install NSIS	2026-01-24T01:17:18.5845977Z Progress: Downloading nsis.install 3.11.0... 23%
+build	Install NSIS	2026-01-24T01:17:18.5907207Z Progress: Downloading nsis.install 3.11.0... 23%
+build	Install NSIS	2026-01-24T01:17:18.5908192Z Progress: Downloading nsis.install 3.11.0... 24%
+build	Install NSIS	2026-01-24T01:17:18.5909239Z Progress: Downloading nsis.install 3.11.0... 24%
+build	Install NSIS	2026-01-24T01:17:18.5909798Z Progress: Downloading nsis.install 3.11.0... 25%
+build	Install NSIS	2026-01-24T01:17:18.5912006Z Progress: Downloading nsis.install 3.11.0... 25%
+build	Install NSIS	2026-01-24T01:17:18.5912931Z Progress: Downloading nsis.install 3.11.0... 26%
+build	Install NSIS	2026-01-24T01:17:18.5913549Z Progress: Downloading nsis.install 3.11.0... 27%
+build	Install NSIS	2026-01-24T01:17:18.5914130Z Progress: Downloading nsis.install 3.11.0... 27%
+build	Install NSIS	2026-01-24T01:17:18.5914697Z Progress: Downloading nsis.install 3.11.0... 28%
+build	Install NSIS	2026-01-24T01:17:18.5915253Z Progress: Downloading nsis.install 3.11.0... 28%
+build	Install NSIS	2026-01-24T01:17:18.6537666Z Progress: Downloading nsis.install 3.11.0... 29%
+build	Install NSIS	2026-01-24T01:17:18.6538783Z Progress: Downloading nsis.install 3.11.0... 29%
+build	Install NSIS	2026-01-24T01:17:18.6539764Z Progress: Downloading nsis.install 3.11.0... 30%
+build	Install NSIS	2026-01-24T01:17:18.6540430Z Progress: Downloading nsis.install 3.11.0... 30%
+build	Install NSIS	2026-01-24T01:17:18.7192574Z Progress: Downloading nsis.install 3.11.0... 31%
+build	Install NSIS	2026-01-24T01:17:18.7193429Z Progress: Downloading nsis.install 3.11.0... 31%
+build	Install NSIS	2026-01-24T01:17:18.7194108Z Progress: Downloading nsis.install 3.11.0... 32%
+build	Install NSIS	2026-01-24T01:17:18.7194695Z Progress: Downloading nsis.install 3.11.0... 32%
+build	Install NSIS	2026-01-24T01:17:18.7195319Z Progress: Downloading nsis.install 3.11.0... 33%
+build	Install NSIS	2026-01-24T01:17:18.7195937Z Progress: Downloading nsis.install 3.11.0... 33%
+build	Install NSIS	2026-01-24T01:17:18.7197485Z Progress: Downloading nsis.install 3.11.0... 34%
+build	Install NSIS	2026-01-24T01:17:18.7198745Z Progress: Downloading nsis.install 3.11.0... 34%
+build	Install NSIS	2026-01-24T01:17:18.7199555Z Progress: Downloading nsis.install 3.11.0... 35%
+build	Install NSIS	2026-01-24T01:17:18.7200457Z Progress: Downloading nsis.install 3.11.0... 36%
+build	Install NSIS	2026-01-24T01:17:18.7201272Z Progress: Downloading nsis.install 3.11.0... 36%
+build	Install NSIS	2026-01-24T01:17:18.7201897Z Progress: Downloading nsis.install 3.11.0... 37%
+build	Install NSIS	2026-01-24T01:17:18.7202489Z Progress: Downloading nsis.install 3.11.0... 37%
+build	Install NSIS	2026-01-24T01:17:18.7203089Z Progress: Downloading nsis.install 3.11.0... 38%
+build	Install NSIS	2026-01-24T01:17:18.7203685Z Progress: Downloading nsis.install 3.11.0... 38%
+build	Install NSIS	2026-01-24T01:17:18.7204249Z Progress: Downloading nsis.install 3.11.0... 39%
+build	Install NSIS	2026-01-24T01:17:18.7204826Z Progress: Downloading nsis.install 3.11.0... 39%
+build	Install NSIS	2026-01-24T01:17:18.7205441Z Progress: Downloading nsis.install 3.11.0... 40%
+build	Install NSIS	2026-01-24T01:17:18.7205992Z Progress: Downloading nsis.install 3.11.0... 40%
+build	Install NSIS	2026-01-24T01:17:18.7206332Z Progress: Downloading nsis.install 3.11.0... 41%
+build	Install NSIS	2026-01-24T01:17:18.7206692Z Progress: Downloading nsis.install 3.11.0... 41%
+build	Install NSIS	2026-01-24T01:17:18.7207046Z Progress: Downloading nsis.install 3.11.0... 42%
+build	Install NSIS	2026-01-24T01:17:18.7212836Z Progress: Downloading nsis.install 3.11.0... 42%
+build	Install NSIS	2026-01-24T01:17:18.7213933Z Progress: Downloading nsis.install 3.11.0... 43%
+build	Install NSIS	2026-01-24T01:17:18.7214467Z Progress: Downloading nsis.install 3.11.0... 43%
+build	Install NSIS	2026-01-24T01:17:18.7214897Z Progress: Downloading nsis.install 3.11.0... 44%
+build	Install NSIS	2026-01-24T01:17:18.7222906Z Progress: Downloading nsis.install 3.11.0... 45%
+build	Install NSIS	2026-01-24T01:17:18.7223897Z Progress: Downloading nsis.install 3.11.0... 45%
+build	Install NSIS	2026-01-24T01:17:18.8909434Z Progress: Downloading nsis.install 3.11.0... 46%
+build	Install NSIS	2026-01-24T01:17:18.8910670Z Progress: Downloading nsis.install 3.11.0... 46%
+build	Install NSIS	2026-01-24T01:17:18.8912343Z Progress: Downloading nsis.install 3.11.0... 47%
+build	Install NSIS	2026-01-24T01:17:18.8913006Z Progress: Downloading nsis.install 3.11.0... 47%
+build	Install NSIS	2026-01-24T01:17:18.8913621Z Progress: Downloading nsis.install 3.11.0... 48%
+build	Install NSIS	2026-01-24T01:17:18.8914195Z Progress: Downloading nsis.install 3.11.0... 48%
+build	Install NSIS	2026-01-24T01:17:18.8915968Z Progress: Downloading nsis.install 3.11.0... 49%
+build	Install NSIS	2026-01-24T01:17:18.8916972Z Progress: Downloading nsis.install 3.11.0... 49%
+build	Install NSIS	2026-01-24T01:17:18.8917833Z Progress: Downloading nsis.install 3.11.0... 50%
+build	Install NSIS	2026-01-24T01:17:18.8918432Z Progress: Downloading nsis.install 3.11.0... 50%
+build	Install NSIS	2026-01-24T01:17:18.8919081Z Progress: Downloading nsis.install 3.11.0... 51%
+build	Install NSIS	2026-01-24T01:17:18.8919718Z Progress: Downloading nsis.install 3.11.0... 51%
+build	Install NSIS	2026-01-24T01:17:18.8920881Z Progress: Downloading nsis.install 3.11.0... 52%
+build	Install NSIS	2026-01-24T01:17:18.8921592Z Progress: Downloading nsis.install 3.11.0... 52%
+build	Install NSIS	2026-01-24T01:17:18.8922253Z Progress: Downloading nsis.install 3.11.0... 53%
+build	Install NSIS	2026-01-24T01:17:18.8922861Z Progress: Downloading nsis.install 3.11.0... 53%
+build	Install NSIS	2026-01-24T01:17:18.8923466Z Progress: Downloading nsis.install 3.11.0... 54%
+build	Install NSIS	2026-01-24T01:17:18.8924070Z Progress: Downloading nsis.install 3.11.0... 55%
+build	Install NSIS	2026-01-24T01:17:18.8924656Z Progress: Downloading nsis.install 3.11.0... 55%
+build	Install NSIS	2026-01-24T01:17:18.8925507Z Progress: Downloading nsis.install 3.11.0... 56%
+build	Install NSIS	2026-01-24T01:17:18.8946390Z Progress: Downloading nsis.install 3.11.0... 56%
+build	Install NSIS	2026-01-24T01:17:18.8947287Z Progress: Downloading nsis.install 3.11.0... 57%
+build	Install NSIS	2026-01-24T01:17:18.8947826Z Progress: Downloading nsis.install 3.11.0... 57%
+build	Install NSIS	2026-01-24T01:17:18.8948306Z Progress: Downloading nsis.install 3.11.0... 58%
+build	Install NSIS	2026-01-24T01:17:18.9047299Z Progress: Downloading nsis.install 3.11.0... 58%
+build	Install NSIS	2026-01-24T01:17:18.9048136Z Progress: Downloading nsis.install 3.11.0... 59%
+build	Install NSIS	2026-01-24T01:17:18.9551912Z Progress: Downloading nsis.install 3.11.0... 59%
+build	Install NSIS	2026-01-24T01:17:18.9552831Z Progress: Downloading nsis.install 3.11.0... 60%
+build	Install NSIS	2026-01-24T01:17:18.9553574Z Progress: Downloading nsis.install 3.11.0... 60%
+build	Install NSIS	2026-01-24T01:17:18.9554226Z Progress: Downloading nsis.install 3.11.0... 61%
+build	Install NSIS	2026-01-24T01:17:18.9555014Z Progress: Downloading nsis.install 3.11.0... 61%
+build	Install NSIS	2026-01-24T01:17:18.9555733Z Progress: Downloading nsis.install 3.11.0... 62%
+build	Install NSIS	2026-01-24T01:17:18.9556281Z Progress: Downloading nsis.install 3.11.0... 62%
+build	Install NSIS	2026-01-24T01:17:18.9556803Z Progress: Downloading nsis.install 3.11.0... 63%
+build	Install NSIS	2026-01-24T01:17:18.9557343Z Progress: Downloading nsis.install 3.11.0... 64%
+build	Install NSIS	2026-01-24T01:17:18.9557852Z Progress: Downloading nsis.install 3.11.0... 64%
+build	Install NSIS	2026-01-24T01:17:18.9558308Z Progress: Downloading nsis.install 3.11.0... 65%
+build	Install NSIS	2026-01-24T01:17:18.9558769Z Progress: Downloading nsis.install 3.11.0... 65%
+build	Install NSIS	2026-01-24T01:17:18.9559241Z Progress: Downloading nsis.install 3.11.0... 66%
+build	Install NSIS	2026-01-24T01:17:18.9559741Z Progress: Downloading nsis.install 3.11.0... 66%
+build	Install NSIS	2026-01-24T01:17:18.9560201Z Progress: Downloading nsis.install 3.11.0... 67%
+build	Install NSIS	2026-01-24T01:17:18.9560680Z Progress: Downloading nsis.install 3.11.0... 67%
+build	Install NSIS	2026-01-24T01:17:18.9587148Z Progress: Downloading nsis.install 3.11.0... 68%
+build	Install NSIS	2026-01-24T01:17:18.9588026Z Progress: Downloading nsis.install 3.11.0... 68%
+build	Install NSIS	2026-01-24T01:17:18.9588908Z Progress: Downloading nsis.install 3.11.0... 69%
+build	Install NSIS	2026-01-24T01:17:18.9589438Z Progress: Downloading nsis.install 3.11.0... 69%
+build	Install NSIS	2026-01-24T01:17:18.9590155Z Progress: Downloading nsis.install 3.11.0... 70%
+build	Install NSIS	2026-01-24T01:17:18.9590894Z Progress: Downloading nsis.install 3.11.0... 70%
+build	Install NSIS	2026-01-24T01:17:18.9591380Z Progress: Downloading nsis.install 3.11.0... 71%
+build	Install NSIS	2026-01-24T01:17:18.9591803Z Progress: Downloading nsis.install 3.11.0... 71%
+build	Install NSIS	2026-01-24T01:17:18.9640153Z Progress: Downloading nsis.install 3.11.0... 72%
+build	Install NSIS	2026-01-24T01:17:18.9640902Z Progress: Downloading nsis.install 3.11.0... 73%
+build	Install NSIS	2026-01-24T01:17:18.9728992Z Progress: Downloading nsis.install 3.11.0... 73%
+build	Install NSIS	2026-01-24T01:17:18.9730412Z Progress: Downloading nsis.install 3.11.0... 74%
+build	Install NSIS	2026-01-24T01:17:19.0400635Z Progress: Downloading nsis.install 3.11.0... 74%
+build	Install NSIS	2026-01-24T01:17:19.0402161Z Progress: Downloading nsis.install 3.11.0... 75%
+build	Install NSIS	2026-01-24T01:17:19.0405068Z Progress: Downloading nsis.install 3.11.0... 75%
+build	Install NSIS	2026-01-24T01:17:19.0405916Z Progress: Downloading nsis.install 3.11.0... 76%
+build	Install NSIS	2026-01-24T01:17:19.0484293Z Progress: Downloading nsis.install 3.11.0... 76%
+build	Install NSIS	2026-01-24T01:17:19.0485139Z Progress: Downloading nsis.install 3.11.0... 77%
+build	Install NSIS	2026-01-24T01:17:19.0536588Z Progress: Downloading nsis.install 3.11.0... 77%
+build	Install NSIS	2026-01-24T01:17:19.0537356Z Progress: Downloading nsis.install 3.11.0... 78%
+build	Install NSIS	2026-01-24T01:17:19.0538029Z Progress: Downloading nsis.install 3.11.0... 78%
+build	Install NSIS	2026-01-24T01:17:19.0538654Z Progress: Downloading nsis.install 3.11.0... 79%
+build	Install NSIS	2026-01-24T01:17:19.0539220Z Progress: Downloading nsis.install 3.11.0... 79%
+build	Install NSIS	2026-01-24T01:17:19.0540068Z Progress: Downloading nsis.install 3.11.0... 80%
+build	Install NSIS	2026-01-24T01:17:19.2540663Z Progress: Downloading nsis.install 3.11.0... 80%
+build	Install NSIS	2026-01-24T01:17:19.2541622Z Progress: Downloading nsis.install 3.11.0... 81%
+build	Install NSIS	2026-01-24T01:17:19.2542418Z Progress: Downloading nsis.install 3.11.0... 81%
+build	Install NSIS	2026-01-24T01:17:19.2542918Z Progress: Downloading nsis.install 3.11.0... 82%
+build	Install NSIS	2026-01-24T01:17:19.2543429Z Progress: Downloading nsis.install 3.11.0... 83%
+build	Install NSIS	2026-01-24T01:17:19.2543895Z Progress: Downloading nsis.install 3.11.0... 83%
+build	Install NSIS	2026-01-24T01:17:19.2544323Z Progress: Downloading nsis.install 3.11.0... 84%
+build	Install NSIS	2026-01-24T01:17:19.2544793Z Progress: Downloading nsis.install 3.11.0... 84%
+build	Install NSIS	2026-01-24T01:17:19.2545927Z Progress: Downloading nsis.install 3.11.0... 85%
+build	Install NSIS	2026-01-24T01:17:19.2546581Z Progress: Downloading nsis.install 3.11.0... 85%
+build	Install NSIS	2026-01-24T01:17:19.2547152Z Progress: Downloading nsis.install 3.11.0... 86%
+build	Install NSIS	2026-01-24T01:17:19.2547702Z Progress: Downloading nsis.install 3.11.0... 86%
+build	Install NSIS	2026-01-24T01:17:19.2548272Z Progress: Downloading nsis.install 3.11.0... 87%
+build	Install NSIS	2026-01-24T01:17:19.2548851Z Progress: Downloading nsis.install 3.11.0... 87%
+build	Install NSIS	2026-01-24T01:17:19.2549408Z Progress: Downloading nsis.install 3.11.0... 88%
+build	Install NSIS	2026-01-24T01:17:19.2549966Z Progress: Downloading nsis.install 3.11.0... 88%
+build	Install NSIS	2026-01-24T01:17:19.2550529Z Progress: Downloading nsis.install 3.11.0... 89%
+build	Install NSIS	2026-01-24T01:17:19.2551074Z Progress: Downloading nsis.install 3.11.0... 89%
+build	Install NSIS	2026-01-24T01:17:19.2551639Z Progress: Downloading nsis.install 3.11.0... 90%
+build	Install NSIS	2026-01-24T01:17:19.2552127Z Progress: Downloading nsis.install 3.11.0... 90%
+build	Install NSIS	2026-01-24T01:17:19.2552611Z Progress: Downloading nsis.install 3.11.0... 91%
+build	Install NSIS	2026-01-24T01:17:19.2553375Z Progress: Downloading nsis.install 3.11.0... 92%
+build	Install NSIS	2026-01-24T01:17:19.2553975Z Progress: Downloading nsis.install 3.11.0... 92%
+build	Install NSIS	2026-01-24T01:17:19.2554482Z Progress: Downloading nsis.install 3.11.0... 93%
+build	Install NSIS	2026-01-24T01:17:19.2554990Z Progress: Downloading nsis.install 3.11.0... 93%
+build	Install NSIS	2026-01-24T01:17:19.2555488Z Progress: Downloading nsis.install 3.11.0... 94%
+build	Install NSIS	2026-01-24T01:17:19.2555981Z Progress: Downloading nsis.install 3.11.0... 94%
+build	Install NSIS	2026-01-24T01:17:19.2556458Z Progress: Downloading nsis.install 3.11.0... 95%
+build	Install NSIS	2026-01-24T01:17:19.2556956Z Progress: Downloading nsis.install 3.11.0... 95%
+build	Install NSIS	2026-01-24T01:17:19.2557451Z Progress: Downloading nsis.install 3.11.0... 96%
+build	Install NSIS	2026-01-24T01:17:19.2557932Z Progress: Downloading nsis.install 3.11.0... 96%
+build	Install NSIS	2026-01-24T01:17:19.2558404Z Progress: Downloading nsis.install 3.11.0... 97%
+build	Install NSIS	2026-01-24T01:17:19.2558917Z Progress: Downloading nsis.install 3.11.0... 97%
+build	Install NSIS	2026-01-24T01:17:19.2560590Z Progress: Downloading nsis.install 3.11.0... 98%
+build	Install NSIS	2026-01-24T01:17:19.2561014Z Progress: Downloading nsis.install 3.11.0... 98%
+build	Install NSIS	2026-01-24T01:17:19.2561478Z Progress: Downloading nsis.install 3.11.0... 99%
+build	Install NSIS	2026-01-24T01:17:19.2561925Z Progress: Downloading nsis.install 3.11.0... 99%
+build	Install NSIS	2026-01-24T01:17:19.2562406Z Progress: Downloading nsis.install 3.11.0... 100%
+build	Install NSIS	2026-01-24T01:17:19.2562853Z Progress: Downloading nsis.install 3.11.0... 100%
+build	Install NSIS	2026-01-24T01:17:19.6445521Z 
+build	Install NSIS	2026-01-24T01:17:19.6446469Z nsis.install v3.11.0 [Approved] - Possibly broken
+build	Install NSIS	2026-01-24T01:17:19.6623620Z nsis.install package files install completed. Performing other installation steps.
+build	Install NSIS	2026-01-24T01:17:21.5457612Z Installing nsis.install...
+build	Install NSIS	2026-01-24T01:17:24.1906048Z nsis.install has been installed.
+build	Install NSIS	2026-01-24T01:17:24.3525097Z   nsis.install can be automatically uninstalled.
+build	Install NSIS	2026-01-24T01:17:24.5032906Z  The install of nsis.install was successful.
+build	Install NSIS	2026-01-24T01:17:24.5038661Z   Deployed to 'C:\Program Files (x86)\NSIS'
+build	Install NSIS	2026-01-24T01:17:24.5151714Z Downloading package from source 'https://community.chocolatey.org/api/v2/'
+build	Install NSIS	2026-01-24T01:17:24.7565230Z 
+build	Install NSIS	2026-01-24T01:17:24.7565817Z Progress: Downloading nsis 3.11.0... 100%
+build	Install NSIS	2026-01-24T01:17:24.7957381Z 
+build	Install NSIS	2026-01-24T01:17:24.7958089Z nsis v3.11.0 [Approved] - Possibly broken
+build	Install NSIS	2026-01-24T01:17:24.7973658Z nsis package files install completed. Performing other installation steps.
+build	Install NSIS	2026-01-24T01:17:24.9785161Z  The install of nsis was successful.
+build	Install NSIS	2026-01-24T01:17:24.9789644Z   Deployed to 'C:\ProgramData\chocolatey\lib\nsis'
+build	Install NSIS	2026-01-24T01:17:25.0065433Z 
+build	Install NSIS	2026-01-24T01:17:25.0066031Z Chocolatey installed 2/2 packages. 
+build	Install NSIS	2026-01-24T01:17:25.0066558Z  See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+build	Determine version	﻿2026-01-24T01:17:25.0716975Z ##[group]Run if [ ! -z "" ]; then
+build	Determine version	2026-01-24T01:17:25.0717386Z [36;1mif [ ! -z "" ]; then[0m
+build	Determine version	2026-01-24T01:17:25.0717629Z [36;1m  VERSION=""[0m
+build	Determine version	2026-01-24T01:17:25.0717875Z [36;1melif [[ $GITHUB_REF == refs/tags/* ]]; then[0m
+build	Determine version	2026-01-24T01:17:25.0718206Z [36;1m  VERSION="${GITHUB_REF#refs/tags/v}"[0m
+build	Determine version	2026-01-24T01:17:25.0718702Z [36;1melse[0m
+build	Determine version	2026-01-24T01:17:25.0718944Z [36;1m  # Get version from pyproject.toml using poetry[0m
+build	Determine version	2026-01-24T01:17:25.0719254Z [36;1m  VERSION=$(poetry version -s)[0m
+build	Determine version	2026-01-24T01:17:25.0719493Z [36;1mfi[0m
+build	Determine version	2026-01-24T01:17:25.0719696Z [36;1mecho "VERSION=$VERSION" >> $GITHUB_ENV[0m
+build	Determine version	2026-01-24T01:17:25.0720002Z [36;1mecho "version=$VERSION" >> $GITHUB_OUTPUT[0m
+build	Determine version	2026-01-24T01:17:25.0720293Z [36;1mecho "Building version: $VERSION"[0m
+build	Determine version	2026-01-24T01:17:25.0735442Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Determine version	2026-01-24T01:17:25.0735821Z env:
+build	Determine version	2026-01-24T01:17:25.0736276Z   PYTHON_VERSION: 3.11
+build	Determine version	2026-01-24T01:17:25.0736627Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Determine version	2026-01-24T01:17:25.0737063Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Determine version	2026-01-24T01:17:25.0737506Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Determine version	2026-01-24T01:17:25.0737899Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Determine version	2026-01-24T01:17:25.0738280Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Determine version	2026-01-24T01:17:25.0738591Z ##[endgroup]
+build	Determine version	2026-01-24T01:17:25.8666724Z Building version: 1.9.0
+build	Update version in files	﻿2026-01-24T01:17:25.8860655Z ##[group]Run # Update version.py
+build	Update version in files	2026-01-24T01:17:25.8861090Z [36;1m# Update version.py[0m
+build	Update version in files	2026-01-24T01:17:25.8861374Z [36;1mecho "APP_VERSION = '$VERSION'" > version.py[0m
+build	Update version in files	2026-01-24T01:17:25.8861655Z [36;1m[0m
+build	Update version in files	2026-01-24T01:17:25.8861866Z [36;1m# Update .env (create if not exists)[0m
+build	Update version in files	2026-01-24T01:17:25.8862149Z [36;1mif [ -f ".env" ]; then[0m
+build	Update version in files	2026-01-24T01:17:25.8862437Z [36;1m  sed -i "s/APP_VERSION=.*/APP_VERSION=$VERSION/" .env[0m
+build	Update version in files	2026-01-24T01:17:25.8862727Z [36;1melse[0m
+build	Update version in files	2026-01-24T01:17:25.8862926Z [36;1m  echo "APP_VERSION=$VERSION" > .env[0m
+build	Update version in files	2026-01-24T01:17:25.8863180Z [36;1mfi[0m
+build	Update version in files	2026-01-24T01:17:25.8863566Z [36;1m[0m
+build	Update version in files	2026-01-24T01:17:25.8863756Z [36;1m# Update installer script[0m
+build	Update version in files	2026-01-24T01:17:25.8864256Z [36;1msed -i "s/Name \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/Name \"Voice Transcriber v$VERSION\"/" tools/installer.nsi[0m
+build	Update version in files	2026-01-24T01:17:25.8865074Z [36;1msed -i "s/OutFile \"VoiceTranscriber_Installer_v[0-9]\+\.[0-9]\+\.[0-9]\+\.exe\"/OutFile \"VoiceTranscriber_Installer_v$VERSION.exe\"/" tools/installer.nsi[0m
+build	Update version in files	2026-01-24T01:17:25.8865977Z [36;1msed -i "s/DisplayName \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber v$VERSION\"/" tools/installer.nsi[0m
+build	Update version in files	2026-01-24T01:17:25.8866665Z [36;1msed -i "s/DisplayVersion \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayVersion \"$VERSION\"/" tools/installer.nsi[0m
+build	Update version in files	2026-01-24T01:17:25.8867077Z [36;1m[0m
+build	Update version in files	2026-01-24T01:17:25.8867265Z [36;1m# Update bootstrap installer[0m
+build	Update version in files	2026-01-24T01:17:25.8867786Z [36;1msed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" tools/bootstrap_installer.nsi[0m
+build	Update version in files	2026-01-24T01:17:25.8868691Z [36;1msed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" tools/bootstrap_installer.nsi[0m
+build	Update version in files	2026-01-24T01:17:25.8869675Z [36;1msed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" tools/bootstrap_installer.nsi[0m
+build	Update version in files	2026-01-24T01:17:25.8884627Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Update version in files	2026-01-24T01:17:25.8885010Z env:
+build	Update version in files	2026-01-24T01:17:25.8885183Z   PYTHON_VERSION: 3.11
+build	Update version in files	2026-01-24T01:17:25.8885481Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Update version in files	2026-01-24T01:17:25.8885911Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Update version in files	2026-01-24T01:17:25.8886338Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Update version in files	2026-01-24T01:17:25.8886730Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Update version in files	2026-01-24T01:17:25.8887133Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Update version in files	2026-01-24T01:17:25.8887439Z   VERSION: 1.9.0
+build	Update version in files	2026-01-24T01:17:25.8887633Z ##[endgroup]
+build	Build VoiceTranscriber EXE	﻿2026-01-24T01:17:26.1055614Z ##[group]Run # Build with Poetry
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1056014Z [36;1m# Build with Poetry[0m
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1056261Z [36;1mpoetry run python tools/build.py[0m
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1069777Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1070162Z env:
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1070339Z   PYTHON_VERSION: 3.11
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1070618Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1071050Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1071470Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1071848Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1072221Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1072533Z   VERSION: 1.9.0
+build	Build VoiceTranscriber EXE	2026-01-24T01:17:26.1072711Z ##[endgroup]
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5352510Z Voice Transcriber - Build Script
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5353203Z ==================================================
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5353653Z Starte Starte Build-Prozess...
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5354009Z ==================================================
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5354408Z OK: Icon bereits vorhanden
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5355846Z Build: F�hre PyInstaller aus...
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5368657Z Command: pyinstaller --onefile --windowed --noupx --icon=assets/icon.ico --name=VoiceTranscriber --add-data=assets:assets --add-data=scripts:scripts --paths=src --optimize=2 --strip --exclude-module=torch --exclude-module=faster_whisper --exclude-module=ctranslate2 --exclude-module=numpy --exclude-module=huggingface_hub --exclude-module=matplotlib --exclude-module=unittest --exclude-module=doctest --exclude-module=pytest --exclude-module=setuptools --exclude-module=IPython --exclude-module=PIL.ImageQt --exclude-module=PIL.ImageTk --hidden-import=version_manager --hidden-import=version_manager --hidden-import=pystray._win32 --hidden-import=winsound --hidden-import=keyboard --hidden-import=pyperclip --hidden-import=pillow --hidden-import=pyaudio --hidden-import=audioop --hidden-import=pydub --hidden-import=pydub.effects --hidden-import=numpy --hidden-import=httpx --hidden-import=requests --hidden-import=pyautogui --hidden-import=pkg_resources --hidden-import=jaraco.text --hidden-import=jaraco.functools --hidden-import=jaraco.context --hidden-import=version_manager --hidden-import=user_config --hidden-import=mouse_integration --hidden-import=exceptions --hidden-import=notification --hidden-import=src.model_manager --hidden-import=src.audio_recorder --hidden-import=src.clipboard_injector --hidden-import=src.config --hidden-import=src.downloader --hidden-import=src.encryption --hidden-import=src.exceptions --hidden-import=src.hotkey_listener --hidden-import=src.local_transcription --hidden-import=src.main --hidden-import=src.model_manager --hidden-import=src.mouse_integration --hidden-import=src.notification --hidden-import=src.settings_gui --hidden-import=src.text_processor --hidden-import=src.transcription --hidden-import=src.user_config --hidden-import=src.version_manager --hidden-import=src.__main__ main_exe.py
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5382718Z OK: Build erfolgreich abgeschlossen!
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5383192Z Datei: EXE-Datei: dist/VoiceTranscriber.exe
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5383872Z Groesse: Dateigr��e: 25.2 MB
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5384148Z 
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5384289Z Bereit: Bereit zur Verwendung!
+build	Build VoiceTranscriber EXE	2026-01-24T01:18:16.5384732Z    Hinweis: OpenAI API-Key in .env erforderlich
+build	Build Bootstrap Installer	﻿2026-01-24T01:18:16.6600002Z ##[group]Run poetry run python tools/build.py --bootstrap --bootstrap-nsis
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6600592Z [36;1mpoetry run python tools/build.py --bootstrap --bootstrap-nsis[0m
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6614586Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6614988Z env:
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6615171Z   PYTHON_VERSION: 3.11
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6615453Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6615888Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6616324Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6616718Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6617101Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6617408Z   VERSION: 1.9.0
+build	Build Bootstrap Installer	2026-01-24T01:18:16.6617598Z ##[endgroup]
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9303022Z Exception in thread Thread-7 (_readerthread):
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9303983Z Traceback (most recent call last):
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9313644Z   File "C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\threading.py", line 1045, in _bootstrap_inner
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9314529Z     self.run()
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9315302Z   File "C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\threading.py", line 982, in run
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9316118Z     self._target(*self._args, **self._kwargs)
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9317033Z   File "C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\subprocess.py", line 1599, in _readerthread
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9319392Z     buffer.append(fh.read())
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9319900Z                   ^^^^^^^^^
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9321026Z   File "C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\encodings\cp1252.py", line 23, in decode
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9321970Z     return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9322382Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9323094Z UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 5326: character maps to <undefined>
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9332069Z Voice Transcriber - Build Script
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9332475Z ==================================================
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9333215Z Starte Starte Build-Prozess...
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9333473Z ==================================================
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9333725Z Geloescht: build/
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9333915Z Geloescht: dist/
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9334108Z OK: Icon bereits vorhanden
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9334686Z Build: F�hre PyInstaller aus...
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9340579Z Command: pyinstaller --onefile --windowed --noupx --icon=assets/icon.ico --name=VoiceTranscriber --add-data=assets:assets --add-data=scripts:scripts --paths=src --optimize=2 --strip --exclude-module=torch --exclude-module=faster_whisper --exclude-module=ctranslate2 --exclude-module=numpy --exclude-module=huggingface_hub --exclude-module=matplotlib --exclude-module=unittest --exclude-module=doctest --exclude-module=pytest --exclude-module=setuptools --exclude-module=IPython --exclude-module=PIL.ImageQt --exclude-module=PIL.ImageTk --hidden-import=version_manager --hidden-import=version_manager --hidden-import=pystray._win32 --hidden-import=winsound --hidden-import=keyboard --hidden-import=pyperclip --hidden-import=pillow --hidden-import=pyaudio --hidden-import=audioop --hidden-import=pydub --hidden-import=pydub.effects --hidden-import=numpy --hidden-import=httpx --hidden-import=requests --hidden-import=pyautogui --hidden-import=pkg_resources --hidden-import=jaraco.text --hidden-import=jaraco.functools --hidden-import=jaraco.context --hidden-import=version_manager --hidden-import=user_config --hidden-import=mouse_integration --hidden-import=exceptions --hidden-import=notification --hidden-import=src.model_manager --hidden-import=src.audio_recorder --hidden-import=src.clipboard_injector --hidden-import=src.config --hidden-import=src.downloader --hidden-import=src.encryption --hidden-import=src.exceptions --hidden-import=src.hotkey_listener --hidden-import=src.local_transcription --hidden-import=src.main --hidden-import=src.model_manager --hidden-import=src.mouse_integration --hidden-import=src.notification --hidden-import=src.settings_gui --hidden-import=src.text_processor --hidden-import=src.transcription --hidden-import=src.user_config --hidden-import=src.version_manager --hidden-import=src.__main__ main_exe.py
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9349175Z OK: Build erfolgreich abgeschlossen!
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9349476Z Datei: EXE-Datei: dist/VoiceTranscriber.exe
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9349859Z Groesse: Dateigr��e: 25.2 MB
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9350083Z 
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9350226Z Bereit: Bereit zur Verwendung!
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9350665Z    Hinweis: OpenAI API-Key in .env erforderlich
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9350986Z 
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9351073Z ==================================================
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9351350Z Build: Erstelle Bootstrap-Installer...
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9351773Z Build: F�hre PyInstaller f�r Bootstrap-Installer aus...
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9352888Z Command: pyinstaller --onefile --windowed --noupx --icon=assets/icon.ico --name=BootstrapInstaller --add-data=assets;assets --hidden-import=src.downloader --hidden-import=urllib.request --hidden-import=urllib.error --hidden-import=ssl --hidden-import=hashlib --paths=src bootstrap_installer.py
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9353987Z OK: Bootstrap-Installer erfolgreich erstellt!
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9354329Z Datei: Bootstrap-Installer: dist\BootstrapInstaller.exe
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9354667Z Groesse: Gr��e: 11.6 MB
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9354988Z Datei: Finaler Installer (Copy): VoiceTranscriber_Bootstrap_Installer.exe
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9355258Z 
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9355373Z Bereit: Bootstrap-Installer bereit!
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9355715Z    Hinweis: L�dt VoiceTranscriber.exe von R2 Storage nach
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9355975Z 
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9356111Z ERFOLG: Bootstrap-Installer (PyInstaller) erfolgreich!
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9356517Z    - Bootstrap-Installer: VoiceTranscriber_Bootstrap_Installer.exe
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9356767Z 
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9356875Z ==================================================
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9357172Z Build: Erstelle Bootstrap-Installer mit NSIS...
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9357714Z OK: NSIS gefunden: C:\Program Files (x86)\NSIS\makensis.exe
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9358258Z NSIS: F�hre NSIS aus: C:\Program Files (x86)\NSIS\makensis.exe /V4 tools\bootstrap_installer.nsi
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9358711Z OK: Bootstrap-Installer erfolgreich erstellt!
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9359073Z Datei: Bootstrap-Installer: VoiceTranscriber_Bootstrap_Installer.exe
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9359468Z Groesse: Gr��e: 11.6 MB
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9359611Z 
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9359721Z ERFOLG: Bootstrap-Installer (NSIS) erfolgreich!
+build	Build Bootstrap Installer	2026-01-24T01:19:02.9360079Z    - Bootstrap-Installer: VoiceTranscriber_Bootstrap_Installer.exe
+build	Build NSIS Installer	﻿2026-01-24T01:19:03.0256842Z ##[group]Run poetry run python tools/build.py --installer
+build	Build NSIS Installer	2026-01-24T01:19:03.0257373Z [36;1mpoetry run python tools/build.py --installer[0m
+build	Build NSIS Installer	2026-01-24T01:19:03.0270987Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Build NSIS Installer	2026-01-24T01:19:03.0271371Z env:
+build	Build NSIS Installer	2026-01-24T01:19:03.0271569Z   PYTHON_VERSION: 3.11
+build	Build NSIS Installer	2026-01-24T01:19:03.0271891Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build NSIS Installer	2026-01-24T01:19:03.0272318Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Build NSIS Installer	2026-01-24T01:19:03.0272743Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build NSIS Installer	2026-01-24T01:19:03.0273136Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build NSIS Installer	2026-01-24T01:19:03.0273523Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Build NSIS Installer	2026-01-24T01:19:03.0273834Z   VERSION: 1.9.0
+build	Build NSIS Installer	2026-01-24T01:19:03.0274013Z ##[endgroup]
+build	Build NSIS Installer	2026-01-24T01:19:39.5818028Z Voice Transcriber - Build Script
+build	Build NSIS Installer	2026-01-24T01:19:39.5818573Z ==================================================
+build	Build NSIS Installer	2026-01-24T01:19:39.5819289Z Starte Starte Build-Prozess...
+build	Build NSIS Installer	2026-01-24T01:19:39.5819666Z ==================================================
+build	Build NSIS Installer	2026-01-24T01:19:39.5820063Z Geloescht: build/
+build	Build NSIS Installer	2026-01-24T01:19:39.5820351Z Geloescht: dist/
+build	Build NSIS Installer	2026-01-24T01:19:39.5820662Z OK: Icon bereits vorhanden
+build	Build NSIS Installer	2026-01-24T01:19:39.5821356Z Build: F�hre PyInstaller aus...
+build	Build NSIS Installer	2026-01-24T01:19:39.5827961Z Command: pyinstaller --onefile --windowed --noupx --icon=assets/icon.ico --name=VoiceTranscriber --add-data=assets:assets --add-data=scripts:scripts --paths=src --optimize=2 --strip --exclude-module=torch --exclude-module=faster_whisper --exclude-module=ctranslate2 --exclude-module=numpy --exclude-module=huggingface_hub --exclude-module=matplotlib --exclude-module=unittest --exclude-module=doctest --exclude-module=pytest --exclude-module=setuptools --exclude-module=IPython --exclude-module=PIL.ImageQt --exclude-module=PIL.ImageTk --hidden-import=version_manager --hidden-import=version_manager --hidden-import=pystray._win32 --hidden-import=winsound --hidden-import=keyboard --hidden-import=pyperclip --hidden-import=pillow --hidden-import=pyaudio --hidden-import=audioop --hidden-import=pydub --hidden-import=pydub.effects --hidden-import=numpy --hidden-import=httpx --hidden-import=requests --hidden-import=pyautogui --hidden-import=pkg_resources --hidden-import=jaraco.text --hidden-import=jaraco.functools --hidden-import=jaraco.context --hidden-import=version_manager --hidden-import=user_config --hidden-import=mouse_integration --hidden-import=exceptions --hidden-import=notification --hidden-import=src.model_manager --hidden-import=src.audio_recorder --hidden-import=src.clipboard_injector --hidden-import=src.config --hidden-import=src.downloader --hidden-import=src.encryption --hidden-import=src.exceptions --hidden-import=src.hotkey_listener --hidden-import=src.local_transcription --hidden-import=src.main --hidden-import=src.model_manager --hidden-import=src.mouse_integration --hidden-import=src.notification --hidden-import=src.settings_gui --hidden-import=src.text_processor --hidden-import=src.transcription --hidden-import=src.user_config --hidden-import=src.version_manager --hidden-import=src.__main__ main_exe.py
+build	Build NSIS Installer	2026-01-24T01:19:39.5834199Z OK: Build erfolgreich abgeschlossen!
+build	Build NSIS Installer	2026-01-24T01:19:39.5834499Z Datei: EXE-Datei: dist/VoiceTranscriber.exe
+build	Build NSIS Installer	2026-01-24T01:19:39.5835474Z Groesse: Dateigr��e: 25.2 MB
+build	Build NSIS Installer	2026-01-24T01:19:39.5835746Z 
+build	Build NSIS Installer	2026-01-24T01:19:39.5835880Z Bereit: Bereit zur Verwendung!
+build	Build NSIS Installer	2026-01-24T01:19:39.5836312Z    Hinweis: OpenAI API-Key in .env erforderlich
+build	Build NSIS Installer	2026-01-24T01:19:39.5836657Z 
+build	Build NSIS Installer	2026-01-24T01:19:39.5836798Z ==================================================
+build	Build NSIS Installer	2026-01-24T01:19:39.5837243Z Build: Erstelle Windows-Installer...
+build	Build NSIS Installer	2026-01-24T01:19:39.5837747Z OK: NSIS gefunden: C:\Program Files (x86)\NSIS\makensis.exe
+build	Build NSIS Installer	2026-01-24T01:19:39.5838633Z NSIS: F�hre NSIS aus: C:\Program Files (x86)\NSIS\makensis.exe /V4 tools\installer.nsi
+build	Build NSIS Installer	2026-01-24T01:19:39.5839533Z OK: Installer erfolgreich erstellt!
+build	Build NSIS Installer	2026-01-24T01:19:39.5843257Z Datei: Installer: VoiceTranscriber_Bootstrap_Installer.exe
+build	Build NSIS Installer	2026-01-24T01:19:39.5843964Z Groesse: Gr��e: 11.6 MB
+build	Build NSIS Installer	2026-01-24T01:19:39.5844196Z 
+build	Build NSIS Installer	2026-01-24T01:19:39.5844444Z ERFOLG: Vollst�ndiger Build erfolgreich!
+build	Build NSIS Installer	2026-01-24T01:19:39.5844918Z    - EXE: dist/VoiceTranscriber.exe
+build	Build NSIS Installer	2026-01-24T01:19:39.5845386Z    - Installer: VoiceTranscriber_Installer.exe
+build	Create version info	﻿2026-01-24T01:19:39.6721235Z ##[group]Run echo "VERSION=$VERSION" > build_info.txt
+build	Create version info	2026-01-24T01:19:39.6721697Z [36;1mecho "VERSION=$VERSION" > build_info.txt[0m
+build	Create version info	2026-01-24T01:19:39.6722108Z [36;1mecho "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> build_info.txt[0m
+build	Create version info	2026-01-24T01:19:39.6722502Z [36;1mecho "GIT_COMMIT=$GITHUB_SHA" >> build_info.txt[0m
+build	Create version info	2026-01-24T01:19:39.6722846Z [36;1mecho "GIT_REF=$GITHUB_REF" >> build_info.txt[0m
+build	Create version info	2026-01-24T01:19:39.6735310Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Create version info	2026-01-24T01:19:39.6735707Z env:
+build	Create version info	2026-01-24T01:19:39.6735900Z   PYTHON_VERSION: 3.11
+build	Create version info	2026-01-24T01:19:39.6736545Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Create version info	2026-01-24T01:19:39.6737015Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Create version info	2026-01-24T01:19:39.6737449Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Create version info	2026-01-24T01:19:39.6737860Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Create version info	2026-01-24T01:19:39.6738282Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Create version info	2026-01-24T01:19:39.6738598Z   VERSION: 1.9.0
+build	Create version info	2026-01-24T01:19:39.6738789Z ##[endgroup]
+build	Deploy to Cloudflare R2	﻿2026-01-24T01:19:39.7501258Z ##[group]Run # Deployment Script ausführen (nutzt artifacts_dir = "." Fallback)
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7501885Z [36;1m# Deployment Script ausführen (nutzt artifacts_dir = "." Fallback)[0m
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7502283Z [36;1mpoetry run python tools/deploy_to_r2.py[0m
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7515210Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7515588Z env:
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7515780Z   PYTHON_VERSION: 3.11
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7516061Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7516485Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7516902Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7517305Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7517685Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7517986Z   VERSION: 1.9.0
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7518427Z   R2_ACCESS_KEY_ID: ***
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7518837Z   R2_SECRET_ACCESS_KEY: ***
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7519107Z   R2_ACCOUNT_ID: ***
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7519359Z   R2_BUCKET_NAME: ***
+build	Deploy to Cloudflare R2	2026-01-24T01:19:39.7519566Z ##[endgroup]
+build	Deploy to Cloudflare R2	2026-01-24T01:19:41.3550231Z 2026-01-24 01:19:41,354 - INFO - \U0001f680 Starte Deployment f�r Version 1.9.0
+build	Deploy to Cloudflare R2	2026-01-24T01:19:41.5686040Z 2026-01-24 01:19:41,568 - INFO - Verwende 'dist/' Verzeichnis
+build	Deploy to Cloudflare R2	2026-01-24T01:19:41.5687711Z 2026-01-24 01:19:41,568 - INFO - Lade dist\VoiceTranscriber.exe -> VoiceTranscriber.exe
+build	Deploy to Cloudflare R2	2026-01-24T01:19:45.7479899Z 2026-01-24 01:19:45,747 - INFO - \u2705 Erfolgreich hochgeladen: VoiceTranscriber.exe
+build	Deploy to Cloudflare R2	2026-01-24T01:19:45.7480643Z 2026-01-24 01:19:45,747 - INFO - Lade dist\VoiceTranscriber.exe -> versions/1.9.0/VoiceTranscriber.exe
+build	Deploy to Cloudflare R2	2026-01-24T01:19:49.1509993Z 2026-01-24 01:19:49,149 - INFO - \u2705 Erfolgreich hochgeladen: versions/1.9.0/VoiceTranscriber.exe
+build	Deploy to Cloudflare R2	2026-01-24T01:19:49.1521788Z 2026-01-24 01:19:49,151 - INFO - Lade dist\version_1.9.0.json -> versions/1.9.0.json
+build	Deploy to Cloudflare R2	2026-01-24T01:19:50.1431617Z 2026-01-24 01:19:50,141 - INFO - \u2705 Erfolgreich hochgeladen: versions/1.9.0.json
+build	Deploy to Cloudflare R2	2026-01-24T01:19:50.1434184Z 2026-01-24 01:19:50,141 - INFO - \u2705 Deployment erfolgreich abgeschlossen!
+build	Deploy to Cloudflare R2	2026-01-24T01:19:50.1435350Z 2026-01-24 01:19:50,141 - INFO - \U0001f4e6 Version 1.9.0 ist verf�gbar unter:
+build	Deploy to Cloudflare R2	2026-01-24T01:19:50.1437662Z 2026-01-24 01:19:50,141 - INFO -    EXE: https://***.***.r2.cloudflarestorage.com/VoiceTranscriber.exe
+build	Deploy to Cloudflare R2	2026-01-24T01:19:50.1439073Z 2026-01-24 01:19:50,141 - INFO -    Bootstrap: https://***.***.r2.cloudflarestorage.com/installer/VoiceTranscriber_Bootstrap_Installer_v1.9.0.exe
+build	Upload build artifacts (GitHub)	﻿2026-01-24T01:19:50.2850839Z ##[group]Run actions/upload-artifact@v4
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2851219Z with:
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2851435Z   name: voice-transcriber-builds-1.9.0
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2851826Z   path: VoiceTranscriber_*.exe
+build	Upload build artifacts (GitHub)	VoiceTranscriber_Bootstrap_*.exe
+build	Upload build artifacts (GitHub)	build_info.txt
+build	Upload build artifacts (GitHub)	
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2852205Z   retention-days: 7
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2852416Z   if-no-files-found: warn
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2852639Z   compression-level: 6
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2852836Z   overwrite: false
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2853024Z   include-hidden-files: false
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2853238Z env:
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2853403Z   PYTHON_VERSION: 3.11
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2853680Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2854092Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2854516Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2854897Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2855314Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2855624Z   VERSION: 1.9.0
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.2855814Z ##[endgroup]
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.5671204Z With the provided path, there will be 2 files uploaded
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.5676875Z Artifact name is valid!
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.5679427Z Root directory input is valid!
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:50.8565907Z Beginning upload of artifact content to blob storage
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:52.2435386Z Uploaded bytes 8388608
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:52.4431862Z Uploaded bytes 11865391
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:52.5122804Z Finished uploading artifact content to blob storage!
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:52.5126358Z SHA256 digest of uploaded artifact zip is 4bf56cf9a135642ab01633bf98a35a761e13b4f64dbd39a4f1d923d82e99cbbf
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:52.5128586Z Finalizing artifact upload
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:52.6531910Z Artifact voice-transcriber-builds-1.9.0.zip successfully finalized. Artifact ID 5241445981
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:52.6533213Z Artifact voice-transcriber-builds-1.9.0 has been successfully uploaded! Final size is 11865391 bytes. Artifact ID is 5241445981
+build	Upload build artifacts (GitHub)	2026-01-24T01:19:52.6548757Z Artifact download URL: https://github.com/skquievreux/Speechering/actions/runs/21306589748/artifacts/5241445981
+build	Post Set up Python	﻿2026-01-24T01:19:52.6877756Z Post job cleanup.
+build	Post Checkout code	﻿2026-01-24T01:19:52.9147552Z Post job cleanup.
+build	Post Checkout code	2026-01-24T01:19:53.1121581Z [command]"C:\Program Files\Git\bin\git.exe" version
+build	Post Checkout code	2026-01-24T01:19:53.1456726Z git version 2.52.0.windows.1
+build	Post Checkout code	2026-01-24T01:19:53.1534355Z Temporarily overriding HOME='D:\a\_temp\3cc87bca-6393-4bf1-a72f-5643ff04b5e5' before making global git config changes
+build	Post Checkout code	2026-01-24T01:19:53.1535509Z Adding repository directory to the temporary git global config as a safe directory
+build	Post Checkout code	2026-01-24T01:19:53.1547583Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Speechering\Speechering
+build	Post Checkout code	2026-01-24T01:19:53.1870677Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+build	Post Checkout code	2026-01-24T01:19:53.2164546Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+build	Post Checkout code	2026-01-24T01:19:53.7438465Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Post Checkout code	2026-01-24T01:19:53.7693793Z http.https://github.com/.extraheader
+build	Post Checkout code	2026-01-24T01:19:53.7742543Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+build	Post Checkout code	2026-01-24T01:19:53.8046111Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+build	Post Checkout code	2026-01-24T01:19:54.3488064Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Post Checkout code	2026-01-24T01:19:54.3793367Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+build	Complete job	﻿2026-01-24T01:19:54.9537847Z Evaluate and set job outputs
+build	Complete job	2026-01-24T01:19:54.9543465Z Set output 'version'
+build	Complete job	2026-01-24T01:19:54.9545238Z Cleaning up orphan processes

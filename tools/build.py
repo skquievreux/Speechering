@@ -117,6 +117,13 @@ def build_exe(mode="onedir", skip_cleanup=False):
         # GUI-Automation (nur für Settings)
         "--hidden-import=pyautogui",       # GUI-Automation
 
+        # jaraco dependencies (now explicitly installed)
+        "--collect-all=jaraco",
+        "--hidden-import=jaraco",
+        "--hidden-import=jaraco.text",
+        "--hidden-import=jaraco.classes",
+        "--hidden-import=jaraco.context",
+        "--hidden-import=jaraco.functools",
 
 
         # Projekt-spezifische Module
@@ -459,10 +466,24 @@ def build_installer():
         print(f"FEHLER: Installer-Skript nicht gefunden: {installer_script}")
         return False
 
+    # Lade Version aus pyproject.toml
+    version = "1.0.0" # Fallback
+    try:
+        with open("pyproject.toml", "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip().startswith('version = "'):
+                    version = line.split('"')[1]
+                    break
+    except Exception as e:
+        print(f"WARNUNG: Konnte Version nicht aus pyproject.toml lesen: {e}")
+        
+    print(f"Build: Verwende Version {version}")
+
     # NSIS-Befehl ausführen
     nsis_cmd = [
         nsis_path,
         "/V4",  # Verbose output
+        f"/DVERSION={version}", # Version übergeben
         str(installer_script)
     ]
 

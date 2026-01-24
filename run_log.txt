@@ -1,0 +1,1044 @@
+build	UNKNOWN STEP	﻿2026-01-23T22:15:22.4497346Z Current runner version: '2.331.0'
+build	UNKNOWN STEP	2026-01-23T22:15:22.4522127Z ##[group]Runner Image Provisioner
+build	UNKNOWN STEP	2026-01-23T22:15:22.4522942Z Hosted Compute Agent
+build	UNKNOWN STEP	2026-01-23T22:15:22.4523440Z Version: 20260115.477
+build	UNKNOWN STEP	2026-01-23T22:15:22.4524001Z Commit: 4b342d620503cbe250a3154040964899ea7c9b00
+build	UNKNOWN STEP	2026-01-23T22:15:22.4524632Z Build Date: 2026-01-15T22:32:41Z
+build	UNKNOWN STEP	2026-01-23T22:15:22.4525265Z Worker ID: {6abc96a6-6e0c-4772-a6a2-b712f9238692}
+build	UNKNOWN STEP	2026-01-23T22:15:22.4526173Z Azure Region: westus3
+build	UNKNOWN STEP	2026-01-23T22:15:22.4526664Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:22.4527966Z ##[group]Operating System
+build	UNKNOWN STEP	2026-01-23T22:15:22.4528542Z Microsoft Windows Server 2025
+build	UNKNOWN STEP	2026-01-23T22:15:22.4529017Z 10.0.26100
+build	UNKNOWN STEP	2026-01-23T22:15:22.4529455Z Datacenter
+build	UNKNOWN STEP	2026-01-23T22:15:22.4529924Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:22.4530377Z ##[group]Runner Image
+build	UNKNOWN STEP	2026-01-23T22:15:22.4530858Z Image: windows-2025
+build	UNKNOWN STEP	2026-01-23T22:15:22.4531341Z Version: 20260119.4.1
+build	UNKNOWN STEP	2026-01-23T22:15:22.4532505Z Included Software: https://github.com/actions/runner-images/blob/win25/20260119.4/images/windows/Windows2025-Readme.md
+build	UNKNOWN STEP	2026-01-23T22:15:22.4533883Z Image Release: https://github.com/actions/runner-images/releases/tag/win25%2F20260119.4
+build	UNKNOWN STEP	2026-01-23T22:15:22.4534681Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:22.4535794Z ##[group]GITHUB_TOKEN Permissions
+build	UNKNOWN STEP	2026-01-23T22:15:22.4538281Z Contents: write
+build	UNKNOWN STEP	2026-01-23T22:15:22.4538864Z Metadata: read
+build	UNKNOWN STEP	2026-01-23T22:15:22.4539295Z Packages: read
+build	UNKNOWN STEP	2026-01-23T22:15:22.4539745Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:22.4541762Z Secret source: Actions
+build	UNKNOWN STEP	2026-01-23T22:15:22.4542388Z Prepare workflow directory
+build	UNKNOWN STEP	2026-01-23T22:15:22.4944053Z Prepare all required actions
+build	UNKNOWN STEP	2026-01-23T22:15:22.5000498Z Getting action download info
+build	UNKNOWN STEP	2026-01-23T22:15:22.8922231Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build	UNKNOWN STEP	2026-01-23T22:15:23.0027418Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+build	UNKNOWN STEP	2026-01-23T22:15:23.1296033Z Download action repository 'softprops/action-gh-release@v2' (SHA:a06a81a03ee405af7f2048a818ed3f03bbf83c7b)
+build	UNKNOWN STEP	2026-01-23T22:15:23.8713311Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+build	UNKNOWN STEP	2026-01-23T22:15:24.2176795Z Complete job name: build
+build	UNKNOWN STEP	2026-01-23T22:15:24.3736877Z ##[group]Run actions/checkout@v4
+build	UNKNOWN STEP	2026-01-23T22:15:24.3738432Z with:
+build	UNKNOWN STEP	2026-01-23T22:15:24.3739048Z   fetch-depth: 0
+build	UNKNOWN STEP	2026-01-23T22:15:24.3739757Z   repository: skquievreux/Speechering
+build	UNKNOWN STEP	2026-01-23T22:15:24.3740890Z   token: ***
+build	UNKNOWN STEP	2026-01-23T22:15:24.3741561Z   ssh-strict: true
+build	UNKNOWN STEP	2026-01-23T22:15:24.3742335Z   ssh-user: git
+build	UNKNOWN STEP	2026-01-23T22:15:24.3743007Z   persist-credentials: true
+build	UNKNOWN STEP	2026-01-23T22:15:24.3743739Z   clean: true
+build	UNKNOWN STEP	2026-01-23T22:15:24.3744401Z   sparse-checkout-cone-mode: true
+build	UNKNOWN STEP	2026-01-23T22:15:24.3745189Z   fetch-tags: false
+build	UNKNOWN STEP	2026-01-23T22:15:24.3745850Z   show-progress: true
+build	UNKNOWN STEP	2026-01-23T22:15:24.3746497Z   lfs: false
+build	UNKNOWN STEP	2026-01-23T22:15:24.3747326Z   submodules: false
+build	UNKNOWN STEP	2026-01-23T22:15:24.3747988Z   set-safe-directory: true
+build	UNKNOWN STEP	2026-01-23T22:15:24.3749089Z env:
+build	UNKNOWN STEP	2026-01-23T22:15:24.3749687Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:15:24.3750369Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:24.5398179Z Syncing repository: skquievreux/Speechering
+build	UNKNOWN STEP	2026-01-23T22:15:24.5401846Z ##[group]Getting Git version info
+build	UNKNOWN STEP	2026-01-23T22:15:24.5403890Z Working directory is 'D:\a\Speechering\Speechering'
+build	UNKNOWN STEP	2026-01-23T22:15:24.6364228Z [command]"C:\Program Files\Git\bin\git.exe" version
+build	UNKNOWN STEP	2026-01-23T22:15:24.9596286Z git version 2.52.0.windows.1
+build	UNKNOWN STEP	2026-01-23T22:15:24.9649671Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:24.9671628Z Temporarily overriding HOME='D:\a\_temp\8bf97acf-ed3e-4f88-bcc7-af7c6529cca6' before making global git config changes
+build	UNKNOWN STEP	2026-01-23T22:15:24.9673671Z Adding repository directory to the temporary git global config as a safe directory
+build	UNKNOWN STEP	2026-01-23T22:15:24.9683405Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Speechering\Speechering
+build	UNKNOWN STEP	2026-01-23T22:15:25.0255272Z Deleting the contents of 'D:\a\Speechering\Speechering'
+build	UNKNOWN STEP	2026-01-23T22:15:25.0261927Z ##[group]Initializing the repository
+build	UNKNOWN STEP	2026-01-23T22:15:25.0271520Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Speechering\Speechering
+build	UNKNOWN STEP	2026-01-23T22:15:25.1146280Z Initialized empty Git repository in D:/a/Speechering/Speechering/.git/
+build	UNKNOWN STEP	2026-01-23T22:15:25.1196217Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/skquievreux/Speechering
+build	UNKNOWN STEP	2026-01-23T22:15:25.1697008Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:25.1698903Z ##[group]Disabling automatic garbage collection
+build	UNKNOWN STEP	2026-01-23T22:15:25.1707841Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+build	UNKNOWN STEP	2026-01-23T22:15:25.2002486Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:25.2003573Z ##[group]Setting up auth
+build	UNKNOWN STEP	2026-01-23T22:15:25.2016183Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+build	UNKNOWN STEP	2026-01-23T22:15:25.2309623Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+build	UNKNOWN STEP	2026-01-23T22:15:26.5326740Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	UNKNOWN STEP	2026-01-23T22:15:26.5629827Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+build	UNKNOWN STEP	2026-01-23T22:15:27.0755777Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	UNKNOWN STEP	2026-01-23T22:15:27.1062209Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+build	UNKNOWN STEP	2026-01-23T22:15:27.6480147Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+build	UNKNOWN STEP	2026-01-23T22:15:27.6792586Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:27.6793426Z ##[group]Fetching the repository
+build	UNKNOWN STEP	2026-01-23T22:15:27.6810551Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+build	UNKNOWN STEP	2026-01-23T22:15:29.0508836Z From https://github.com/skquievreux/Speechering
+build	UNKNOWN STEP	2026-01-23T22:15:29.0509761Z  * [new branch]      main        -> origin/main
+build	UNKNOWN STEP	2026-01-23T22:15:29.0510086Z  * [new tag]         v1.0.0-test -> v1.0.0-test
+build	UNKNOWN STEP	2026-01-23T22:15:29.0510358Z  * [new tag]         v1.4.2      -> v1.4.2
+build	UNKNOWN STEP	2026-01-23T22:15:29.0510609Z  * [new tag]         v1.5.0      -> v1.5.0
+build	UNKNOWN STEP	2026-01-23T22:15:29.0510887Z  * [new tag]         v1.5.1      -> v1.5.1
+build	UNKNOWN STEP	2026-01-23T22:15:29.0511446Z  * [new tag]         v1.5.1-test -> v1.5.1-test
+build	UNKNOWN STEP	2026-01-23T22:15:29.0511749Z  * [new tag]         v1.5.2      -> v1.5.2
+build	UNKNOWN STEP	2026-01-23T22:15:29.0512014Z  * [new tag]         v1.5.3      -> v1.5.3
+build	UNKNOWN STEP	2026-01-23T22:15:29.0512272Z  * [new tag]         v1.6.0      -> v1.6.0
+build	UNKNOWN STEP	2026-01-23T22:15:29.0512515Z  * [new tag]         v1.7.0      -> v1.7.0
+build	UNKNOWN STEP	2026-01-23T22:15:29.0512806Z  * [new tag]         v1.8.0      -> v1.8.0
+build	UNKNOWN STEP	2026-01-23T22:15:29.0513055Z  * [new tag]         v1.8.1      -> v1.8.1
+build	UNKNOWN STEP	2026-01-23T22:15:29.0513339Z  * [new tag]         v1.8.2      -> v1.8.2
+build	UNKNOWN STEP	2026-01-23T22:15:29.0513690Z  * [new tag]         v1.8.3      -> v1.8.3
+build	UNKNOWN STEP	2026-01-23T22:15:29.0818796Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/main
+build	UNKNOWN STEP	2026-01-23T22:15:29.1138326Z   origin/main
+build	UNKNOWN STEP	2026-01-23T22:15:29.1189775Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/main
+build	UNKNOWN STEP	2026-01-23T22:15:29.1474697Z 4b8d3202a96c49b80425352b4a89fb778f93a520
+build	UNKNOWN STEP	2026-01-23T22:15:29.1509864Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:29.1510222Z ##[group]Determining the checkout info
+build	UNKNOWN STEP	2026-01-23T22:15:29.1511383Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:29.1521487Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+build	UNKNOWN STEP	2026-01-23T22:15:29.1855912Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+build	UNKNOWN STEP	2026-01-23T22:15:29.2134365Z ##[group]Checking out the ref
+build	UNKNOWN STEP	2026-01-23T22:15:29.2144293Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+build	UNKNOWN STEP	2026-01-23T22:15:29.3007591Z branch 'main' set up to track 'origin/main'.
+build	UNKNOWN STEP	2026-01-23T22:15:29.3014034Z Switched to a new branch 'main'
+build	UNKNOWN STEP	2026-01-23T22:15:29.3055234Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:29.3450631Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+build	UNKNOWN STEP	2026-01-23T22:15:29.3718652Z 4b8d3202a96c49b80425352b4a89fb778f93a520
+build	UNKNOWN STEP	2026-01-23T22:15:29.4157589Z ##[group]Run actions/setup-python@v5
+build	UNKNOWN STEP	2026-01-23T22:15:29.4157906Z with:
+build	UNKNOWN STEP	2026-01-23T22:15:29.4158110Z   python-version: 3.11
+build	UNKNOWN STEP	2026-01-23T22:15:29.4158311Z   check-latest: false
+build	UNKNOWN STEP	2026-01-23T22:15:29.4158673Z   token: ***
+build	UNKNOWN STEP	2026-01-23T22:15:29.4158860Z   update-environment: true
+build	UNKNOWN STEP	2026-01-23T22:15:29.4159079Z   allow-prereleases: false
+build	UNKNOWN STEP	2026-01-23T22:15:29.4159279Z   freethreaded: false
+build	UNKNOWN STEP	2026-01-23T22:15:29.4159457Z env:
+build	UNKNOWN STEP	2026-01-23T22:15:29.4159648Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:15:29.4159819Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:29.6626358Z ##[group]Installed versions
+build	UNKNOWN STEP	2026-01-23T22:15:29.6920360Z Successfully set up CPython (3.11.9)
+build	UNKNOWN STEP	2026-01-23T22:15:29.6921371Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:29.7233190Z ##[group]Run pipx install poetry
+build	UNKNOWN STEP	2026-01-23T22:15:29.7233831Z [36;1mpipx install poetry[0m
+build	UNKNOWN STEP	2026-01-23T22:15:29.7234218Z [36;1mpoetry --version[0m
+build	UNKNOWN STEP	2026-01-23T22:15:29.7958331Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+build	UNKNOWN STEP	2026-01-23T22:15:29.7958724Z env:
+build	UNKNOWN STEP	2026-01-23T22:15:29.7958952Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:15:29.7959284Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:15:29.7959798Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:15:29.7960292Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:15:29.7960741Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:15:29.7961205Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:15:29.7961566Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:35.3619339Z Found a space in the pipx home path. We heavily discourage this, due to
+build	UNKNOWN STEP	2026-01-23T22:15:35.3620453Z     multiple incompatibilities. Please check our docs for more information on
+build	UNKNOWN STEP	2026-01-23T22:15:35.3621407Z     this, as well as some pointers on how to migrate to a different home path.
+build	UNKNOWN STEP	2026-01-23T22:15:35.9839816Z creating virtual environment...
+build	UNKNOWN STEP	2026-01-23T22:15:36.2541988Z installing poetry...
+build	UNKNOWN STEP	2026-01-23T22:15:51.8911285Z done! 
+build	UNKNOWN STEP	2026-01-23T22:15:51.8913868Z   installed package poetry 2.3.1, installed using Python 3.12.10
+build	UNKNOWN STEP	2026-01-23T22:15:51.8914444Z   These apps are now globally available
+build	UNKNOWN STEP	2026-01-23T22:15:51.8914775Z     - poetry.exe
+build	UNKNOWN STEP	2026-01-23T22:15:52.7314742Z Poetry (version 2.3.1)
+build	UNKNOWN STEP	2026-01-23T22:15:53.3601323Z ##[group]Run poetry install --no-root
+build	UNKNOWN STEP	2026-01-23T22:15:53.3601670Z [36;1mpoetry install --no-root[0m
+build	UNKNOWN STEP	2026-01-23T22:15:53.3617447Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:15:53.3617829Z env:
+build	UNKNOWN STEP	2026-01-23T22:15:53.3618002Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:15:53.3618296Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:15:53.3618706Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:15:53.3619113Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:15:53.3619477Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:15:53.3619838Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:15:53.3620124Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:15:54.8208692Z Creating virtualenv ***-VHie70zz-py3.11 in C:\Users\runneradmin\AppData\Local\pypoetry\Cache\virtualenvs
+build	UNKNOWN STEP	2026-01-23T22:15:58.4181814Z Installing dependencies from lock file
+build	UNKNOWN STEP	2026-01-23T22:15:58.6561784Z 
+build	UNKNOWN STEP	2026-01-23T22:15:58.6562449Z Package operations: 71 installs, 0 updates, 0 removals
+build	UNKNOWN STEP	2026-01-23T22:15:58.6563612Z 
+build	UNKNOWN STEP	2026-01-23T22:15:58.6568673Z   - Installing altgraph (0.17.5)
+build	UNKNOWN STEP	2026-01-23T22:15:58.6574203Z   - Installing annotated-types (0.7.0)
+build	UNKNOWN STEP	2026-01-23T22:15:58.6580119Z   - Installing anyio (4.12.1)
+build	UNKNOWN STEP	2026-01-23T22:15:58.6586122Z   - Installing astroid (3.3.11)
+build	UNKNOWN STEP	2026-01-23T22:15:58.6603359Z   - Installing black (23.12.1)
+build	UNKNOWN STEP	2026-01-23T22:15:58.6620619Z   - Installing boto3 (1.42.34)
+build	UNKNOWN STEP	2026-01-23T22:15:58.6624596Z   - Installing botocore (1.42.34)
+build	UNKNOWN STEP	2026-01-23T22:15:58.6638584Z   - Installing certifi (2026.1.4)
+build	UNKNOWN STEP	2026-01-23T22:16:00.6274733Z   - Installing click (8.3.1)
+build	UNKNOWN STEP	2026-01-23T22:16:00.7259687Z   - Installing colorama (0.4.6)
+build	UNKNOWN STEP	2026-01-23T22:16:00.8407241Z   - Installing coverage (7.13.1)
+build	UNKNOWN STEP	2026-01-23T22:16:00.9094116Z   - Installing dill (0.4.1)
+build	UNKNOWN STEP	2026-01-23T22:16:01.0044335Z   - Installing distro (1.9.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.0964019Z   - Installing execnet (2.1.2)
+build	UNKNOWN STEP	2026-01-23T22:16:01.1333321Z   - Installing h11 (0.16.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.1805511Z   - Installing httpcore (1.0.9)
+build	UNKNOWN STEP	2026-01-23T22:16:01.2339868Z   - Installing httpx (0.28.1)
+build	UNKNOWN STEP	2026-01-23T22:16:01.2717892Z   - Installing idna (3.11)
+build	UNKNOWN STEP	2026-01-23T22:16:01.2832595Z   - Installing iniconfig (2.3.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.3017076Z   - Installing isort (5.13.2)
+build	UNKNOWN STEP	2026-01-23T22:16:01.3629509Z   - Installing jiter (0.12.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.4057800Z   - Installing jmespath (1.0.1)
+build	UNKNOWN STEP	2026-01-23T22:16:01.4132885Z   - Installing keyboard (0.13.5)
+build	UNKNOWN STEP	2026-01-23T22:16:01.4187482Z   - Installing librt (0.7.8)
+build	UNKNOWN STEP	2026-01-23T22:16:01.4251218Z   - Installing mccabe (0.7.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.4501497Z   - Installing mouseinfo (0.1.3)
+build	UNKNOWN STEP	2026-01-23T22:16:01.5189369Z   - Installing mypy (1.19.1)
+build	UNKNOWN STEP	2026-01-23T22:16:01.5403831Z   - Installing mypy-extensions (1.1.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.5803418Z   - Installing openai (1.109.1)
+build	UNKNOWN STEP	2026-01-23T22:16:01.5919176Z   - Installing packaging (25.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.5985890Z   - Installing pathspec (1.0.3)
+build	UNKNOWN STEP	2026-01-23T22:16:01.6666371Z   - Installing pefile (2024.8.26)
+build	UNKNOWN STEP	2026-01-23T22:16:01.6856402Z   - Installing pillow (11.3.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.7563272Z   - Installing platformdirs (4.5.1)
+build	UNKNOWN STEP	2026-01-23T22:16:01.7996044Z   - Installing pluggy (1.6.0)
+build	UNKNOWN STEP	2026-01-23T22:16:01.8323826Z   - Installing pyaudio (0.2.14)
+build	UNKNOWN STEP	2026-01-23T22:16:01.8975060Z   - Installing pyautogui (0.9.54)
+build	UNKNOWN STEP	2026-01-23T22:16:01.9251052Z   - Installing pydantic (2.12.5)
+build	UNKNOWN STEP	2026-01-23T22:16:02.5673734Z   - Installing pydantic-core (2.41.5)
+build	UNKNOWN STEP	2026-01-23T22:16:02.9117658Z   - Installing pydub (0.25.1)
+build	UNKNOWN STEP	2026-01-23T22:16:02.9188230Z   - Installing pygetwindow (0.0.9)
+build	UNKNOWN STEP	2026-01-23T22:16:03.1009933Z   - Installing pyinstaller (6.18.0)
+build	UNKNOWN STEP	2026-01-23T22:16:03.2253769Z   - Installing pyinstaller-hooks-contrib (2025.11)
+build	UNKNOWN STEP	2026-01-23T22:16:05.9084006Z   - Installing pylint (3.3.9)
+build	UNKNOWN STEP	2026-01-23T22:16:06.6810900Z   - Installing pymsgbox (2.0.1)
+build	UNKNOWN STEP	2026-01-23T22:16:06.7414679Z   - Installing pyperclip (1.11.0)
+build	UNKNOWN STEP	2026-01-23T22:16:06.7722503Z   - Installing pypiwin32 (223)
+build	UNKNOWN STEP	2026-01-23T22:16:07.1860419Z   - Installing pyrect (0.2.0)
+build	UNKNOWN STEP	2026-01-23T22:16:07.1939884Z   - Installing pyscreeze (1.0.1)
+build	UNKNOWN STEP	2026-01-23T22:16:07.6013332Z   - Installing pystray (0.19.5)
+build	UNKNOWN STEP	2026-01-23T22:16:07.6830101Z   - Installing pytest (7.4.4)
+build	UNKNOWN STEP	2026-01-23T22:16:07.8617509Z   - Installing pytest-cov (4.1.0)
+build	UNKNOWN STEP	2026-01-23T22:16:07.9285249Z   - Installing pytest-mock (3.15.1)
+build	UNKNOWN STEP	2026-01-23T22:16:08.0195166Z   - Installing pytest-xdist (3.8.0)
+build	UNKNOWN STEP	2026-01-23T22:16:08.1602397Z   - Installing python-dateutil (2.9.0.post0)
+build	UNKNOWN STEP	2026-01-23T22:16:08.2478589Z   - Installing python-dotenv (1.2.1)
+build	UNKNOWN STEP	2026-01-23T22:16:08.3682926Z   - Installing pytweening (1.2.0)
+build	UNKNOWN STEP	2026-01-23T22:16:08.3903012Z   - Installing pywin32 (311)
+build	UNKNOWN STEP	2026-01-23T22:16:11.1850866Z   - Installing pywin32-ctypes (0.2.3)
+build	UNKNOWN STEP	2026-01-23T22:16:11.3284779Z   - Installing ruff (0.14.14)
+build	UNKNOWN STEP	2026-01-23T22:16:12.2609782Z   - Installing s3transfer (0.16.0)
+build	UNKNOWN STEP	2026-01-23T22:16:12.2688016Z   - Installing setuptools (80.9.0)
+build	UNKNOWN STEP	2026-01-23T22:16:12.3016624Z   - Installing six (1.17.0)
+build	UNKNOWN STEP	2026-01-23T22:16:12.3829040Z   - Installing sniffio (1.3.1)
+build	UNKNOWN STEP	2026-01-23T22:16:12.3948015Z   - Installing tomlkit (0.14.0)
+build	UNKNOWN STEP	2026-01-23T22:16:12.5059894Z   - Installing tqdm (4.67.1)
+build	UNKNOWN STEP	2026-01-23T22:16:12.5151066Z   - Installing typing-extensions (4.15.0)
+build	UNKNOWN STEP	2026-01-23T22:16:12.5352104Z   - Installing typing-inspection (0.4.2)
+build	UNKNOWN STEP	2026-01-23T22:16:12.5797244Z   - Installing urllib3 (2.6.3)
+build	UNKNOWN STEP	2026-01-23T22:16:12.6089099Z   - Installing watchdog (3.0.0)
+build	UNKNOWN STEP	2026-01-23T22:16:12.6527744Z   - Installing win10toast (0.9)
+build	UNKNOWN STEP	2026-01-23T22:16:15.3253956Z ##[group]Run choco install nsis -y
+build	UNKNOWN STEP	2026-01-23T22:16:15.3254398Z [36;1mchoco install nsis -y[0m
+build	UNKNOWN STEP	2026-01-23T22:16:15.3269009Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:16:15.3269394Z env:
+build	UNKNOWN STEP	2026-01-23T22:16:15.3269582Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:16:15.3269879Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:15.3270343Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:16:15.3270762Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:15.3271170Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:15.3271534Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:15.3271823Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:16:17.5214643Z Chocolatey v2.6.0
+build	UNKNOWN STEP	2026-01-23T22:16:17.7481452Z Installing the following packages:
+build	UNKNOWN STEP	2026-01-23T22:16:17.7490369Z nsis
+build	UNKNOWN STEP	2026-01-23T22:16:17.7496776Z By installing, you accept licenses for the packages.
+build	UNKNOWN STEP	2026-01-23T22:16:21.3770439Z Downloading package from source 'https://community.chocolatey.org/api/v2/'
+build	UNKNOWN STEP	2026-01-23T22:16:21.6560261Z 
+build	UNKNOWN STEP	2026-01-23T22:16:21.6561692Z Progress: Downloading nsis.install 3.11.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:21.6563186Z Progress: Downloading nsis.install 3.11.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:21.6563855Z Progress: Downloading nsis.install 3.11.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:21.6567319Z Progress: Downloading nsis.install 3.11.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:21.6568233Z Progress: Downloading nsis.install 3.11.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:21.6569118Z Progress: Downloading nsis.install 3.11.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:21.6570082Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6571437Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6572275Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6572777Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6573246Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6573969Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6574639Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6575122Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6575569Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6575999Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6576448Z Progress: Downloading nsis.install 3.11.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6576905Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6577366Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6577809Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6578246Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6578692Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6579634Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6580245Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6580765Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6581275Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6581739Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6582203Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6582701Z Progress: Downloading nsis.install 3.11.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6583201Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6583663Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6584075Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6585633Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6586507Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6586996Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6587470Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6589799Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6590425Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6590921Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6591386Z Progress: Downloading nsis.install 3.11.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6591831Z Progress: Downloading nsis.install 3.11.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6592275Z Progress: Downloading nsis.install 3.11.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6592730Z Progress: Downloading nsis.install 3.11.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6593182Z Progress: Downloading nsis.install 3.11.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6593930Z Progress: Downloading nsis.install 3.11.0... 5%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6594437Z Progress: Downloading nsis.install 3.11.0... 5%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6594903Z Progress: Downloading nsis.install 3.11.0... 5%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6595378Z Progress: Downloading nsis.install 3.11.0... 5%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6595873Z Progress: Downloading nsis.install 3.11.0... 6%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6596340Z Progress: Downloading nsis.install 3.11.0... 6%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6596826Z Progress: Downloading nsis.install 3.11.0... 6%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6597286Z Progress: Downloading nsis.install 3.11.0... 7%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6597746Z Progress: Downloading nsis.install 3.11.0... 7%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6598222Z Progress: Downloading nsis.install 3.11.0... 7%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6598695Z Progress: Downloading nsis.install 3.11.0... 7%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6599154Z Progress: Downloading nsis.install 3.11.0... 8%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6599637Z Progress: Downloading nsis.install 3.11.0... 8%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6600099Z Progress: Downloading nsis.install 3.11.0... 8%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6600567Z Progress: Downloading nsis.install 3.11.0... 8%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6601024Z Progress: Downloading nsis.install 3.11.0... 9%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6601479Z Progress: Downloading nsis.install 3.11.0... 9%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6601920Z Progress: Downloading nsis.install 3.11.0... 9%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6602388Z Progress: Downloading nsis.install 3.11.0... 10%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6602871Z Progress: Downloading nsis.install 3.11.0... 10%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6603340Z Progress: Downloading nsis.install 3.11.0... 10%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6603787Z Progress: Downloading nsis.install 3.11.0... 10%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6604238Z Progress: Downloading nsis.install 3.11.0... 11%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6604687Z Progress: Downloading nsis.install 3.11.0... 11%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6605130Z Progress: Downloading nsis.install 3.11.0... 11%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6605571Z Progress: Downloading nsis.install 3.11.0... 11%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6606023Z Progress: Downloading nsis.install 3.11.0... 12%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6606478Z Progress: Downloading nsis.install 3.11.0... 12%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6606921Z Progress: Downloading nsis.install 3.11.0... 12%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6607375Z Progress: Downloading nsis.install 3.11.0... 12%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6607814Z Progress: Downloading nsis.install 3.11.0... 13%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6608253Z Progress: Downloading nsis.install 3.11.0... 13%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6608698Z Progress: Downloading nsis.install 3.11.0... 13%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6609135Z Progress: Downloading nsis.install 3.11.0... 14%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6609568Z Progress: Downloading nsis.install 3.11.0... 14%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6609846Z Progress: Downloading nsis.install 3.11.0... 14%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6610111Z Progress: Downloading nsis.install 3.11.0... 14%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6610382Z Progress: Downloading nsis.install 3.11.0... 15%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6610654Z Progress: Downloading nsis.install 3.11.0... 15%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6610932Z Progress: Downloading nsis.install 3.11.0... 16%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6682104Z Progress: Downloading nsis.install 3.11.0... 17%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6685128Z Progress: Downloading nsis.install 3.11.0... 17%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6686023Z Progress: Downloading nsis.install 3.11.0... 18%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6686669Z Progress: Downloading nsis.install 3.11.0... 18%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6687281Z Progress: Downloading nsis.install 3.11.0... 18%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6688829Z Progress: Downloading nsis.install 3.11.0... 19%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6689853Z Progress: Downloading nsis.install 3.11.0... 20%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6690469Z Progress: Downloading nsis.install 3.11.0... 20%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6691055Z Progress: Downloading nsis.install 3.11.0... 21%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6691628Z Progress: Downloading nsis.install 3.11.0... 21%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6692158Z Progress: Downloading nsis.install 3.11.0... 22%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6692685Z Progress: Downloading nsis.install 3.11.0... 22%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6693232Z Progress: Downloading nsis.install 3.11.0... 23%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6693783Z Progress: Downloading nsis.install 3.11.0... 23%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6694238Z Progress: Downloading nsis.install 3.11.0... 24%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6694658Z Progress: Downloading nsis.install 3.11.0... 24%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6695110Z Progress: Downloading nsis.install 3.11.0... 25%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6695562Z Progress: Downloading nsis.install 3.11.0... 25%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6696062Z Progress: Downloading nsis.install 3.11.0... 26%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6696550Z Progress: Downloading nsis.install 3.11.0... 26%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6697033Z Progress: Downloading nsis.install 3.11.0... 27%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6697510Z Progress: Downloading nsis.install 3.11.0... 27%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6697967Z Progress: Downloading nsis.install 3.11.0... 28%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6698405Z Progress: Downloading nsis.install 3.11.0... 29%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6698852Z Progress: Downloading nsis.install 3.11.0... 29%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6699286Z Progress: Downloading nsis.install 3.11.0... 30%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6702251Z Progress: Downloading nsis.install 3.11.0... 30%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6702753Z Progress: Downloading nsis.install 3.11.0... 31%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6703370Z Progress: Downloading nsis.install 3.11.0... 31%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6704120Z Progress: Downloading nsis.install 3.11.0... 32%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6704633Z Progress: Downloading nsis.install 3.11.0... 32%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6705098Z Progress: Downloading nsis.install 3.11.0... 33%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6774283Z Progress: Downloading nsis.install 3.11.0... 33%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6774769Z Progress: Downloading nsis.install 3.11.0... 34%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6797080Z Progress: Downloading nsis.install 3.11.0... 34%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6797734Z Progress: Downloading nsis.install 3.11.0... 35%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6798389Z Progress: Downloading nsis.install 3.11.0... 35%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6798886Z Progress: Downloading nsis.install 3.11.0... 36%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6799385Z Progress: Downloading nsis.install 3.11.0... 36%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6799878Z Progress: Downloading nsis.install 3.11.0... 37%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6800686Z Progress: Downloading nsis.install 3.11.0... 38%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6801352Z Progress: Downloading nsis.install 3.11.0... 38%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6802477Z Progress: Downloading nsis.install 3.11.0... 39%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6802946Z Progress: Downloading nsis.install 3.11.0... 39%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6803410Z Progress: Downloading nsis.install 3.11.0... 40%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6803867Z Progress: Downloading nsis.install 3.11.0... 40%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6804312Z Progress: Downloading nsis.install 3.11.0... 41%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6804754Z Progress: Downloading nsis.install 3.11.0... 41%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6807000Z Progress: Downloading nsis.install 3.11.0... 42%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6807956Z Progress: Downloading nsis.install 3.11.0... 42%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6808581Z Progress: Downloading nsis.install 3.11.0... 43%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6809268Z Progress: Downloading nsis.install 3.11.0... 43%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6810015Z Progress: Downloading nsis.install 3.11.0... 44%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6810485Z Progress: Downloading nsis.install 3.11.0... 44%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6810926Z Progress: Downloading nsis.install 3.11.0... 45%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6811373Z Progress: Downloading nsis.install 3.11.0... 45%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6815690Z Progress: Downloading nsis.install 3.11.0... 46%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6816230Z Progress: Downloading nsis.install 3.11.0... 46%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6816728Z Progress: Downloading nsis.install 3.11.0... 47%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6817228Z Progress: Downloading nsis.install 3.11.0... 48%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6817720Z Progress: Downloading nsis.install 3.11.0... 48%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6818230Z Progress: Downloading nsis.install 3.11.0... 49%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6818720Z Progress: Downloading nsis.install 3.11.0... 49%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6819181Z Progress: Downloading nsis.install 3.11.0... 50%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6819624Z Progress: Downloading nsis.install 3.11.0... 50%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6823168Z Progress: Downloading nsis.install 3.11.0... 50%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6823633Z Progress: Downloading nsis.install 3.11.0... 51%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6824091Z Progress: Downloading nsis.install 3.11.0... 51%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6824541Z Progress: Downloading nsis.install 3.11.0... 52%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6825042Z Progress: Downloading nsis.install 3.11.0... 52%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6825489Z Progress: Downloading nsis.install 3.11.0... 53%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6825945Z Progress: Downloading nsis.install 3.11.0... 53%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6826392Z Progress: Downloading nsis.install 3.11.0... 54%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6831212Z Progress: Downloading nsis.install 3.11.0... 54%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6832105Z Progress: Downloading nsis.install 3.11.0... 55%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6832713Z Progress: Downloading nsis.install 3.11.0... 55%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6833515Z Progress: Downloading nsis.install 3.11.0... 56%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6833980Z Progress: Downloading nsis.install 3.11.0... 57%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6834448Z Progress: Downloading nsis.install 3.11.0... 57%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6834887Z Progress: Downloading nsis.install 3.11.0... 58%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6835338Z Progress: Downloading nsis.install 3.11.0... 58%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6839121Z Progress: Downloading nsis.install 3.11.0... 59%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6839907Z Progress: Downloading nsis.install 3.11.0... 59%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6840386Z Progress: Downloading nsis.install 3.11.0... 60%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6840850Z Progress: Downloading nsis.install 3.11.0... 60%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6841300Z Progress: Downloading nsis.install 3.11.0... 61%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6841752Z Progress: Downloading nsis.install 3.11.0... 61%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6842206Z Progress: Downloading nsis.install 3.11.0... 62%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6842628Z Progress: Downloading nsis.install 3.11.0... 62%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6846966Z Progress: Downloading nsis.install 3.11.0... 63%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6847459Z Progress: Downloading nsis.install 3.11.0... 63%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6847928Z Progress: Downloading nsis.install 3.11.0... 64%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6848606Z Progress: Downloading nsis.install 3.11.0... 64%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6849062Z Progress: Downloading nsis.install 3.11.0... 65%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6849504Z Progress: Downloading nsis.install 3.11.0... 66%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6849958Z Progress: Downloading nsis.install 3.11.0... 66%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6850407Z Progress: Downloading nsis.install 3.11.0... 67%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6913601Z Progress: Downloading nsis.install 3.11.0... 67%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6915999Z Progress: Downloading nsis.install 3.11.0... 68%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6916592Z Progress: Downloading nsis.install 3.11.0... 68%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6917181Z Progress: Downloading nsis.install 3.11.0... 69%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6917752Z Progress: Downloading nsis.install 3.11.0... 69%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6918997Z Progress: Downloading nsis.install 3.11.0... 70%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6919573Z Progress: Downloading nsis.install 3.11.0... 70%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6920324Z Progress: Downloading nsis.install 3.11.0... 71%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6920794Z Progress: Downloading nsis.install 3.11.0... 71%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6921271Z Progress: Downloading nsis.install 3.11.0... 72%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6921751Z Progress: Downloading nsis.install 3.11.0... 72%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6922432Z Progress: Downloading nsis.install 3.11.0... 73%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6922941Z Progress: Downloading nsis.install 3.11.0... 73%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6923433Z Progress: Downloading nsis.install 3.11.0... 74%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6923921Z Progress: Downloading nsis.install 3.11.0... 75%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6924378Z Progress: Downloading nsis.install 3.11.0... 75%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6924916Z Progress: Downloading nsis.install 3.11.0... 76%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6926310Z Progress: Downloading nsis.install 3.11.0... 76%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6926815Z Progress: Downloading nsis.install 3.11.0... 77%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6927642Z Progress: Downloading nsis.install 3.11.0... 77%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6928164Z Progress: Downloading nsis.install 3.11.0... 78%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6928653Z Progress: Downloading nsis.install 3.11.0... 78%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6929439Z Progress: Downloading nsis.install 3.11.0... 79%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6929919Z Progress: Downloading nsis.install 3.11.0... 79%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6930364Z Progress: Downloading nsis.install 3.11.0... 80%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6930824Z Progress: Downloading nsis.install 3.11.0... 80%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6933452Z Progress: Downloading nsis.install 3.11.0... 81%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6933929Z Progress: Downloading nsis.install 3.11.0... 81%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6934390Z Progress: Downloading nsis.install 3.11.0... 82%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6934838Z Progress: Downloading nsis.install 3.11.0... 82%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6935294Z Progress: Downloading nsis.install 3.11.0... 83%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6935746Z Progress: Downloading nsis.install 3.11.0... 83%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6936200Z Progress: Downloading nsis.install 3.11.0... 84%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6937164Z Progress: Downloading nsis.install 3.11.0... 85%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6941302Z Progress: Downloading nsis.install 3.11.0... 85%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6941846Z Progress: Downloading nsis.install 3.11.0... 86%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6942343Z Progress: Downloading nsis.install 3.11.0... 86%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6942856Z Progress: Downloading nsis.install 3.11.0... 87%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6943342Z Progress: Downloading nsis.install 3.11.0... 87%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6943812Z Progress: Downloading nsis.install 3.11.0... 88%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6944310Z Progress: Downloading nsis.install 3.11.0... 88%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6944788Z Progress: Downloading nsis.install 3.11.0... 89%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6949677Z Progress: Downloading nsis.install 3.11.0... 89%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6950169Z Progress: Downloading nsis.install 3.11.0... 90%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6950677Z Progress: Downloading nsis.install 3.11.0... 90%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6951186Z Progress: Downloading nsis.install 3.11.0... 91%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6951697Z Progress: Downloading nsis.install 3.11.0... 91%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6952192Z Progress: Downloading nsis.install 3.11.0... 92%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6952676Z Progress: Downloading nsis.install 3.11.0... 92%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6953161Z Progress: Downloading nsis.install 3.11.0... 93%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6956714Z Progress: Downloading nsis.install 3.11.0... 94%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6957250Z Progress: Downloading nsis.install 3.11.0... 94%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6957751Z Progress: Downloading nsis.install 3.11.0... 95%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6958268Z Progress: Downloading nsis.install 3.11.0... 95%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6958785Z Progress: Downloading nsis.install 3.11.0... 96%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6959245Z Progress: Downloading nsis.install 3.11.0... 96%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6959706Z Progress: Downloading nsis.install 3.11.0... 97%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6963953Z Progress: Downloading nsis.install 3.11.0... 97%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6964678Z Progress: Downloading nsis.install 3.11.0... 97%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6966074Z Progress: Downloading nsis.install 3.11.0... 98%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6966776Z Progress: Downloading nsis.install 3.11.0... 98%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6967249Z Progress: Downloading nsis.install 3.11.0... 99%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6967713Z Progress: Downloading nsis.install 3.11.0... 99%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6968837Z Progress: Downloading nsis.install 3.11.0... 100%
+build	UNKNOWN STEP	2026-01-23T22:16:21.6969333Z Progress: Downloading nsis.install 3.11.0... 100%
+build	UNKNOWN STEP	2026-01-23T22:16:21.9102280Z 
+build	UNKNOWN STEP	2026-01-23T22:16:21.9102787Z nsis.install v3.11.0 [Approved] - Possibly broken
+build	UNKNOWN STEP	2026-01-23T22:16:21.9280738Z nsis.install package files install completed. Performing other installation steps.
+build	UNKNOWN STEP	2026-01-23T22:16:23.0208616Z Installing nsis.install...
+build	UNKNOWN STEP	2026-01-23T22:16:24.5938690Z nsis.install has been installed.
+build	UNKNOWN STEP	2026-01-23T22:16:24.7279950Z   nsis.install can be automatically uninstalled.
+build	UNKNOWN STEP	2026-01-23T22:16:24.8323005Z  The install of nsis.install was successful.
+build	UNKNOWN STEP	2026-01-23T22:16:24.8327058Z   Deployed to 'C:\Program Files (x86)\NSIS'
+build	UNKNOWN STEP	2026-01-23T22:16:24.8440117Z Downloading package from source 'https://community.chocolatey.org/api/v2/'
+build	UNKNOWN STEP	2026-01-23T22:16:24.9930646Z 
+build	UNKNOWN STEP	2026-01-23T22:16:24.9931198Z Progress: Downloading nsis 3.11.0... 100%
+build	UNKNOWN STEP	2026-01-23T22:16:25.0247449Z 
+build	UNKNOWN STEP	2026-01-23T22:16:25.0247830Z nsis v3.11.0 [Approved] - Possibly broken
+build	UNKNOWN STEP	2026-01-23T22:16:25.0264027Z nsis package files install completed. Performing other installation steps.
+build	UNKNOWN STEP	2026-01-23T22:16:25.2049727Z  The install of nsis was successful.
+build	UNKNOWN STEP	2026-01-23T22:16:25.2054022Z   Deployed to 'C:\ProgramData\chocolatey\lib\nsis'
+build	UNKNOWN STEP	2026-01-23T22:16:25.2199797Z 
+build	UNKNOWN STEP	2026-01-23T22:16:25.2200110Z Chocolatey installed 2/2 packages. 
+build	UNKNOWN STEP	2026-01-23T22:16:25.2200637Z  See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+build	UNKNOWN STEP	2026-01-23T22:16:25.2754298Z ##[group]Run if [ ! -z "" ]; then
+build	UNKNOWN STEP	2026-01-23T22:16:25.2754663Z [36;1mif [ ! -z "" ]; then[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2754901Z [36;1m  VERSION=""[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2755156Z [36;1melif [[ $GITHUB_REF == refs/tags/* ]]; then[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2755505Z [36;1m  VERSION="${GITHUB_REF#refs/tags/v}"[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2755756Z [36;1melse[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2756005Z [36;1m  # Get version from pyproject.toml using poetry[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2756317Z [36;1m  VERSION=$(poetry version -s)[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2756626Z [36;1mfi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2757128Z [36;1mecho "VERSION=$VERSION" >> $GITHUB_ENV[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2757437Z [36;1mecho "version=$VERSION" >> $GITHUB_OUTPUT[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2757751Z [36;1mecho "Building version: $VERSION"[0m
+build	UNKNOWN STEP	2026-01-23T22:16:25.2771442Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:16:25.2771825Z env:
+build	UNKNOWN STEP	2026-01-23T22:16:25.2772074Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:16:25.2772353Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:25.2772764Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:16:25.2773334Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:25.2773953Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:25.2774877Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:25.2775375Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:16:26.0562822Z Building version: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:16:26.0763047Z ##[group]Run # Update version.py
+build	UNKNOWN STEP	2026-01-23T22:16:26.0763423Z [36;1m# Update version.py[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0763685Z [36;1mecho "APP_VERSION = '$VERSION'" > version.py[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0763940Z [36;1m[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0764138Z [36;1m# Update .env (create if not exists)[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0764399Z [36;1mif [ -f ".env" ]; then[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0764677Z [36;1m  sed -i "s/APP_VERSION=.*/APP_VERSION=$VERSION/" .env[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0764957Z [36;1melse[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0765152Z [36;1m  echo "APP_VERSION=$VERSION" > .env[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0765388Z [36;1mfi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0765753Z [36;1m[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0765926Z [36;1m# Update installer script[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0766404Z [36;1msed -i "s/Name \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/Name \"Voice Transcriber v$VERSION\"/" tools/installer.nsi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0767253Z [36;1msed -i "s/OutFile \"VoiceTranscriber_Installer_v[0-9]\+\.[0-9]\+\.[0-9]\+\.exe\"/OutFile \"VoiceTranscriber_Installer_v$VERSION.exe\"/" tools/installer.nsi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0768085Z [36;1msed -i "s/DisplayName \"Voice Transcriber v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber v$VERSION\"/" tools/installer.nsi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0768756Z [36;1msed -i "s/DisplayVersion \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayVersion \"$VERSION\"/" tools/installer.nsi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0769157Z [36;1m[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0769330Z [36;1m# Update bootstrap installer[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0769824Z [36;1msed -i "s/Name \"Voice Transcriber Bootstrap\"/Name \"Voice Transcriber Bootstrap v$VERSION\"/" tools/bootstrap_installer.nsi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0771075Z [36;1msed -i "s/OutFile \"VoiceTranscriber_Bootstrap_Installer.exe\"/OutFile \"VoiceTranscriber_Bootstrap_Installer_v$VERSION.exe\"/" tools/bootstrap_installer.nsi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0772056Z [36;1msed -i "s/DisplayName \"Voice Transcriber Bootstrap v[0-9]\+\.[0-9]\+\.[0-9]\+\"/DisplayName \"Voice Transcriber Bootstrap v$VERSION\"/" tools/bootstrap_installer.nsi[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.0786060Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:16:26.0786416Z env:
+build	UNKNOWN STEP	2026-01-23T22:16:26.0786584Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:16:26.0786848Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:26.0787255Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:16:26.0787661Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:26.0788026Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:26.0788411Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:26.0788702Z   VERSION: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:16:26.0788872Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:16:26.2665807Z ##[group]Run choco install upx -y
+build	UNKNOWN STEP	2026-01-23T22:16:26.2666135Z [36;1mchoco install upx -y[0m
+build	UNKNOWN STEP	2026-01-23T22:16:26.2680101Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:16:26.2680449Z env:
+build	UNKNOWN STEP	2026-01-23T22:16:26.2680618Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:16:26.2680883Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:26.2681289Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:16:26.2681698Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:26.2682069Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:26.2682434Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:26.2682745Z   VERSION: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:16:26.2682918Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:16:27.0215973Z Chocolatey v2.6.0
+build	UNKNOWN STEP	2026-01-23T22:16:27.1645884Z Installing the following packages:
+build	UNKNOWN STEP	2026-01-23T22:16:27.1653323Z upx
+build	UNKNOWN STEP	2026-01-23T22:16:27.1659017Z By installing, you accept licenses for the packages.
+build	UNKNOWN STEP	2026-01-23T22:16:28.0646303Z Downloading package from source 'https://community.chocolatey.org/api/v2/'
+build	UNKNOWN STEP	2026-01-23T22:16:28.2912632Z 
+build	UNKNOWN STEP	2026-01-23T22:16:28.2914922Z Progress: Downloading upx 5.1.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:28.2915407Z Progress: Downloading upx 5.1.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:28.2915849Z Progress: Downloading upx 5.1.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:28.2917891Z Progress: Downloading upx 5.1.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:28.2918329Z Progress: Downloading upx 5.1.0... %
+build	UNKNOWN STEP	2026-01-23T22:16:28.2918732Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2919160Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2919577Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2919998Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2920934Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2921356Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2921784Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2922269Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2923378Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2925072Z Progress: Downloading upx 5.1.0... 1%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2925910Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2927484Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2928921Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2929452Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2930127Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2930491Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2930836Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2931210Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2931589Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2931980Z Progress: Downloading upx 5.1.0... 2%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2932374Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2932792Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2933189Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2933577Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2933971Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2934361Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2934754Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2935144Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2936082Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2936800Z Progress: Downloading upx 5.1.0... 3%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2937214Z Progress: Downloading upx 5.1.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2937603Z Progress: Downloading upx 5.1.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2937997Z Progress: Downloading upx 5.1.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2938394Z Progress: Downloading upx 5.1.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2938790Z Progress: Downloading upx 5.1.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2939161Z Progress: Downloading upx 5.1.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2942177Z Progress: Downloading upx 5.1.0... 4%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2942717Z Progress: Downloading upx 5.1.0... 5%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2943124Z Progress: Downloading upx 5.1.0... 5%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2943526Z Progress: Downloading upx 5.1.0... 5%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2943918Z Progress: Downloading upx 5.1.0... 6%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2944320Z Progress: Downloading upx 5.1.0... 6%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2944707Z Progress: Downloading upx 5.1.0... 6%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2945099Z Progress: Downloading upx 5.1.0... 7%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2945489Z Progress: Downloading upx 5.1.0... 7%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2945889Z Progress: Downloading upx 5.1.0... 7%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2946295Z Progress: Downloading upx 5.1.0... 8%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2946703Z Progress: Downloading upx 5.1.0... 8%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2947105Z Progress: Downloading upx 5.1.0... 8%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2947526Z Progress: Downloading upx 5.1.0... 8%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2947932Z Progress: Downloading upx 5.1.0... 9%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2948345Z Progress: Downloading upx 5.1.0... 9%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2948747Z Progress: Downloading upx 5.1.0... 9%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2949160Z Progress: Downloading upx 5.1.0... 10%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2949556Z Progress: Downloading upx 5.1.0... 10%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2950456Z Progress: Downloading upx 5.1.0... 10%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2950849Z Progress: Downloading upx 5.1.0... 11%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2951225Z Progress: Downloading upx 5.1.0... 11%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2951584Z Progress: Downloading upx 5.1.0... 11%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2951957Z Progress: Downloading upx 5.1.0... 12%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2952332Z Progress: Downloading upx 5.1.0... 12%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2952698Z Progress: Downloading upx 5.1.0... 12%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2953058Z Progress: Downloading upx 5.1.0... 13%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2953474Z Progress: Downloading upx 5.1.0... 13%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2954088Z Progress: Downloading upx 5.1.0... 13%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2954460Z Progress: Downloading upx 5.1.0... 13%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2954847Z Progress: Downloading upx 5.1.0... 14%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2955208Z Progress: Downloading upx 5.1.0... 14%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2955580Z Progress: Downloading upx 5.1.0... 14%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2955955Z Progress: Downloading upx 5.1.0... 15%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2956322Z Progress: Downloading upx 5.1.0... 15%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2956688Z Progress: Downloading upx 5.1.0... 15%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2957065Z Progress: Downloading upx 5.1.0... 16%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2957438Z Progress: Downloading upx 5.1.0... 16%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2957804Z Progress: Downloading upx 5.1.0... 16%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2958168Z Progress: Downloading upx 5.1.0... 17%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2958545Z Progress: Downloading upx 5.1.0... 17%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2958908Z Progress: Downloading upx 5.1.0... 18%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2959309Z Progress: Downloading upx 5.1.0... 18%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2959695Z Progress: Downloading upx 5.1.0... 19%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2960076Z Progress: Downloading upx 5.1.0... 20%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2960445Z Progress: Downloading upx 5.1.0... 20%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2960837Z Progress: Downloading upx 5.1.0... 21%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2961236Z Progress: Downloading upx 5.1.0... 21%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2961472Z Progress: Downloading upx 5.1.0... 22%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2961695Z Progress: Downloading upx 5.1.0... 23%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2961926Z Progress: Downloading upx 5.1.0... 23%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2962164Z Progress: Downloading upx 5.1.0... 24%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2962398Z Progress: Downloading upx 5.1.0... 24%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2962632Z Progress: Downloading upx 5.1.0... 25%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2962867Z Progress: Downloading upx 5.1.0... 26%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2963131Z Progress: Downloading upx 5.1.0... 26%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2963368Z Progress: Downloading upx 5.1.0... 27%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2963600Z Progress: Downloading upx 5.1.0... 27%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2963827Z Progress: Downloading upx 5.1.0... 28%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2964057Z Progress: Downloading upx 5.1.0... 29%
+build	UNKNOWN STEP	2026-01-23T22:16:28.2964889Z Progress: Downloading upx 5.1.0... 29%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3034177Z Progress: Downloading upx 5.1.0... 30%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3035083Z Progress: Downloading upx 5.1.0... 30%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3035616Z Progress: Downloading upx 5.1.0... 31%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3036111Z Progress: Downloading upx 5.1.0... 32%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3036957Z Progress: Downloading upx 5.1.0... 32%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3037430Z Progress: Downloading upx 5.1.0... 33%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3039012Z Progress: Downloading upx 5.1.0... 34%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3039733Z Progress: Downloading upx 5.1.0... 34%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3040215Z Progress: Downloading upx 5.1.0... 35%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3040674Z Progress: Downloading upx 5.1.0... 35%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3041373Z Progress: Downloading upx 5.1.0... 36%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3041873Z Progress: Downloading upx 5.1.0... 36%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3042333Z Progress: Downloading upx 5.1.0... 37%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3042821Z Progress: Downloading upx 5.1.0... 38%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3043278Z Progress: Downloading upx 5.1.0... 38%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3044012Z Progress: Downloading upx 5.1.0... 39%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3044468Z Progress: Downloading upx 5.1.0... 39%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3044918Z Progress: Downloading upx 5.1.0... 40%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3045376Z Progress: Downloading upx 5.1.0... 41%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3045837Z Progress: Downloading upx 5.1.0... 41%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3046305Z Progress: Downloading upx 5.1.0... 42%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3046764Z Progress: Downloading upx 5.1.0... 42%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3047195Z Progress: Downloading upx 5.1.0... 43%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3047628Z Progress: Downloading upx 5.1.0... 44%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3051379Z Progress: Downloading upx 5.1.0... 44%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3051912Z Progress: Downloading upx 5.1.0... 45%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3052799Z Progress: Downloading upx 5.1.0... 46%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3053240Z Progress: Downloading upx 5.1.0... 46%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3053611Z Progress: Downloading upx 5.1.0... 47%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3054001Z Progress: Downloading upx 5.1.0... 47%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3058223Z Progress: Downloading upx 5.1.0... 48%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3058636Z Progress: Downloading upx 5.1.0... 49%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3059017Z Progress: Downloading upx 5.1.0... 49%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3059434Z Progress: Downloading upx 5.1.0... 50%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3059818Z Progress: Downloading upx 5.1.0... 50%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3060192Z Progress: Downloading upx 5.1.0... 51%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3060569Z Progress: Downloading upx 5.1.0... 52%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3060948Z Progress: Downloading upx 5.1.0... 52%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3061731Z Progress: Downloading upx 5.1.0... 53%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3062122Z Progress: Downloading upx 5.1.0... 53%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3065899Z Progress: Downloading upx 5.1.0... 54%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3066382Z Progress: Downloading upx 5.1.0... 55%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3066766Z Progress: Downloading upx 5.1.0... 55%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3067558Z Progress: Downloading upx 5.1.0... 56%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3068581Z Progress: Downloading upx 5.1.0... 57%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3069244Z Progress: Downloading upx 5.1.0... 57%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3069624Z Progress: Downloading upx 5.1.0... 58%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3069992Z Progress: Downloading upx 5.1.0... 58%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3072707Z Progress: Downloading upx 5.1.0... 59%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3073117Z Progress: Downloading upx 5.1.0... 60%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3073629Z Progress: Downloading upx 5.1.0... 60%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3074378Z Progress: Downloading upx 5.1.0... 61%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3074784Z Progress: Downloading upx 5.1.0... 61%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3075173Z Progress: Downloading upx 5.1.0... 62%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3075556Z Progress: Downloading upx 5.1.0... 63%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3079813Z Progress: Downloading upx 5.1.0... 63%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3080633Z Progress: Downloading upx 5.1.0... 64%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3081140Z Progress: Downloading upx 5.1.0... 64%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3081734Z Progress: Downloading upx 5.1.0... 65%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3082125Z Progress: Downloading upx 5.1.0... 66%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3082663Z Progress: Downloading upx 5.1.0... 66%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3083052Z Progress: Downloading upx 5.1.0... 67%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3083413Z Progress: Downloading upx 5.1.0... 67%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3086516Z Progress: Downloading upx 5.1.0... 68%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3086934Z Progress: Downloading upx 5.1.0... 69%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3148930Z Progress: Downloading upx 5.1.0... 69%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3149688Z Progress: Downloading upx 5.1.0... 70%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3150109Z Progress: Downloading upx 5.1.0... 70%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3150516Z Progress: Downloading upx 5.1.0... 71%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3150948Z Progress: Downloading upx 5.1.0... 72%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3152481Z Progress: Downloading upx 5.1.0... 72%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3153000Z Progress: Downloading upx 5.1.0... 73%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3153451Z Progress: Downloading upx 5.1.0... 74%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3154325Z Progress: Downloading upx 5.1.0... 74%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3154970Z Progress: Downloading upx 5.1.0... 75%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3155490Z Progress: Downloading upx 5.1.0... 75%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3156005Z Progress: Downloading upx 5.1.0... 76%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3157437Z Progress: Downloading upx 5.1.0... 77%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3158200Z Progress: Downloading upx 5.1.0... 77%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3158738Z Progress: Downloading upx 5.1.0... 78%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3159265Z Progress: Downloading upx 5.1.0... 78%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3159761Z Progress: Downloading upx 5.1.0... 79%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3160265Z Progress: Downloading upx 5.1.0... 80%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3160786Z Progress: Downloading upx 5.1.0... 80%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3161276Z Progress: Downloading upx 5.1.0... 81%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3161947Z Progress: Downloading upx 5.1.0... 81%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3162434Z Progress: Downloading upx 5.1.0... 82%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3169081Z Progress: Downloading upx 5.1.0... 83%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3170371Z Progress: Downloading upx 5.1.0... 83%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3171335Z Progress: Downloading upx 5.1.0... 84%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3171964Z Progress: Downloading upx 5.1.0... 85%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3172758Z Progress: Downloading upx 5.1.0... 85%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3173616Z Progress: Downloading upx 5.1.0... 86%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3174651Z Progress: Downloading upx 5.1.0... 86%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3175082Z Progress: Downloading upx 5.1.0... 87%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3175860Z Progress: Downloading upx 5.1.0... 88%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3176486Z Progress: Downloading upx 5.1.0... 88%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3176885Z Progress: Downloading upx 5.1.0... 89%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3177281Z Progress: Downloading upx 5.1.0... 89%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3177816Z Progress: Downloading upx 5.1.0... 90%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3178863Z Progress: Downloading upx 5.1.0... 91%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3179759Z Progress: Downloading upx 5.1.0... 91%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3180167Z Progress: Downloading upx 5.1.0... 92%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3180874Z Progress: Downloading upx 5.1.0... 92%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3181819Z Progress: Downloading upx 5.1.0... 93%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3182274Z Progress: Downloading upx 5.1.0... 94%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3182692Z Progress: Downloading upx 5.1.0... 94%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3183330Z Progress: Downloading upx 5.1.0... 95%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3183736Z Progress: Downloading upx 5.1.0... 95%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3184144Z Progress: Downloading upx 5.1.0... 96%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3184559Z Progress: Downloading upx 5.1.0... 97%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3184967Z Progress: Downloading upx 5.1.0... 97%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3185375Z Progress: Downloading upx 5.1.0... 98%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3185780Z Progress: Downloading upx 5.1.0... 99%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3186538Z Progress: Downloading upx 5.1.0... 99%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3186970Z Progress: Downloading upx 5.1.0... 100%
+build	UNKNOWN STEP	2026-01-23T22:16:28.3187606Z Progress: Downloading upx 5.1.0... 100%
+build	UNKNOWN STEP	2026-01-23T22:16:28.5182002Z 
+build	UNKNOWN STEP	2026-01-23T22:16:28.5183092Z upx v5.1.0 [Approved]
+build	UNKNOWN STEP	2026-01-23T22:16:28.5416294Z upx package files install completed. Performing other installation steps.
+build	UNKNOWN STEP	2026-01-23T22:16:29.2672455Z Extracting 64-bit C:\ProgramData\chocolatey\lib\upx\tools\upx-5.1.0-win64_x64.zip to C:\ProgramData\chocolatey\lib\upx\tools...
+build	UNKNOWN STEP	2026-01-23T22:16:29.5528177Z C:\ProgramData\chocolatey\lib\upx\tools
+build	UNKNOWN STEP	2026-01-23T22:16:30.4765741Z  ShimGen has successfully created a shim for upx.exe
+build	UNKNOWN STEP	2026-01-23T22:16:30.5037914Z  The install of upx was successful.
+build	UNKNOWN STEP	2026-01-23T22:16:30.5042018Z   Deployed to 'C:\ProgramData\chocolatey\lib\upx\tools'
+build	UNKNOWN STEP	2026-01-23T22:16:30.5115238Z 
+build	UNKNOWN STEP	2026-01-23T22:16:30.5115551Z Chocolatey installed 1/1 packages. 
+build	UNKNOWN STEP	2026-01-23T22:16:30.5115940Z  See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+build	UNKNOWN STEP	2026-01-23T22:16:30.5654112Z ##[group]Run # Build with Poetry
+build	UNKNOWN STEP	2026-01-23T22:16:30.5654481Z [36;1m# Build with Poetry[0m
+build	UNKNOWN STEP	2026-01-23T22:16:30.5654743Z [36;1mpoetry run python tools/build.py --upx[0m
+build	UNKNOWN STEP	2026-01-23T22:16:30.5669133Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:16:30.5669486Z env:
+build	UNKNOWN STEP	2026-01-23T22:16:30.5669660Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:16:30.5669930Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:30.5670334Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:16:30.5670738Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:30.5671111Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:30.5671474Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:16:30.5671766Z   VERSION: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:16:30.5671934Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:17:14.6187283Z Voice Transcriber - Build Script
+build	UNKNOWN STEP	2026-01-23T22:17:14.6188566Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:17:14.6189042Z Starte Starte Build-Prozess...
+build	UNKNOWN STEP	2026-01-23T22:17:14.6189618Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:17:14.6190039Z OK: Icon bereits vorhanden
+build	UNKNOWN STEP	2026-01-23T22:17:14.6190893Z Build: F�hre PyInstaller aus...
+build	UNKNOWN STEP	2026-01-23T22:17:14.6197367Z Command: pyinstaller --onefile --windowed --noupx --icon=assets/icon.ico --name=VoiceTranscriber --add-data=assets:assets --add-data=scripts:scripts --paths=src --optimize=2 --strip --exclude-module=torch --exclude-module=faster_whisper --exclude-module=ctranslate2 --exclude-module=numpy --exclude-module=huggingface_hub --exclude-module=matplotlib --exclude-module=unittest --exclude-module=doctest --exclude-module=pytest --exclude-module=setuptools --exclude-module=IPython --exclude-module=PIL.ImageQt --exclude-module=PIL.ImageTk --hidden-import=version_manager --hidden-import=version_manager --hidden-import=pystray._win32 --hidden-import=winsound --hidden-import=keyboard --hidden-import=pyperclip --hidden-import=pillow --hidden-import=pyaudio --hidden-import=audioop --hidden-import=pydub --hidden-import=pydub.effects --hidden-import=numpy --hidden-import=httpx --hidden-import=requests --hidden-import=pyautogui --hidden-import=pkg_resources --hidden-import=jaraco.text --hidden-import=jaraco.functools --hidden-import=jaraco.context --hidden-import=version_manager --hidden-import=user_config --hidden-import=mouse_integration --hidden-import=exceptions --hidden-import=notification --hidden-import=src.model_manager --hidden-import=src.audio_recorder --hidden-import=src.clipboard_injector --hidden-import=src.config --hidden-import=src.downloader --hidden-import=src.encryption --hidden-import=src.exceptions --hidden-import=src.hotkey_listener --hidden-import=src.local_transcription --hidden-import=src.main --hidden-import=src.model_manager --hidden-import=src.mouse_integration --hidden-import=src.notification --hidden-import=src.settings_gui --hidden-import=src.text_processor --hidden-import=src.transcription --hidden-import=src.user_config --hidden-import=src.version_manager --hidden-import=src.__main__ main_exe.py
+build	UNKNOWN STEP	2026-01-23T22:17:14.6203527Z OK: Build erfolgreich abgeschlossen!
+build	UNKNOWN STEP	2026-01-23T22:17:14.6203817Z Datei: EXE-Datei: dist/VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:17:14.6204166Z Groesse: Dateigr��e: 25.2 MB
+build	UNKNOWN STEP	2026-01-23T22:17:14.6204367Z 
+build	UNKNOWN STEP	2026-01-23T22:17:14.6204456Z Bereit: Bereit zur Verwendung!
+build	UNKNOWN STEP	2026-01-23T22:17:14.6204729Z    Hinweis: OpenAI API-Key in .env erforderlich
+build	UNKNOWN STEP	2026-01-23T22:17:14.7193519Z ##[group]Run poetry run python tools/build.py --bootstrap --bootstrap-nsis
+build	UNKNOWN STEP	2026-01-23T22:17:14.7194097Z [36;1mpoetry run python tools/build.py --bootstrap --bootstrap-nsis[0m
+build	UNKNOWN STEP	2026-01-23T22:17:14.7208414Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:17:14.7208786Z env:
+build	UNKNOWN STEP	2026-01-23T22:17:14.7208981Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:17:14.7209265Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:17:14.7209720Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:17:14.7210145Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:17:14.7210530Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:17:14.7210909Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:17:14.7211217Z   VERSION: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:17:14.7211413Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:17:59.5373477Z Exception in thread Thread-7 (_readerthread):
+build	UNKNOWN STEP	2026-01-23T22:17:59.5374461Z Traceback (most recent call last):
+build	UNKNOWN STEP	2026-01-23T22:17:59.5385718Z   File "C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\threading.py", line 1045, in _bootstrap_inner
+build	UNKNOWN STEP	2026-01-23T22:17:59.5386535Z     self.run()
+build	UNKNOWN STEP	2026-01-23T22:17:59.5387038Z   File "C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\threading.py", line 982, in run
+build	UNKNOWN STEP	2026-01-23T22:17:59.5387591Z     self._target(*self._args, **self._kwargs)
+build	UNKNOWN STEP	2026-01-23T22:17:59.5388143Z   File "C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\subprocess.py", line 1599, in _readerthread
+build	UNKNOWN STEP	2026-01-23T22:17:59.5390353Z     buffer.append(fh.read())
+build	UNKNOWN STEP	2026-01-23T22:17:59.5390737Z                   ^^^^^^^^^
+build	UNKNOWN STEP	2026-01-23T22:17:59.5391272Z   File "C:\hostedtoolcache\windows\Python\3.11.9\x64\Lib\encodings\cp1252.py", line 23, in decode
+build	UNKNOWN STEP	2026-01-23T22:17:59.5391909Z     return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+build	UNKNOWN STEP	2026-01-23T22:17:59.5392548Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build	UNKNOWN STEP	2026-01-23T22:17:59.5393979Z UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 5326: character maps to <undefined>
+build	UNKNOWN STEP	2026-01-23T22:17:59.5402592Z Voice Transcriber - Build Script
+build	UNKNOWN STEP	2026-01-23T22:17:59.5403343Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:17:59.5404060Z Starte Starte Build-Prozess...
+build	UNKNOWN STEP	2026-01-23T22:17:59.5404564Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:17:59.5405453Z Geloescht: build/
+build	UNKNOWN STEP	2026-01-23T22:17:59.5406042Z Geloescht: dist/
+build	UNKNOWN STEP	2026-01-23T22:17:59.5406391Z OK: Icon bereits vorhanden
+build	UNKNOWN STEP	2026-01-23T22:17:59.5407860Z Build: F�hre PyInstaller aus...
+build	UNKNOWN STEP	2026-01-23T22:17:59.5422436Z Command: pyinstaller --onefile --windowed --noupx --icon=assets/icon.ico --name=VoiceTranscriber --add-data=assets:assets --add-data=scripts:scripts --paths=src --optimize=2 --strip --exclude-module=torch --exclude-module=faster_whisper --exclude-module=ctranslate2 --exclude-module=numpy --exclude-module=huggingface_hub --exclude-module=matplotlib --exclude-module=unittest --exclude-module=doctest --exclude-module=pytest --exclude-module=setuptools --exclude-module=IPython --exclude-module=PIL.ImageQt --exclude-module=PIL.ImageTk --hidden-import=version_manager --hidden-import=version_manager --hidden-import=pystray._win32 --hidden-import=winsound --hidden-import=keyboard --hidden-import=pyperclip --hidden-import=pillow --hidden-import=pyaudio --hidden-import=audioop --hidden-import=pydub --hidden-import=pydub.effects --hidden-import=numpy --hidden-import=httpx --hidden-import=requests --hidden-import=pyautogui --hidden-import=pkg_resources --hidden-import=jaraco.text --hidden-import=jaraco.functools --hidden-import=jaraco.context --hidden-import=version_manager --hidden-import=user_config --hidden-import=mouse_integration --hidden-import=exceptions --hidden-import=notification --hidden-import=src.model_manager --hidden-import=src.audio_recorder --hidden-import=src.clipboard_injector --hidden-import=src.config --hidden-import=src.downloader --hidden-import=src.encryption --hidden-import=src.exceptions --hidden-import=src.hotkey_listener --hidden-import=src.local_transcription --hidden-import=src.main --hidden-import=src.model_manager --hidden-import=src.mouse_integration --hidden-import=src.notification --hidden-import=src.settings_gui --hidden-import=src.text_processor --hidden-import=src.transcription --hidden-import=src.user_config --hidden-import=src.version_manager --hidden-import=src.__main__ main_exe.py
+build	UNKNOWN STEP	2026-01-23T22:17:59.5435694Z OK: Build erfolgreich abgeschlossen!
+build	UNKNOWN STEP	2026-01-23T22:17:59.5436182Z Datei: EXE-Datei: dist/VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:17:59.5436838Z Groesse: Dateigr��e: 25.2 MB
+build	UNKNOWN STEP	2026-01-23T22:17:59.5437129Z 
+build	UNKNOWN STEP	2026-01-23T22:17:59.5437280Z Bereit: Bereit zur Verwendung!
+build	UNKNOWN STEP	2026-01-23T22:17:59.5437728Z    Hinweis: OpenAI API-Key in .env erforderlich
+build	UNKNOWN STEP	2026-01-23T22:17:59.5438066Z 
+build	UNKNOWN STEP	2026-01-23T22:17:59.5438223Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:17:59.5438723Z Build: Erstelle Bootstrap-Installer...
+build	UNKNOWN STEP	2026-01-23T22:17:59.5439404Z Build: F�hre PyInstaller f�r Bootstrap-Installer aus...
+build	UNKNOWN STEP	2026-01-23T22:17:59.5441478Z Command: pyinstaller --onefile --windowed --noupx --icon=assets/icon.ico --name=BootstrapInstaller --add-data=assets;assets --hidden-import=src.downloader --hidden-import=urllib.request --hidden-import=urllib.error --hidden-import=ssl --hidden-import=hashlib --paths=src bootstrap_installer.py
+build	UNKNOWN STEP	2026-01-23T22:17:59.5443483Z OK: Bootstrap-Installer erfolgreich erstellt!
+build	UNKNOWN STEP	2026-01-23T22:17:59.5445213Z Datei: Bootstrap-Installer: dist\BootstrapInstaller.exe
+build	UNKNOWN STEP	2026-01-23T22:17:59.5445923Z Groesse: Gr��e: 11.6 MB
+build	UNKNOWN STEP	2026-01-23T22:17:59.5446487Z Datei: Finaler Installer (Copy): VoiceTranscriber_Bootstrap_Installer.exe
+build	UNKNOWN STEP	2026-01-23T22:17:59.5447026Z 
+build	UNKNOWN STEP	2026-01-23T22:17:59.5447191Z Bereit: Bootstrap-Installer bereit!
+build	UNKNOWN STEP	2026-01-23T22:17:59.5447849Z    Hinweis: L�dt VoiceTranscriber.exe von R2 Storage nach
+build	UNKNOWN STEP	2026-01-23T22:17:59.5448630Z 
+build	UNKNOWN STEP	2026-01-23T22:17:59.5448921Z ERFOLG: Bootstrap-Installer (PyInstaller) erfolgreich!
+build	UNKNOWN STEP	2026-01-23T22:17:59.5449634Z    - Bootstrap-Installer: VoiceTranscriber_Bootstrap_Installer.exe
+build	UNKNOWN STEP	2026-01-23T22:17:59.5450127Z 
+build	UNKNOWN STEP	2026-01-23T22:17:59.5450300Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:17:59.5450798Z Build: Erstelle Bootstrap-Installer mit NSIS...
+build	UNKNOWN STEP	2026-01-23T22:17:59.5451376Z OK: NSIS gefunden: C:\Program Files (x86)\NSIS\makensis.exe
+build	UNKNOWN STEP	2026-01-23T22:17:59.5478238Z NSIS: F�hre NSIS aus: C:\Program Files (x86)\NSIS\makensis.exe /V4 tools\bootstrap_installer.nsi
+build	UNKNOWN STEP	2026-01-23T22:17:59.5479193Z OK: Bootstrap-Installer erfolgreich erstellt!
+build	UNKNOWN STEP	2026-01-23T22:17:59.5479862Z Datei: Bootstrap-Installer: VoiceTranscriber_Bootstrap_Installer.exe
+build	UNKNOWN STEP	2026-01-23T22:17:59.5480631Z Groesse: Gr��e: 11.6 MB
+build	UNKNOWN STEP	2026-01-23T22:17:59.5480887Z 
+build	UNKNOWN STEP	2026-01-23T22:17:59.5481093Z ERFOLG: Bootstrap-Installer (NSIS) erfolgreich!
+build	UNKNOWN STEP	2026-01-23T22:17:59.5481766Z    - Bootstrap-Installer: VoiceTranscriber_Bootstrap_Installer.exe
+build	UNKNOWN STEP	2026-01-23T22:17:59.6345076Z ##[group]Run poetry run python tools/build.py --installer
+build	UNKNOWN STEP	2026-01-23T22:17:59.6345560Z [36;1mpoetry run python tools/build.py --installer[0m
+build	UNKNOWN STEP	2026-01-23T22:17:59.6358603Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:17:59.6359035Z env:
+build	UNKNOWN STEP	2026-01-23T22:17:59.6359316Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:17:59.6359943Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:17:59.6360377Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:17:59.6360828Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:17:59.6361225Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:17:59.6361621Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:17:59.6361930Z   VERSION: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:17:59.6362128Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:18:36.0692267Z Voice Transcriber - Build Script
+build	UNKNOWN STEP	2026-01-23T22:18:36.0692710Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:18:36.0692993Z Starte Starte Build-Prozess...
+build	UNKNOWN STEP	2026-01-23T22:18:36.0693233Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:18:36.0693476Z Geloescht: build/
+build	UNKNOWN STEP	2026-01-23T22:18:36.0693659Z Geloescht: dist/
+build	UNKNOWN STEP	2026-01-23T22:18:36.0693852Z OK: Icon bereits vorhanden
+build	UNKNOWN STEP	2026-01-23T22:18:36.0694388Z Build: F�hre PyInstaller aus...
+build	UNKNOWN STEP	2026-01-23T22:18:36.0700432Z Command: pyinstaller --onefile --windowed --noupx --icon=assets/icon.ico --name=VoiceTranscriber --add-data=assets:assets --add-data=scripts:scripts --paths=src --optimize=2 --strip --exclude-module=torch --exclude-module=faster_whisper --exclude-module=ctranslate2 --exclude-module=numpy --exclude-module=huggingface_hub --exclude-module=matplotlib --exclude-module=unittest --exclude-module=doctest --exclude-module=pytest --exclude-module=setuptools --exclude-module=IPython --exclude-module=PIL.ImageQt --exclude-module=PIL.ImageTk --hidden-import=version_manager --hidden-import=version_manager --hidden-import=pystray._win32 --hidden-import=winsound --hidden-import=keyboard --hidden-import=pyperclip --hidden-import=pillow --hidden-import=pyaudio --hidden-import=audioop --hidden-import=pydub --hidden-import=pydub.effects --hidden-import=numpy --hidden-import=httpx --hidden-import=requests --hidden-import=pyautogui --hidden-import=pkg_resources --hidden-import=jaraco.text --hidden-import=jaraco.functools --hidden-import=jaraco.context --hidden-import=version_manager --hidden-import=user_config --hidden-import=mouse_integration --hidden-import=exceptions --hidden-import=notification --hidden-import=src.model_manager --hidden-import=src.audio_recorder --hidden-import=src.clipboard_injector --hidden-import=src.config --hidden-import=src.downloader --hidden-import=src.encryption --hidden-import=src.exceptions --hidden-import=src.hotkey_listener --hidden-import=src.local_transcription --hidden-import=src.main --hidden-import=src.model_manager --hidden-import=src.mouse_integration --hidden-import=src.notification --hidden-import=src.settings_gui --hidden-import=src.text_processor --hidden-import=src.transcription --hidden-import=src.user_config --hidden-import=src.version_manager --hidden-import=src.__main__ main_exe.py
+build	UNKNOWN STEP	2026-01-23T22:18:36.0706832Z OK: Build erfolgreich abgeschlossen!
+build	UNKNOWN STEP	2026-01-23T22:18:36.0707108Z Datei: EXE-Datei: dist/VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:18:36.0707446Z Groesse: Dateigr��e: 25.2 MB
+build	UNKNOWN STEP	2026-01-23T22:18:36.0707606Z 
+build	UNKNOWN STEP	2026-01-23T22:18:36.0707691Z Bereit: Bereit zur Verwendung!
+build	UNKNOWN STEP	2026-01-23T22:18:36.0707947Z    Hinweis: OpenAI API-Key in .env erforderlich
+build	UNKNOWN STEP	2026-01-23T22:18:36.0708154Z 
+build	UNKNOWN STEP	2026-01-23T22:18:36.0708237Z ==================================================
+build	UNKNOWN STEP	2026-01-23T22:18:36.0708501Z Build: Erstelle Windows-Installer...
+build	UNKNOWN STEP	2026-01-23T22:18:36.0708805Z OK: NSIS gefunden: C:\Program Files (x86)\NSIS\makensis.exe
+build	UNKNOWN STEP	2026-01-23T22:18:36.0709311Z NSIS: F�hre NSIS aus: C:\Program Files (x86)\NSIS\makensis.exe /V4 tools\installer.nsi
+build	UNKNOWN STEP	2026-01-23T22:18:36.0712361Z OK: Installer erfolgreich erstellt!
+build	UNKNOWN STEP	2026-01-23T22:18:36.0712810Z Datei: Installer: VoiceTranscriber_Bootstrap_Installer.exe
+build	UNKNOWN STEP	2026-01-23T22:18:36.0713218Z Groesse: Gr��e: 11.6 MB
+build	UNKNOWN STEP	2026-01-23T22:18:36.0713358Z 
+build	UNKNOWN STEP	2026-01-23T22:18:36.0713504Z ERFOLG: Vollst�ndiger Build erfolgreich!
+build	UNKNOWN STEP	2026-01-23T22:18:36.0713776Z    - EXE: dist/VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:18:36.0714051Z    - Installer: VoiceTranscriber_Installer.exe
+build	UNKNOWN STEP	2026-01-23T22:18:36.1721287Z ##[group]Run echo "VERSION=$VERSION" > build_info.txt
+build	UNKNOWN STEP	2026-01-23T22:18:36.1721791Z [36;1mecho "VERSION=$VERSION" > build_info.txt[0m
+build	UNKNOWN STEP	2026-01-23T22:18:36.1722304Z [36;1mecho "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> build_info.txt[0m
+build	UNKNOWN STEP	2026-01-23T22:18:36.1723183Z [36;1mecho "GIT_COMMIT=$GITHUB_SHA" >> build_info.txt[0m
+build	UNKNOWN STEP	2026-01-23T22:18:36.1723585Z [36;1mecho "GIT_REF=$GITHUB_REF" >> build_info.txt[0m
+build	UNKNOWN STEP	2026-01-23T22:18:36.1737458Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:18:36.1737817Z env:
+build	UNKNOWN STEP	2026-01-23T22:18:36.1737994Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:18:36.1738278Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:36.1738687Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:18:36.1739097Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:36.1739505Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:36.1739864Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:36.1740168Z   VERSION: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:18:36.1740359Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:18:36.2826212Z ##[group]Run # Deployment Script ausführen (nutzt artifacts_dir = "." Fallback)
+build	UNKNOWN STEP	2026-01-23T22:18:36.2826834Z [36;1m# Deployment Script ausführen (nutzt artifacts_dir = "." Fallback)[0m
+build	UNKNOWN STEP	2026-01-23T22:18:36.2827232Z [36;1mpoetry run python tools/deploy_to_r2.py[0m
+build	UNKNOWN STEP	2026-01-23T22:18:36.2841598Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+build	UNKNOWN STEP	2026-01-23T22:18:36.2841951Z env:
+build	UNKNOWN STEP	2026-01-23T22:18:36.2842130Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:18:36.2842414Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:36.2842832Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:18:36.2843247Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:36.2843616Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:36.2843987Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:36.2844493Z   VERSION: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:18:36.2844898Z   R2_ACCESS_KEY_ID: ***
+build	UNKNOWN STEP	2026-01-23T22:18:36.2845304Z   R2_SECRET_ACCESS_KEY: ***
+build	UNKNOWN STEP	2026-01-23T22:18:36.2845557Z   R2_ACCOUNT_ID: ***
+build	UNKNOWN STEP	2026-01-23T22:18:36.2845767Z   R2_BUCKET_NAME: ***
+build	UNKNOWN STEP	2026-01-23T22:18:36.2845954Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:18:38.0419393Z 2026-01-23 22:18:38,041 - INFO - \U0001f680 Starte Deployment f�r Version 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:18:38.2639610Z 2026-01-23 22:18:38,263 - INFO - Verwende 'dist/' Verzeichnis
+build	UNKNOWN STEP	2026-01-23T22:18:38.2641002Z 2026-01-23 22:18:38,263 - INFO - Lade dist\VoiceTranscriber.exe -> VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:18:42.0745903Z 2026-01-23 22:18:42,072 - INFO - \u2705 Erfolgreich hochgeladen: VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:18:42.0749542Z 2026-01-23 22:18:42,072 - INFO - Lade dist\VoiceTranscriber.exe -> versions/1.8.3/VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:18:45.4465940Z 2026-01-23 22:18:45,444 - INFO - \u2705 Erfolgreich hochgeladen: versions/1.8.3/VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:18:45.4476412Z 2026-01-23 22:18:45,446 - INFO - Lade dist\version_1.8.3.json -> versions/1.8.3.json
+build	UNKNOWN STEP	2026-01-23T22:18:46.0257791Z 2026-01-23 22:18:46,023 - INFO - \u2705 Erfolgreich hochgeladen: versions/1.8.3.json
+build	UNKNOWN STEP	2026-01-23T22:18:46.0259832Z 2026-01-23 22:18:46,025 - INFO - \u2705 Deployment erfolgreich abgeschlossen!
+build	UNKNOWN STEP	2026-01-23T22:18:46.0260925Z 2026-01-23 22:18:46,025 - INFO - \U0001f4e6 Version 1.8.3 ist verf�gbar unter:
+build	UNKNOWN STEP	2026-01-23T22:18:46.0263342Z 2026-01-23 22:18:46,025 - INFO -    EXE: https://***.***.r2.cloudflarestorage.com/VoiceTranscriber.exe
+build	UNKNOWN STEP	2026-01-23T22:18:46.0267733Z 2026-01-23 22:18:46,025 - INFO -    Bootstrap: https://***.***.r2.cloudflarestorage.com/installer/VoiceTranscriber_Bootstrap_Installer_v1.8.3.exe
+build	UNKNOWN STEP	2026-01-23T22:18:46.2100784Z ##[group]Run actions/upload-artifact@v4
+build	UNKNOWN STEP	2026-01-23T22:18:46.2101341Z with:
+build	UNKNOWN STEP	2026-01-23T22:18:46.2101655Z   name: voice-transcriber-builds-1.8.3
+build	UNKNOWN STEP	2026-01-23T22:18:46.2102559Z   path: VoiceTranscriber_*.exe
+build	UNKNOWN STEP	VoiceTranscriber_Bootstrap_*.exe
+build	UNKNOWN STEP	build_info.txt
+build	UNKNOWN STEP	
+build	UNKNOWN STEP	2026-01-23T22:18:46.2103260Z   retention-days: 7
+build	UNKNOWN STEP	2026-01-23T22:18:46.2103588Z   if-no-files-found: warn
+build	UNKNOWN STEP	2026-01-23T22:18:46.2103922Z   compression-level: 6
+build	UNKNOWN STEP	2026-01-23T22:18:46.2104244Z   overwrite: false
+build	UNKNOWN STEP	2026-01-23T22:18:46.2104557Z   include-hidden-files: false
+build	UNKNOWN STEP	2026-01-23T22:18:46.2104903Z env:
+build	UNKNOWN STEP	2026-01-23T22:18:46.2105090Z   PYTHON_VERSION: 3.11
+build	UNKNOWN STEP	2026-01-23T22:18:46.2105361Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:46.2105786Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.11.9\x64/lib/pkgconfig
+build	UNKNOWN STEP	2026-01-23T22:18:46.2106424Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:46.2107026Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:46.2107617Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.11.9\x64
+build	UNKNOWN STEP	2026-01-23T22:18:46.2108089Z   VERSION: 1.8.3
+build	UNKNOWN STEP	2026-01-23T22:18:46.2108361Z ##[endgroup]
+build	UNKNOWN STEP	2026-01-23T22:18:46.5632356Z With the provided path, there will be 2 files uploaded
+build	UNKNOWN STEP	2026-01-23T22:18:46.5638121Z Artifact name is valid!
+build	UNKNOWN STEP	2026-01-23T22:18:46.5640900Z Root directory input is valid!
+build	UNKNOWN STEP	2026-01-23T22:18:46.8555124Z Beginning upload of artifact content to blob storage
+build	UNKNOWN STEP	2026-01-23T22:18:48.2954010Z Uploaded bytes 8388608
+build	UNKNOWN STEP	2026-01-23T22:18:48.4800111Z Uploaded bytes 11864818
+build	UNKNOWN STEP	2026-01-23T22:18:48.5400181Z Finished uploading artifact content to blob storage!
+build	UNKNOWN STEP	2026-01-23T22:18:48.5403843Z SHA256 digest of uploaded artifact zip is 6fc65a268e7c95e71b45db8b88c5d2fc1690eb3eea443f7294d86673969a6bee
+build	UNKNOWN STEP	2026-01-23T22:18:48.5407375Z Finalizing artifact upload
+build	UNKNOWN STEP	2026-01-23T22:18:48.6925351Z Artifact voice-transcriber-builds-1.8.3.zip successfully finalized. Artifact ID 5240232766
+build	UNKNOWN STEP	2026-01-23T22:18:48.6926768Z Artifact voice-transcriber-builds-1.8.3 has been successfully uploaded! Final size is 11864818 bytes. Artifact ID is 5240232766
+build	UNKNOWN STEP	2026-01-23T22:18:48.6941850Z Artifact download URL: https://github.com/skquievreux/Speechering/actions/runs/21302982491/artifacts/5240232766
+build	UNKNOWN STEP	2026-01-23T22:18:48.7300987Z Post job cleanup.
+build	UNKNOWN STEP	2026-01-23T22:18:48.9703830Z Post job cleanup.
+build	UNKNOWN STEP	2026-01-23T22:18:49.1905789Z [command]"C:\Program Files\Git\bin\git.exe" version
+build	UNKNOWN STEP	2026-01-23T22:18:49.2260889Z git version 2.52.0.windows.1
+build	UNKNOWN STEP	2026-01-23T22:18:49.2352749Z Temporarily overriding HOME='D:\a\_temp\c8967582-358d-4871-bdb4-3df6fc1157ee' before making global git config changes
+build	UNKNOWN STEP	2026-01-23T22:18:49.2354128Z Adding repository directory to the temporary git global config as a safe directory
+build	UNKNOWN STEP	2026-01-23T22:18:49.2366094Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Speechering\Speechering
+build	UNKNOWN STEP	2026-01-23T22:18:49.2735570Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+build	UNKNOWN STEP	2026-01-23T22:18:49.3051035Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+build	UNKNOWN STEP	2026-01-23T22:18:49.9099456Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	UNKNOWN STEP	2026-01-23T22:18:49.9359854Z http.https://github.com/.extraheader
+build	UNKNOWN STEP	2026-01-23T22:18:49.9413216Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+build	UNKNOWN STEP	2026-01-23T22:18:49.9737900Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+build	UNKNOWN STEP	2026-01-23T22:18:50.5326104Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	UNKNOWN STEP	2026-01-23T22:18:50.5642123Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+build	UNKNOWN STEP	2026-01-23T22:18:51.3095005Z Evaluate and set job outputs
+build	UNKNOWN STEP	2026-01-23T22:18:51.3103119Z Set output 'version'
+build	UNKNOWN STEP	2026-01-23T22:18:51.3105067Z Cleaning up orphan processes
