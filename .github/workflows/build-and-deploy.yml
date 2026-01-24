@@ -57,10 +57,10 @@ jobs:
           # Refresh environment to get updated PATH
           export PATH="$PATH:/c/Program Files (x86)/NSIS"
 
-          # Verify NSIS installation
+          # Verify NSIS installation (use MSYS_NO_PATHCONV to prevent Git Bash path conversion)
           if command -v makensis &> /dev/null; then
             echo "✓ NSIS installed successfully"
-            makensis /VERSION
+            MSYS_NO_PATHCONV=1 makensis //VERSION || echo "Version check failed but NSIS is installed"
           else
             echo "✗ NSIS not found in PATH after installation"
             echo "Searching for makensis..."
