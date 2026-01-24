@@ -219,16 +219,10 @@ def build_exe(mode="onedir", skip_cleanup=False):
         # ENTFERNT: --optimize=2 (zu aggressiv, kann DLLs beschädigen)
         # ENTFERNT: --strip (kann wichtige DLL-Informationen entfernen)
         # Modul-Excludes für kleinere EXE
-        "--exclude-module=torch",      # PyTorch ausschließen (~150MB) - ctranslate2 reicht oft
-        # "--exclude-module=faster_whisper", # Benötigt für lokal
-        # "--exclude-module=ctranslate2",    # Benötigt für lokal
-        # "--exclude-module=numpy",          # Benötigt
-        # "--exclude-module=huggingface_hub",# Benötigt
         "--exclude-module=matplotlib", # Nicht benötigte Module ausschließen
         "--exclude-module=unittest",   # Test-Module entfernen
         "--exclude-module=doctest",    # Doctest entfernen
         "--exclude-module=pytest",     # Test-Framework entfernen
-        "--exclude-module=setuptools", # Build-Tools entfernen
         "--exclude-module=IPython",
         "--exclude-module=PIL.ImageQt",
         "--exclude-module=PIL.ImageTk",
