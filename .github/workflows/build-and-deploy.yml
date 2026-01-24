@@ -50,7 +50,22 @@ jobs:
 
       - name: Install NSIS
         shell: bash
-        run: choco install nsis -y
+        run: |
+          echo "Installing NSIS..."
+          choco install nsis -y
+
+          # Refresh environment to get updated PATH
+          export PATH="$PATH:/c/Program Files (x86)/NSIS"
+
+          # Verify NSIS installation
+          if command -v makensis &> /dev/null; then
+            echo "✓ NSIS installed successfully"
+            makensis /VERSION
+          else
+            echo "✗ NSIS not found in PATH after installation"
+            echo "Searching for makensis..."
+            find /c/Program* -name "makensis.exe" 2>/dev/null || true
+          fi
 
       - name: Determine version
         id: version
