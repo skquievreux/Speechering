@@ -171,7 +171,14 @@ def build_exe():
     print(f"Command: {' '.join(pyinstaller_cmd)}")
 
     try:
-        result = subprocess.run(pyinstaller_cmd, check=True, capture_output=True, text=True)
+        result = subprocess.run(
+            pyinstaller_cmd, 
+            check=True, 
+            capture_output=True, 
+            text=True, 
+            encoding='utf-8', 
+            errors='replace'
+        )
 
         if result.returncode == 0:
             print("OK: Build erfolgreich abgeschlossen!")
