@@ -121,11 +121,6 @@ def build_exe(mode="onedir", skip_cleanup=False):
         "--hidden-import=pkg_resources",
         # jaraco dependencies (now explicitly installed)
         "--collect-all=jaraco",           # Namespace-Paket: alle jaraco Module sammeln
-        # Metadata NUR für Subpakete (jaraco selbst ist nur ein Namespace ohne Metadaten)
-        "--copy-metadata=jaraco.text",
-        "--copy-metadata=jaraco.functools",
-        "--copy-metadata=jaraco.context",
-        
         # Explizite jaraco imports als Fallback
         "--hidden-import=jaraco",
         "--hidden-import=jaraco.text",
