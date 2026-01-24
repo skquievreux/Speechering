@@ -1,3 +1,10 @@
+## [1.9.6](https://github.com/skquievreux/Speechering/compare/v1.9.5...v1.9.6) (2026-01-24)
+
+
+### Bug Fixes
+
+* restore AI modules (torch) and set version to 1.9.4 for functional release ([#40](https://github.com/skquievreux/Speechering/issues/40)) ([1407c71](https://github.com/skquievreux/Speechering/commit/1407c71f1829bdf17dce01976d53150735e51053))
+
 ## [1.9.5](https://github.com/skquievreux/Speechering/compare/v1.9.4...v1.9.5) (2026-01-24)
 
 
