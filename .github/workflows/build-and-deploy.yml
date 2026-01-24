@@ -96,20 +96,17 @@ jobs:
 
 
 
-      - name: Build VoiceTranscriber EXE (onedir + onefile)
+      - name: Build All (VoiceTranscriber EXE + Installers)
         shell: bash
         run: |
-          # Build with Poetry
-          # onedir für stabilen NSIS-Installer, onefile für R2-Download
-          poetry run python tools/build.py --onefile
-
-      - name: Build Bootstrap Installer
-        shell: bash
-        run: poetry run python tools/build.py --bootstrap --bootstrap-nsis
-
-      - name: Build NSIS Installer
-        shell: bash
-        run: poetry run python tools/build.py --installer
+          # Build everything in ONE command to avoid cleanup conflicts
+          # This creates:
+          # - dist/VoiceTranscriber/ (onedir - for NSIS installer)
+          # - dist/VoiceTranscriber.exe (onefile - for R2 download)
+          # - dist/BootstrapInstaller.exe (bootstrap installer)
+          # - VoiceTranscriber_Bootstrap_*.exe (NSIS bootstrap installer)
+          # - VoiceTranscriber_Installer_*.exe (Full NSIS installer)
+          poetry run python tools/build.py --onefile --bootstrap-nsis --installer
 
       - name: Create version info
         shell: bash

@@ -63,11 +63,12 @@ def generate_icon():
         print("OK: Icon bereits vorhanden")
     return True
 
-def build_exe(mode="onedir"):
+def build_exe(mode="onedir", skip_cleanup=False):
     """EXE erstellen
 
     Args:
         mode: 'onedir' für Verzeichnis-Modus (stabiler) oder 'onefile' für einzelne EXE
+        skip_cleanup: Wenn True, wird clean_build() übersprungen (für mehrere Builds)
     """
     # venv-Prüfung für lokale Entwicklung überspringen
     # if not check_venv():
@@ -76,10 +77,13 @@ def build_exe(mode="onedir"):
     print("Starte Starte Build-Prozess...")
     print("=" * 50)
 
-    # Cleanup
-    if not clean_build():
-        print("FEHLER: Build abgebrochen - Cleanup fehlgeschlagen")
-        sys.exit(1)
+    # Cleanup (nur wenn nicht übersprungen)
+    if not skip_cleanup:
+        if not clean_build():
+            print("FEHLER: Build abgebrochen - Cleanup fehlgeschlagen")
+            sys.exit(1)
+    else:
+        print("HINWEIS: Cleanup übersprungen (Multi-Build-Modus)")
 
     # Icon generieren
     if not generate_icon():
@@ -156,9 +160,6 @@ def build_exe(mode="onedir"):
         "--add-data=assets:assets",    # Assets einbinden
         "--add-data=scripts:scripts",  # AHK-Skript einbinden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
-        # Windows-spezifische Optimierungen
-        "--win-private-assemblies",    # Verhindert DLL-Konflikte
-        "--win-no-prefer-redirects",   # Nutzt gebündelte DLLs statt System-DLLs
         # Performance-Optimierungen
         "--optimize=2",                # Höhere Bytecode-Optimierung
         "--strip",                     # Debug-Info entfernen
@@ -254,9 +255,6 @@ def build_bootstrap_installer():
         "--manifest=assets/VoiceTranscriber.manifest",  # Windows-Manifest
         "--name=BootstrapInstaller",   # Name der EXE
         "--add-data=assets;assets",    # Assets einbinden
-        # Windows-spezifische Optimierungen
-        "--win-private-assemblies",    # Verhindert DLL-Konflikte
-        "--win-no-prefer-redirects",   # Nutzt gebündelte DLLs statt System-DLLs
         "--hidden-import=src.downloader",  # Downloader-Modul
         "--hidden-import=urllib.request",   # HTTP-Requests
         "--hidden-import=urllib.error",     # HTTP-Fehlerbehandlung
@@ -498,14 +496,20 @@ def main():
         return
 
     try:
+        # Cleanup NUR einmal am Anfang
+        print("Bereinige alte Builds...")
+        if not clean_build():
+            print("FEHLER: Build abgebrochen - Cleanup fehlgeschlagen")
+            sys.exit(1)
+
         # Standardmäßig --onedir bauen (stabiler!)
-        build_exe(mode="onedir")
+        build_exe(mode="onedir", skip_cleanup=True)
 
         # Optional: --onefile für R2-Deployment bauen
         if build_onefile_flag or build_bootstrap_nsis_flag:
             print("\n" + "=" * 50)
             print("Erstelle zusätzlich --onefile Version für R2-Deployment...")
-            build_exe(mode="onefile")
+            build_exe(mode="onefile", skip_cleanup=True)
 
         # Optional Bootstrap-Installer (PyInstaller) bauen
         if build_bootstrap_flag:
