@@ -6,4 +6,9 @@ Speechering ist eine plattformübergreifende Anwendung für Spracherkennung und 
 This documentation was automatically scaffolded by Backstage.
 
 ## Getting Started
-Add your documentation here.
+- [Installation Guide](02-implementation/build-system-learnings.md)
+
+## Implementation Details
+- [Build System & Versioning Learnings](02-implementation/build-system-learnings.md)
+- [Local Transcription Setup](local_transcription.md)
+- [Deployment Process](Deployment-Prozess.md)

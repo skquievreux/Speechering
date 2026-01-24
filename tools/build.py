@@ -500,22 +500,11 @@ def build_installer():
 
     for path in possible_nsis_paths:
         try:
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a7dd59c (fix(ci): prevent Git Bash path conversion for NSIS commands)
             # Test if makensis executable exists (avoid /VERSION which Git Bash might convert)
             if Path(path).exists() or Path(path).name == 'makensis.exe':
                 # Try to run makensis with a simple test
                 result = subprocess.run([path, '--'], capture_output=True, text=True, timeout=5, encoding='utf-8', errors='replace')
                 # makensis returns non-zero for invalid args, but that proves it exists
-<<<<<<< HEAD
-=======
-            result = subprocess.run([path, '/VERSION'], capture_output=True, text=True, timeout=10, encoding='utf-8', errors='replace')
-            if result.returncode == 0:
->>>>>>> 4826c34 (fix(ci): improve NSIS installation and detection)
-=======
->>>>>>> a7dd59c (fix(ci): prevent Git Bash path conversion for NSIS commands)
                 nsis_path = path
                 print(f"OK: NSIS gefunden: {path}")
                 break
