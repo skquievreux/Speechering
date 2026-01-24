@@ -160,13 +160,13 @@ def build_exe(mode="onedir", skip_cleanup=False):
         "--add-data=assets:assets",    # Assets einbinden
         "--add-data=scripts:scripts",  # AHK-Skript einbinden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
-        # Performance-Optimierungen
-        "--optimize=2",                # Höhere Bytecode-Optimierung
-        "--strip",                     # Debug-Info entfernen
+        # Performance-Optimierungen (KONSERVATIV - verhindert DLL-Korruption)
+        # ENTFERNT: --optimize=2 (zu aggressiv, kann DLLs beschädigen)
+        # ENTFERNT: --strip (kann wichtige DLL-Informationen entfernen)
         # Modul-Excludes für kleinere EXE - EXTREM WICHTIG
         "--exclude-module=torch",      # PyTorch ausschließen (~150MB)
         "--exclude-module=faster_whisper", # Whisper ausschließen (~50MB)
-        "--exclude-module=ctranslate2", 
+        "--exclude-module=ctranslate2",
         "--exclude-module=numpy",      # Numpy ausschließen (wird bei Bedarf geladen)
         "--exclude-module=huggingface_hub",
         "--exclude-module=matplotlib", # Nicht benötigte Module ausschließen
