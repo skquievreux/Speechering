@@ -156,9 +156,6 @@ def build_exe(mode="onedir"):
         "--add-data=assets:assets",    # Assets einbinden
         "--add-data=scripts:scripts",  # AHK-Skript einbinden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
-        # Windows-spezifische Optimierungen
-        "--win-private-assemblies",    # Verhindert DLL-Konflikte
-        "--win-no-prefer-redirects",   # Nutzt gebündelte DLLs statt System-DLLs
         # Performance-Optimierungen
         "--optimize=2",                # Höhere Bytecode-Optimierung
         "--strip",                     # Debug-Info entfernen
@@ -254,9 +251,6 @@ def build_bootstrap_installer():
         "--manifest=assets/VoiceTranscriber.manifest",  # Windows-Manifest
         "--name=BootstrapInstaller",   # Name der EXE
         "--add-data=assets;assets",    # Assets einbinden
-        # Windows-spezifische Optimierungen
-        "--win-private-assemblies",    # Verhindert DLL-Konflikte
-        "--win-no-prefer-redirects",   # Nutzt gebündelte DLLs statt System-DLLs
         "--hidden-import=src.downloader",  # Downloader-Modul
         "--hidden-import=urllib.request",   # HTTP-Requests
         "--hidden-import=urllib.error",     # HTTP-Fehlerbehandlung
