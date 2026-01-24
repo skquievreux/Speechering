@@ -1,3 +1,10 @@
+## [1.9.4](https://github.com/skquievreux/Speechering/compare/v1.9.3...v1.9.4) (2026-01-24)
+
+
+### Bug Fixes
+
+* fix versioning and restore local model download ([#37](https://github.com/skquievreux/Speechering/issues/37)) ([3d9d9c0](https://github.com/skquievreux/Speechering/commit/3d9d9c006de9574ae26878cc7ba328dbabbbcece))
+
 ## [1.9.3](https://github.com/skquievreux/Speechering/compare/v1.9.2...v1.9.3) (2026-01-24)
 
 
