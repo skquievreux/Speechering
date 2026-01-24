@@ -108,6 +108,60 @@ jobs:
           # - VoiceTranscriber_Installer_*.exe (Full NSIS installer)
           poetry run python tools/build.py --onefile --bootstrap-nsis --installer
 
+      - name: Verify Build Artifacts
+        shell: bash
+        run: |
+          echo "=== Build Artifact Verification ==="
+
+          # Check onedir build
+          if [ ! -d "dist/VoiceTranscriber" ]; then
+            echo "❌ ERROR: dist/VoiceTranscriber/ directory missing!"
+            exit 1
+          fi
+          echo "✅ onedir build exists"
+
+          # Check onefile build
+          if [ ! -f "dist/VoiceTranscriber.exe" ]; then
+            echo "❌ ERROR: dist/VoiceTranscriber.exe missing!"
+            exit 1
+          fi
+          ONEFILE_SIZE=$(stat -c%s "dist/VoiceTranscriber.exe")
+          echo "✅ onefile build exists ($(($ONEFILE_SIZE/1024/1024))MB)"
+
+          # Check bootstrap installer
+          if [ ! -f "dist/BootstrapInstaller.exe" ]; then
+            echo "❌ ERROR: dist/BootstrapInstaller.exe missing!"
+            exit 1
+          fi
+          BOOTSTRAP_SIZE=$(stat -c%s "dist/BootstrapInstaller.exe")
+          echo "✅ BootstrapInstaller.exe exists ($(($BOOTSTRAP_SIZE/1024/1024))MB)"
+
+          # Check NSIS outputs
+          if ! ls VoiceTranscriber_Bootstrap_Installer*.exe 1> /dev/null 2>&1; then
+            echo "❌ ERROR: Bootstrap NSIS installer missing!"
+            exit 1
+          fi
+          echo "✅ Bootstrap NSIS installer exists"
+
+          if ! ls VoiceTranscriber_Installer_*.exe 1> /dev/null 2>&1; then
+            echo "❌ ERROR: Full NSIS installer missing!"
+            exit 1
+          fi
+          echo "✅ Full NSIS installer exists"
+
+          # File size sanity checks
+          if [ $ONEFILE_SIZE -lt 10000000 ]; then
+            echo "❌ ERROR: VoiceTranscriber.exe too small (< 10MB)"
+            exit 1
+          fi
+
+          if [ $BOOTSTRAP_SIZE -lt 1000000 ]; then
+            echo "❌ ERROR: BootstrapInstaller.exe too small (< 1MB)"
+            exit 1
+          fi
+
+          echo "=== ✅ All verification checks passed! ==="
+
       - name: Create version info
         shell: bash
         run: |
