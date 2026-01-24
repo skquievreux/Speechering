@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/skquievreux/Speechering/compare/v1.9.1...v1.9.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* handle encoding errors in build script subprocess ([#18](https://github.com/skquievreux/Speechering/issues/18)) ([769b87c](https://github.com/skquievreux/Speechering/commit/769b87c27b66e4eeb75934e1498df64d62d26e3f))
+
 ## [1.9.1](https://github.com/skquievreux/Speechering/compare/v1.9.0...v1.9.1) (2026-01-24)
 
 
