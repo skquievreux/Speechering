@@ -3,7 +3,7 @@
 
 ; Allgemeine Einstellungen
 Name "Voice Transcriber v1.4.1"
-OutFile "VoiceTranscriber_Installer_v1.4.1.exe"
+OutFile "..\VoiceTranscriber_Installer_v1.4.1.exe"
 Unicode True
 InstallDir "$PROGRAMFILES\Voice Transcriber"
 InstallDirRegKey HKLM "Software\VoiceTranscriber" ""

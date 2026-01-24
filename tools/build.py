@@ -375,6 +375,11 @@ def build_bootstrap_installer_nsis():
         result = subprocess.run(nsis_cmd, check=True, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
         if result.returncode == 0:
+            # Debug: NSIS output anzeigen
+            if result.stdout:
+                print("DEBUG: NSIS Output:")
+                print(result.stdout[-500:] if len(result.stdout) > 500 else result.stdout)
+
             # Finde die erstellte Installer-Datei
             installer_files = list(Path(".").glob("VoiceTranscriber_Bootstrap_*.exe"))
             if installer_files:
@@ -383,9 +388,13 @@ def build_bootstrap_installer_nsis():
                 print("OK: Bootstrap-Installer erfolgreich erstellt!")
                 print(f"Datei: Bootstrap-Installer: {installer_file}")
                 print(f"Groesse: Größe: {size_mb:.1f} MB")
+                return True
             else:
-                print("OK: Bootstrap-Installer erfolgreich erstellt!")
-            return True
+                print("FEHLER: Bootstrap-Installer-Datei nicht gefunden!")
+                print(f"FEHLER: Erwartetes Pattern: VoiceTranscriber_Bootstrap_*.exe")
+                all_exe = list(Path(".").glob("VoiceTranscriber*.exe"))
+                print(f"FEHLER: Gefundene Dateien: {[f.name for f in all_exe]}")
+                return False
         else:
             print("FEHLER: NSIS-Bootstrap-Build fehlgeschlagen!")
             print("STDOUT:", result.stdout)
@@ -459,6 +468,15 @@ def build_installer():
         result = subprocess.run(nsis_cmd, check=True, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
         if result.returncode == 0:
+            # Debug: NSIS output anzeigen
+            if result.stdout:
+                print("DEBUG: NSIS Output:")
+                print(result.stdout[-500:] if len(result.stdout) > 500 else result.stdout)
+
+            # Debug: Alle EXE-Dateien auflisten
+            all_exe_files = list(Path(".").glob("VoiceTranscriber*.exe"))
+            print(f"DEBUG: Gefundene EXE-Dateien im Root: {[f.name for f in all_exe_files]}")
+
             # Finde die erstellte Installer-Datei
             installer_files = list(Path(".").glob("VoiceTranscriber_Installer_*.exe"))
             if installer_files:
@@ -467,9 +485,12 @@ def build_installer():
                 print("OK: Installer erfolgreich erstellt!")
                 print(f"Datei: Installer: {installer_file}")
                 print(f"Groesse: Größe: {size_mb:.1f} MB")
+                return True
             else:
-                print("OK: Installer erfolgreich erstellt!")
-            return True
+                print("FEHLER: Installer-Datei nicht gefunden!")
+                print(f"FEHLER: Erwartetes Pattern: VoiceTranscriber_Installer_*.exe")
+                print(f"FEHLER: Gefundene Dateien: {[f.name for f in all_exe_files]}")
+                return False
         else:
             print("FEHLER: NSIS-Build fehlgeschlagen!")
             print("STDOUT:", result.stdout)
