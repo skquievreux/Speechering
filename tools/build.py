@@ -341,12 +341,13 @@ def build_bootstrap_installer_nsis():
 
     for path in possible_nsis_paths:
         try:
-            result = subprocess.run([path, '/VERSION'], capture_output=True, text=True, timeout=10)
+            result = subprocess.run([path, '/VERSION'], capture_output=True, text=True, timeout=10, encoding='utf-8', errors='replace')
             if result.returncode == 0:
                 nsis_path = path
                 print(f"OK: NSIS gefunden: {path}")
                 break
-        except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError) as e:
+            print(f"DEBUG: NSIS-Suche fehlgeschlagen für {path}: {type(e).__name__}")
             continue
 
     if not nsis_path:
@@ -434,12 +435,13 @@ def build_installer():
 
     for path in possible_nsis_paths:
         try:
-            result = subprocess.run([path, '/VERSION'], capture_output=True, text=True, timeout=10)
+            result = subprocess.run([path, '/VERSION'], capture_output=True, text=True, timeout=10, encoding='utf-8', errors='replace')
             if result.returncode == 0:
                 nsis_path = path
                 print(f"OK: NSIS gefunden: {path}")
                 break
-        except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError) as e:
+            print(f"DEBUG: NSIS-Suche fehlgeschlagen für {path}: {type(e).__name__}")
             continue
 
     if not nsis_path:
