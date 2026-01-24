@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/skquievreux/Speechering/compare/v1.9.2...v1.9.3) (2026-01-24)
+
+
+### Bug Fixes
+
+* **windows:** resolve DLL loading error and missing Start Menu entries ([#19](https://github.com/skquievreux/Speechering/issues/19)) ([3928aee](https://github.com/skquievreux/Speechering/commit/3928aeef4a5d3b137f1d6677bdb6d419b81aeb4f)), closes [hi#DPI](https://github.com/hi/issues/DPI) [Hi#DPI](https://github.com/Hi/issues/DPI)
+
 ## [1.9.2](https://github.com/skquievreux/Speechering/compare/v1.9.1...v1.9.2) (2026-01-24)
 
 

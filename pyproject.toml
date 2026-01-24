@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "speechering"
-version = "1.9.2"  # Managed by semantic-release
+version = "1.9.3"  # Managed by semantic-release
 description = "Professional Windows Desktop Voice-to-Text Transcription with AI Support"
 authors = ["Quievreux"]
 readme = "docs/README.md"
