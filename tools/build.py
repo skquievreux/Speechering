@@ -268,7 +268,14 @@ def build_bootstrap_installer():
     print(f"Command: {' '.join(pyinstaller_cmd)}")
 
     try:
-        result = subprocess.run(pyinstaller_cmd, check=True, capture_output=True, text=True)
+        result = subprocess.run(
+            pyinstaller_cmd,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            errors='replace'
+        )
 
         if result.returncode == 0:
             print("OK: Bootstrap-Installer erfolgreich erstellt!")
@@ -315,6 +322,16 @@ def build_bootstrap_installer():
 def build_bootstrap_installer_nsis():
     """Erstellt Bootstrap-Installer mit NSIS"""
     print("Build: Erstelle Bootstrap-Installer mit NSIS...")
+
+    # VERIFICATION: Check if BootstrapInstaller.exe exists
+    bootstrap_exe = Path("dist/BootstrapInstaller.exe")
+    if not bootstrap_exe.exists():
+        print(f"FEHLER: {bootstrap_exe} nicht gefunden!")
+        print("   Bootstrap-Installer muss zuerst mit build_bootstrap_installer() erstellt werden")
+        return False
+    else:
+        size_mb = bootstrap_exe.stat().st_size / (1024 * 1024)
+        print(f"OK: Bootstrap-Installer gefunden: {bootstrap_exe} ({size_mb:.1f} MB)")
 
     # Prüfe ob NSIS verfügbar ist
     nsis_path = None
@@ -389,6 +406,16 @@ def build_bootstrap_installer_nsis():
 def build_installer():
     """Erstellt Windows-Installer mit NSIS"""
     print("Build: Erstelle Windows-Installer...")
+
+    # VERIFICATION: Check if onedir build exists
+    onedir_path = Path("dist/VoiceTranscriber")
+    if not onedir_path.exists() or not onedir_path.is_dir():
+        print(f"FEHLER: {onedir_path}/ nicht gefunden!")
+        print("   onedir Build muss zuerst mit build_exe(mode='onedir') erstellt werden")
+        return False
+    else:
+        file_count = len(list(onedir_path.rglob('*')))
+        print(f"OK: onedir Build gefunden: {onedir_path}/ ({file_count} Dateien)")
 
     # Prüfe ob NSIS verfügbar ist
     nsis_path = None
