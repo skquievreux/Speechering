@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/skquievreux/Speechering/compare/v1.9.0...v1.9.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* explicit disable of upx by removing it from ci environment ([d949fe6](https://github.com/skquievreux/Speechering/commit/d949fe67f509f198bfab53dd56f0923501913121))
+
 # [1.9.0](https://github.com/skquievreux/Speechering/compare/v1.8.3...v1.9.0) (2026-01-23)
 
 
