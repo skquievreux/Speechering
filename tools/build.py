@@ -512,7 +512,8 @@ def main():
             build_exe(mode="onefile", skip_cleanup=True)
 
         # Optional Bootstrap-Installer (PyInstaller) bauen
-        if build_bootstrap_flag:
+        # Benötigt für --bootstrap-nsis, daher automatisch bauen wenn nötig
+        if build_bootstrap_flag or build_bootstrap_nsis_flag:
             print("\n" + "=" * 50)
             if build_bootstrap_installer():
                 print("\nERFOLG: Bootstrap-Installer (PyInstaller) erfolgreich!")
