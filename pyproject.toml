@@ -34,6 +34,10 @@ win10toast = {version = "^0.9", markers = "platform_system == 'Windows'"}
 
 # Deployment
 boto3 = "^1.42.34"
+jaraco-text = "^4.0.0"
+jaraco-classes = "^3.4.0"
+jaraco-context = "^6.1.0"
+jaraco-functools = "^4.4.0"
 
 [tool.poetry.extras]
 ai = ["faster-whisper", "ctranslate2", "torch", "numpy", "huggingface-hub"]

@@ -1,0 +1,12 @@
+{
+  "last_updated": "2026-01-24T20:14:00.631662",
+  "files": {
+    "VoiceTranscriber.exe": {
+      "version": "latest",
+      "size": 27995074,
+      "checksum": "57b5a9c34c3790e493083bd125aed487df7539ccb9dc59b83091d1ae4f270492",
+      "last_downloaded": "2026-01-24T20:14:00.631662",
+      "path": "C:\\CODE\\GIT\\Speechering\\artifacts_21306957833\\voice-transcriber-builds-1.9.1\\VoiceTranscriber.exe"
+    }
+  }
+}
