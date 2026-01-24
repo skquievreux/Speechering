@@ -128,16 +128,51 @@ Section "Voice Transcriber Bootstrap" SecApp
     create_shortcuts_app:
         ; Desktop-Verknüpfung auf die eigentliche App
         DetailPrint "Erstelle Desktop-Verknüpfung für Voice Transcriber..."
-        CreateShortCut "$DESKTOP\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0
+        CreateShortCut "$DESKTOP\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber - Sprachtranskription"
+
+        ; Prüfe ob Desktop-Verknüpfung erstellt wurde
+        IfFileExists "$DESKTOP\Voice Transcriber.lnk" desktop_ok desktop_failed
+        desktop_ok:
+            DetailPrint "✅ Desktop-Verknüpfung erfolgreich erstellt"
+            Goto desktop_done
+        desktop_failed:
+            DetailPrint "⚠️ Desktop-Verknüpfung konnte nicht erstellt werden"
+        desktop_done:
 
         ; Startmenü-Verknüpfungen
         DetailPrint "Erstelle Startmenü-Einträge..."
         CreateDirectory "$SMPROGRAMS\Voice Transcriber"
-        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe"
-        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Installation erneut durchführen.lnk" "$INSTDIR\BootstrapInstaller.exe"
-        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe"
-        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\README.md"
-        Goto shortcuts_done
+
+        ; Prüfe ob Verzeichnis erstellt wurde
+        IfFileExists "$SMPROGRAMS\Voice Transcriber" startmenu_dir_ok startmenu_dir_failed
+        startmenu_dir_ok:
+            DetailPrint "✅ Startmenü-Verzeichnis erstellt: $SMPROGRAMS\Voice Transcriber"
+
+            ; Hauptverknüpfung mit Icon
+            CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber starten"
+            DetailPrint "Erstelle Verknüpfung: Voice Transcriber.lnk"
+
+            ; Bootstrap-Verknüpfung
+            CreateShortCut "$SMPROGRAMS\Voice Transcriber\Installation erneut durchführen.lnk" "$INSTDIR\BootstrapInstaller.exe" "" "$INSTDIR\BootstrapInstaller.exe" 0 SW_SHOWNORMAL "" "Installation erneut durchführen"
+            DetailPrint "Erstelle Verknüpfung: Installation erneut durchführen.lnk"
+
+            ; Deinstaller-Verknüpfung
+            CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber deinstallieren"
+            DetailPrint "Erstelle Verknüpfung: Deinstallieren.lnk"
+
+            ; Dokumentation-Verknüpfung
+            CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\README.md" "" "%SystemRoot%\system32\SHELL32.dll" 70 SW_SHOWNORMAL "" "Dokumentation öffnen"
+            DetailPrint "Erstelle Verknüpfung: Dokumentation.lnk"
+
+            ; Verifiziere Verknüpfungen
+            IfFileExists "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" 0 +2
+                DetailPrint "✅ Startmenü-Verknüpfungen erfolgreich erstellt"
+
+            Goto shortcuts_done
+
+        startmenu_dir_failed:
+            DetailPrint "⚠️ Startmenü-Verzeichnis konnte nicht erstellt werden"
+            MessageBox MB_ICONEXCLAMATION|MB_OK "Das Startmenü-Verzeichnis konnte nicht erstellt werden.$\n$\nPfad: $SMPROGRAMS\Voice Transcriber$\n$\nBitte überprüfen Sie die Berechtigungen."
 
     create_shortcuts_bootstrap:
         ; Fallback: Wenn Download fehlgeschlagen, Verknüpfung auf Bootstrap erstellen

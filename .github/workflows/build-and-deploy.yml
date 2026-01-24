@@ -96,11 +96,12 @@ jobs:
 
 
 
-      - name: Build VoiceTranscriber EXE
+      - name: Build VoiceTranscriber EXE (onedir + onefile)
         shell: bash
         run: |
           # Build with Poetry
-          poetry run python tools/build.py
+          # onedir für stabilen NSIS-Installer, onefile für R2-Download
+          poetry run python tools/build.py --onefile
 
       - name: Build Bootstrap Installer
         shell: bash

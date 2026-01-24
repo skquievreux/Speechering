@@ -62,12 +62,13 @@ Section "Voice Transcriber" SecApp
 
     SetOutPath "$INSTDIR"
 
-    ; Hauptprogrammdateien kopieren
-    DetailPrint "Installiere Voice Transcriber..."
-    File "..\dist\VoiceTranscriber.exe"
+    ; Hauptprogrammdateien kopieren (GESAMTES Verzeichnis für --onedir Modus)
+    DetailPrint "Installiere Voice Transcriber Anwendungsdateien..."
+    File /r "..\dist\VoiceTranscriber\*.*"
 
     ; AHK-Skript kopieren
     DetailPrint "Installiere AutoHotkey-Skript..."
+    SetOutPath "$INSTDIR"
     File "..\scripts\mouse_toggle.ahk"
 
     ; Dokumentation kopieren
@@ -106,15 +107,31 @@ Section "Voice Transcriber" SecApp
 
     ; Desktop-Verknüpfung
     DetailPrint "Erstelle Desktop-Verknüpfung..."
-    CreateShortCut "$DESKTOP\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0
+    CreateShortCut "$DESKTOP\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber - Sprachtranskription"
 
-    ; Startmenü-Verknüpfung
-    DetailPrint "Erstelle Startmenü-Eintrag..."
+    ; Startmenü-Verknüpfungen mit vollständigen Icons und Beschreibungen
+    DetailPrint "Erstelle Startmenü-Einträge..."
     CreateDirectory "$SMPROGRAMS\Voice Transcriber"
-    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe"
-    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe"
-    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\MOUSE_WHEEL_README.md"
-    CreateShortCut "$SMPROGRAMS\Voice Transcriber\Versionshinweise.lnk" "$INSTDIR\CHANGELOG.md"
+
+    ; Prüfe ob Startmenü-Verzeichnis erstellt wurde
+    IfFileExists "$SMPROGRAMS\Voice Transcriber" startmenu_ok startmenu_failed
+    startmenu_ok:
+        DetailPrint "✅ Startmenü-Verzeichnis erstellt"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber starten"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber deinstallieren"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\MOUSE_WHEEL_README.md" "" "%SystemRoot%\system32\SHELL32.dll" 70 SW_SHOWNORMAL "" "Dokumentation öffnen"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Versionshinweise.lnk" "$INSTDIR\CHANGELOG.md" "" "%SystemRoot%\system32\SHELL32.dll" 70 SW_SHOWNORMAL "" "Versionshinweise öffnen"
+
+        ; Verifiziere dass Verknüpfungen erstellt wurden
+        IfFileExists "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" 0 +2
+            DetailPrint "✅ Startmenü-Verknüpfungen erfolgreich erstellt"
+        Goto startmenu_done
+
+    startmenu_failed:
+        DetailPrint "⚠️ Startmenü-Verzeichnis konnte nicht erstellt werden"
+        MessageBox MB_ICONEXCLAMATION|MB_OK "Das Startmenü-Verzeichnis konnte nicht erstellt werden.$\n$\nPfad: $SMPROGRAMS\Voice Transcriber"
+
+    startmenu_done:
 
     ; Installationsdatum setzen
     ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VoiceTranscriber" "InstallDate"
@@ -137,18 +154,9 @@ Section "Uninstall"
     DetailPrint "Beende AutoHotkey-Skript..."
     ExecWait 'taskkill /f /im AutoHotkey.exe /fi "WINDOWTITLE eq Voice Transcriber*"'
 
-    ; Dateien löschen
-    DetailPrint "Entferne Programmdateien..."
-    Delete "$INSTDIR\VoiceTranscriber.exe"
-    Delete "$INSTDIR\mouse_toggle.ahk"
-    Delete "$INSTDIR\MOUSE_WHEEL_README.md"
-    Delete "$INSTDIR\README.md"
-    Delete "$INSTDIR\LICENSE"
-    Delete "$INSTDIR\CHANGELOG.md"
-    Delete "$INSTDIR\uninstall.exe"
-
-    ; Verzeichnis entfernen (nur wenn leer)
-    RMDir "$INSTDIR"
+    ; Verzeichnis rekursiv entfernen (für --onedir Modus)
+    DetailPrint "Entferne Installationsverzeichnis..."
+    RMDir /r "$INSTDIR"
 
     ; Registry bereinigen
     DetailPrint "Bereinige Registry..."
