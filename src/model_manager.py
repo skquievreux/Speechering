@@ -21,33 +21,52 @@ def get_models_dir() -> Path:
     base_dir.mkdir(parents=True, exist_ok=True)
     return base_dir
 
-def get_model_path(model_name: str = "base") -> Optional[Path]:
+def get_model_path(model_name: str = "base", search_dir: Optional[Path] = None) -> Optional[Path]:
     """Returns the path to a specific model if it exists"""
-    models_dir = get_models_dir()
+    search_paths = []
     
-    # 1. Check direct directory (e.g. models/base)
-    direct_path = models_dir / model_name
-    if direct_path.exists() and (direct_path / "model.bin").exists():
-        return direct_path
+    # 1. If explicit search_dir is provided, use only that (e.g. during download)
+    if search_dir:
+        search_paths.append(search_dir)
+    else:
+        # a. Check AppData (User downloaded)
+        search_paths.append(get_models_dir())
         
-    # 2. Check huggingface cache format (e.g. models/models--Systran--faster-whisper-base)
-    # This is how faster-whisper stores it when download_root is used
-    hf_folder_name = f"models--Systran--faster-whisper-{model_name}"
-    hf_path = models_dir / hf_folder_name
-    
-    if hf_path.exists():
-        # Find the latest snapshot
-        snapshots_dir = hf_path / "snapshots"
-        if snapshots_dir.exists():
-            snapshots = list(snapshots_dir.iterdir())
-            if snapshots:
-                # Use the latest snapshot directory
-                return snapshots[0]
-                
-    # 3. Fallback: faster-whisper might have downloaded it directly into the download_root 
-    # if it's not using the cache structure (unlikely with recent versions but for safety)
-    if (models_dir / "model.bin").exists() and model_name == "base": # This is risky
-        pass
+        # b. Check Application Directory (Bundled with EXE or in Dev-Root)
+        import sys
+        if getattr(sys, 'frozen', False):
+            # PyInstaller temp path (_MEIPASS)
+            if hasattr(sys, '_MEIPASS'):
+                search_paths.append(Path(sys._MEIPASS) / "models")
+            # Also check next to EXE (portable/onedir)
+            search_paths.append(Path(sys.executable).parent / "models")
+        else:
+            # Dev path: project_root/models
+            search_paths.append(Path(__file__).parent.parent / "models")
+
+    for models_dir in search_paths:
+        if not models_dir.exists():
+            continue
+            
+        # 1. Check direct directory (e.g. models/base)
+        direct_path = models_dir / model_name
+        if direct_path.exists() and (direct_path / "model.bin").exists():
+            return direct_path
+            
+        # 2. Check huggingface cache format (e.g. models/models--Systran--faster-whisper-base)
+        hf_folder_name = f"models--Systran--faster-whisper-{model_name}"
+        hf_path = models_dir / hf_folder_name
+        
+        if hf_path.exists():
+            snapshots_dir = hf_path / "snapshots"
+            if snapshots_dir.exists():
+                snapshots = list(snapshots_dir.iterdir())
+                if snapshots:
+                    return snapshots[0]
+                    
+        # 3. Fallback: Check if model.bin is directly in the search_dir (legacy/direct structure)
+        if (models_dir / "model.bin").exists() and model_name == "base":
+             return models_dir
 
     return None
 
@@ -73,9 +92,8 @@ def download_whisper_model(model_name: str = "base") -> bool:
             download_root=str(temp_download_root)
         )
         
-        # Now find the downloaded files and move them to our clean target_dir
-        # This avoids the complex huggingface-hub cache structure for our UI
-        path = get_model_path(model_name) # This uses the new detection logic
+        # Now find the downloaded files in the temp directory and move them to our clean target_dir
+        path = get_model_path(model_name, search_dir=temp_download_root)
         
         if path and path.exists():
             target_dir.mkdir(parents=True, exist_ok=True)

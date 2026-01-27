@@ -105,6 +105,54 @@ def generate_icon():
         print("OK: Icon bereits vorhanden")
     return True
 
+def prepare_bundled_models(model_names=["base"]):
+    """Kopiert heruntergeladene Modelle aus AppData in den Projekt-Root für den Build"""
+    try:
+        if os.name == 'nt':
+            appdata_models = Path(os.environ.get('APPDATA', '')) / "VoiceTranscriber" / "models"
+        else:
+            appdata_models = Path.home() / ".voicetranscriber" / "models"
+            
+        if not appdata_models.exists():
+            print(f"WARNUNG: AppData Modell-Verzeichnis nicht gefunden: {appdata_models}")
+            return False
+
+        models_root = Path("models")
+        
+        # Falls Modelle schon da sind, vorher löschen um sauber zu sein
+        if models_root.exists():
+            shutil.rmtree(models_root)
+        models_root.mkdir()
+
+        success_count = 0
+        for model_name in model_names:
+            source_dir = appdata_models / model_name
+            target_dir = models_root / model_name
+            
+            if not source_dir.exists():
+                print(f"WARNUNG: Modell '{model_name}' nicht in AppData gefunden: {source_dir}")
+                continue
+                
+            print(f"Kopiere Modell '{model_name}' für Build...")
+            target_dir.mkdir(parents=True, exist_ok=True)
+            
+            for item in source_dir.iterdir():
+                if item.is_file():
+                    shutil.copy2(item, target_dir / item.name)
+            
+            # Prüfe ob model.bin da ist
+            if (target_dir / "model.bin").exists():
+                success_count += 1
+                print(f"OK: Modell '{model_name}' bereitgestellt.")
+            else:
+                print(f"WARNUNG: Modell '{model_name}' scheint unvollständig.")
+                
+        return success_count > 0
+        
+    except Exception as e:
+        print(f"FEHLER beim Vorbereiten der Modelle: {e}")
+        return False
+
 def build_exe(mode="onedir", skip_cleanup=False):
     """EXE erstellen
 
@@ -206,6 +254,7 @@ def build_exe(mode="onedir", skip_cleanup=False):
         "--name=VoiceTranscriber",     # Name der EXE
         "--add-data=assets:assets",    # Assets einbinden
         "--add-data=scripts:scripts",  # AHK-Skript einbinden
+        "--add-data=models:models" if Path("models").exists() else "", # Modelle einbinden falls vorhanden
         "--paths=src",                 # src-Verzeichnis zum Python-Pfad hinzufügen
         
         # AI/ML modules for Local Transcription (REQUIRED)
@@ -230,6 +279,9 @@ def build_exe(mode="onedir", skip_cleanup=False):
     ] + hidden_imports + [
         "main_exe.py"                  # Einstiegspunkt (PyInstaller-optimiert)
     ]
+    
+    # Empty strings entfernen (z.B. wenn Modelle nicht vorhanden)
+    pyinstaller_cmd = [arg for arg in pyinstaller_cmd if arg]
 
     print("Build: Führe PyInstaller aus...")
     print(f"Command: {' '.join(pyinstaller_cmd)}")
@@ -585,6 +637,7 @@ def main():
     build_bootstrap_flag = "--bootstrap" in sys.argv
     build_bootstrap_nsis_flag = "--bootstrap-nsis" in sys.argv
     build_onefile_flag = "--onefile" in sys.argv  # Für R2-Deployment
+    include_models_flag = "--include-models" in sys.argv # Modelle einbetten
     help_flag = "--help" in sys.argv or "-h" in sys.argv
 
     # Hilfe anzeigen
@@ -596,6 +649,7 @@ def main():
         print("  --bootstrap      Erstellt kleinen Bootstrap-Installer (PyInstaller)")
         print("  --bootstrap-nsis Erstellt kleinen Bootstrap-Installer (NSIS)")
         print("  --onefile        Erstellt zusätzlich eine --onefile Version für R2")
+        print("  --include-models Bettet aktuell installierte Whisper-Modelle (base) ein")
         print("  --help, -h       Diese Hilfe anzeigen")
         print("")
         print("Build-Modi:")
@@ -616,6 +670,19 @@ def main():
         if not clean_build():
             print("FEHLER: Build abgebrochen - Cleanup fehlgeschlagen")
             sys.exit(1)
+
+        # Optional: Modelle vorbereiten
+        if include_models_flag:
+            print("\nBereite Modelle für Bundle vor...")
+            if prepare_bundled_models(["base"]):
+                print("ERFOLG: Modelle wurden für den Build vorbereitet.")
+            else:
+                print("WARNUNG: Keine Modelle zum Einbetten gefunden.")
+                if sys.stdin.isatty():
+                    if not input("Trotzdem fortfahren? (y/n): ").lower().startswith('y'):
+                        sys.exit(1)
+                else:
+                    print("Automatischer Modus: Fahre ohne Modelle fort.")
 
         # Standardmäßig --onedir bauen (stabiler!)
         build_exe(mode="onedir", skip_cleanup=True)
