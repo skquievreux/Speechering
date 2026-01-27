@@ -4,8 +4,18 @@ Zeigt dem User freundliche Fehler- und Status-Meldungen.
 """
 
 import logging
+import threading
+import os
 from enum import Enum
 from typing import Optional
+
+# Versuche win10toast zu importieren, aber falle weich, falls es nicht da ist
+try:
+    from win10toast import ToastNotifier
+    TOAST_AVAILABLE = True
+except ImportError:
+    ToastNotifier = None
+    TOAST_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +34,58 @@ class NotificationService:
     def __init__(self):
         self.enabled = True
         self._notification_history = []
+        self._lock = threading.Lock()
+        
+    def show_notification(self, title: str, message: str, type: NotificationType = NotificationType.INFO, duration: int = 5):
+        """Zeigt eine System-Benachrichtigung an (Thread-Safe)"""
+        if not self.enabled:
+            logger.debug(f"Notifications deaktiviert - überspringe: {message}")
+            return
+
+        # Logging immer ausführen, auch wenn keine GUI angezeigt wird
+        log_msg = f"Notification [{type.value}]: {title} - {message}"
+        if type == NotificationType.ERROR:
+            logger.error(log_msg)
+        elif type == NotificationType.WARNING:
+            logger.warning(log_msg)
+        else:
+            logger.info(log_msg)
+
+        if not TOAST_AVAILABLE:
+            logger.debug("win10toast nicht verfügbar, verwende Fallback")
+            # Fallback to tkinter messagebox for errors, or just log for others
+            if type == NotificationType.ERROR:
+                self._fallback_notification(message, type, title)
+            return
+
+        # Toast in einem separaten Thread ausführen, um Blockieren der Main-Loop zu verhindern
+        # Daemon Thread damit er das Programm nicht am Beenden hindert
+        thread = threading.Thread(target=self._show_toast_safe, args=(title, message, type, duration))
+        thread.daemon = True
+        thread.start()
+
+    def _show_toast_safe(self, title: str, message: str, type: NotificationType, duration: int):
+        """Interne Methode zum sicheren Anzeigen des Toasts"""
+        with self._lock:
+            try:
+                # Icon basierend auf Typ wählen (optional, standardmäßig das App-Icon oder Python-Icon)
+                icon_path = "assets/icon.ico"
+                if not os.path.exists(icon_path):
+                    icon_path = None
+                
+                # Immer eine NEUE Instanz erstellen, da win10toast oft Probleme mit Wiederverwendung hat
+                toaster = ToastNotifier()
+                
+                toaster.show_toast(
+                    title=title,
+                    msg=message,
+                    icon_path=icon_path,
+                    duration=max(1, int(duration / 1000)), # Sekunden, mind. 1
+                    threaded=False # Wir sind schon in einem Thread
+                )
+            except Exception as e:
+                logger.error(f"Fehler beim Anzeigen der Notification: {e}")
+                # Fallback: Nur Log, kein Crash
 
     def notify(self,
                message: str,
@@ -57,18 +119,32 @@ class NotificationService:
             # Windows Toast Notification (optional)
             try:
                 from win10toast import ToastNotifier
-                toaster = ToastNotifier()
+                import threading
+                
+                # Toaster in gewissem Rahmen thread-sicherer machen
+                def _show_toast_safe():
+                    try:
+                        import os
+                        from win10toast import ToastNotifier
+                        toaster = ToastNotifier()
+                        icon_path = "assets/icon.ico"
+                        if not os.path.exists(icon_path):
+                            icon_path = None
+                            
+                        toaster.show_toast(
+                            title=title,
+                            msg=message,
+                            icon_path=icon_path,
+                            duration=max(1, int(duration / 1000)),  # Sekunden, mind. 1
+                            threaded=False  # Wir sind bereits in einem eigenen Thread
+                        )
+                    except Exception as toast_e:
+                        logger.warning(f"Interner Toast-Fehler: {toast_e}")
 
-                # Icon basierend auf Type
-                icon_path = "assets/icon.ico"
-
-                toaster.show_toast(
-                    title=title,
-                    msg=message,
-                    icon_path=icon_path,
-                    duration=duration / 1000,  # Sekunden
-                    threaded=True
-                )
+                # Toast in separatem Thread starten um Haupt-Thread nicht zu blockieren
+                import threading
+                toast_thread = threading.Thread(target=_show_toast_safe, daemon=True)
+                toast_thread.start()
                 return True
 
             except ImportError:

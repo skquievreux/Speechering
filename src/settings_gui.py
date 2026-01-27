@@ -438,6 +438,17 @@ class SettingsGUI:
         # Initialen Status prüfen
         self.window.after(500, self._update_model_status)
         
+        # Info-Text
+        info_frame = ttk.Frame(transcription_frame)
+        info_frame.pack(fill='x', pady=10)
+
+        info_text = """💡 Hinweise:
+• Lokale Modelle benötigen beim ersten Start Zeit zum Download
+• GPU-Beschleunigung wird automatisch verwendet (falls verfügbar)
+• Bei Problemen mit lokalem Modell wechselt die App automatisch zur API"""
+
+        ttk.Label(info_frame, text=info_text, foreground="blue", justify="left").pack(anchor='w')
+        
     def _update_model_status(self):
         """Aktualisiert den Status des aktuell ausgewählten Modells"""
         try:
@@ -486,17 +497,6 @@ class SettingsGUI:
                 self.window.after(0, lambda: self.download_btn.config(state="normal"))
 
         threading.Thread(target=download_thread, daemon=True).start()
-
-        # Info-Text
-        info_frame = ttk.Frame(transcription_frame)
-        info_frame.pack(fill='x', pady=10)
-
-        info_text = """💡 Hinweise:
-• Lokale Modelle benötigen beim ersten Start Zeit zum Download
-• GPU-Beschleunigung wird automatisch verwendet (falls verfügbar)
-• Bei Problemen mit lokalem Modell wechselt die App automatisch zur API"""
-
-        ttk.Label(info_frame, text=info_text, foreground="blue", justify="left").pack(anchor='w')
 
     def _create_vocabulary_tab(self, parent):
         """Erstellt den Vokabular-Tab für AI-Prompts"""

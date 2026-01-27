@@ -14,21 +14,17 @@ MButton::
     recording := !recording
 
     if (recording) {
-        ; Starte Aufnahme: Simuliere F12 gedrückt
+        ; Starte Aufnahme: Simuliere F12 gedrückt (halten)
         Send {F12 down}
-        Sleep 50
-        Send {F12 up}
 
         ; Optional: Visuelles Feedback (TrayTip)
-        TrayTip, Voice Transcriber, Aufnahme gestartet, 1, 1
+        TrayTip, Voice Transcriber, Aufnahme läuft..., 1, 1
     } else {
-        ; Stoppe Aufnahme: Simuliere F12 gedrückt
-        Send {F12 down}
-        Sleep 50
+        ; Stoppe Aufnahme: Simuliere F12 loslassen
         Send {F12 up}
 
         ; Optional: Visuelles Feedback
-        TrayTip, Voice Transcriber, Aufnahme gestoppt, 1, 1
+        TrayTip, Voice Transcriber, Aufnahme beendet, 1, 1
     }
 return
 
