@@ -499,8 +499,6 @@ class SettingsGUI:
                 
             os.startfile(debug_file)
         except Exception as e:
-            os.startfile(debug_file)
-        except Exception as e:
             logger.error(f"Fehler beim Öffnen der Debug-Datei: {e}")
             logger.error(traceback.format_exc())
             messagebox.showerror("Fehler", f"Konnte Datei nicht öffnen: {e}")

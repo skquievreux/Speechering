@@ -288,7 +288,11 @@ class VoiceTranscriberApp:
             # 5. Daten laden / Komprimieren
             compressed_data = None
             try:
-                from src.audio_recorder import PYDUB_AVAILABLE
+                # Prüfe ob pydub verfügbar
+                try:
+                    from .audio_recorder import PYDUB_AVAILABLE
+                except ImportError:
+                    from audio_recorder import PYDUB_AVAILABLE
 
                 if PYDUB_AVAILABLE and config.AUDIO_COMPRESSION_ENABLED:
                     logger.info("Komprimiere Audio...")
@@ -370,8 +374,6 @@ class VoiceTranscriberApp:
                 if processed:
                     corrected_text = processed
             except Exception as e:
-                logger.warning(f"Text-Korrektur fehlgeschlagen: {e}")
-
                 logger.warning(f"Text-Korrektur fehlgeschlagen: {e}")
 
             self._write_debug_entry(f"Transkript: {corrected_text}")
