@@ -37,6 +37,7 @@ try:
     from .hotkey_listener import HotkeyListener
     from .mouse_integration import MouseWheelIntegration
     from .notification import notification_service
+    from .resources import get_resource_path
     from .settings_gui import SettingsGUI
     from .text_processor import TextProcessor
     from .transcription import TranscriptionService
@@ -59,6 +60,7 @@ except ImportError:
     from hotkey_listener import HotkeyListener
     from mouse_integration import MouseWheelIntegration
     from notification import notification_service
+    from resources import get_resource_path
     from settings_gui import SettingsGUI
     from text_processor import TextProcessor
     from transcription import TranscriptionService
@@ -168,11 +170,13 @@ class VoiceTranscriberApp:
         """Erstellt das System Tray Icon"""
         try:
             # Lade Icon (fallback auf generisches Icon)
-            icon_path = "assets/icon.ico"
+            # Lade Icon (jetzt über get_resource_path für korrekte Auflösung in EXE)
+            icon_path = get_resource_path("assets/icon.ico")
             try:
                 icon = Image.open(icon_path)
             except FileNotFoundError:
-                # Erstelle einfaches Icon
+                logger.warning(f"Icon nicht gefunden unter {icon_path} - verwende Fallback")
+                # Erstelle einfaches Icon als letzten Rettungsanker
                 icon = Image.new('RGB', (64, 64), color='blue')
 
             # Tray Menü
@@ -431,7 +435,8 @@ class VoiceTranscriberApp:
 
             # Icon setzen (falls verfügbar)
             try:
-                root.iconbitmap("assets/icon.ico")
+                icon_path = get_resource_path("assets/icon.ico")
+                root.iconbitmap(str(icon_path))
             except:
                 pass
 

@@ -117,8 +117,22 @@ class Config:
         self.AUDIO_DEVICE_INDEX: int = int(os.getenv('AUDIO_DEVICE_INDEX', '-1'))  # -1 = default
 
         # Local Transcription (benutzerspezifisch konfigurierbar)
-        self.USE_LOCAL_TRANSCRIPTION: bool = user_config.get('transcription.use_local', False) if self.user_config_loaded else os.getenv('USE_LOCAL_TRANSCRIPTION', 'false').lower() == 'true'
         self.WHISPER_MODEL_SIZE: str = user_config.get('transcription.whisper_model_size', 'base') if self.user_config_loaded else os.getenv('WHISPER_MODEL_SIZE', 'base')
+        
+        # Smart Default: Wenn Modell vorhanden, lokal bevorzugen
+        from .model_manager import get_model_path
+        model_exists = get_model_path(self.WHISPER_MODEL_SIZE) is not None
+        
+        if self.user_config_loaded:
+            # Falls in Config noch nichts steht, aber Modell da ist -> Einschalten
+            if user_config.get('transcription.use_local') is None and model_exists:
+                logger.info(f"Modell '{self.WHISPER_MODEL_SIZE}' gefunden - aktiviere lokale Transkription als Standard")
+                user_config.set('transcription.use_local', True)
+                self.USE_LOCAL_TRANSCRIPTION = True
+            else:
+                self.USE_LOCAL_TRANSCRIPTION = user_config.get('transcription.use_local', False)
+        else:
+            self.USE_LOCAL_TRANSCRIPTION = os.getenv('USE_LOCAL_TRANSCRIPTION', str(model_exists)).lower() == 'true'
 
         # Audio Device Name (für bessere Persistenz als Index)
         self.AUDIO_DEVICE_NAME: str = user_config.get('audio.device_name', '') if self.user_config_loaded else os.getenv('AUDIO_DEVICE_NAME', '')
