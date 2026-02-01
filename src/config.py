@@ -70,6 +70,15 @@ class Config:
             os.makedirs(appdata, exist_ok=True)
             self.LOG_FILE = os.path.join(appdata, 'voice_transcriber.log')
 
+        # Debug-Datei Pfad standardisieren (Immer AppData für Konsistenz)
+        appdata = os.path.join(os.environ.get('APPDATA', ''), 'VoiceTranscriber')
+        os.makedirs(appdata, exist_ok=True)
+        self.DEBUG_FILE_PATH = os.path.join(appdata, 'voice_transcriber_debug.txt')
+        self.HISTORY_FILE_PATH = os.path.join(appdata, 'transcription_history.txt')
+        
+        # Logging für Debug-Pfad
+        # logger.info(f"Debug-Datei Pfad: {self.DEBUG_FILE_PATH}")
+
         # Temporary Files
         self.TEMP_DIR: str = os.getenv('TEMP_DIR', 'temp/')
 

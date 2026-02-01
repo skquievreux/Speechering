@@ -4,6 +4,7 @@ Koordiniert alle Komponenten der Anwendung.
 """
 
 import logging
+import logging.handlers
 import os
 import sys
 import threading
@@ -117,6 +118,7 @@ class VoiceTranscriberApp:
 
         # Debug-Datei für Transkriptionsergebnisse
         self.debug_file_path = None
+        self.history_logger = None
 
         # Singleton-Instanz des TranscriptionService
         self._transcription_service_instance = None
@@ -138,6 +140,7 @@ class VoiceTranscriberApp:
 
             # Debug-Datei initialisieren
             self._init_debug_file()
+            self._init_history_logger()
 
             # Hotkey Callbacks registrieren (mit Config für benutzerspezifische Hotkeys)
             self.hotkey_listener.register_callbacks(
@@ -235,6 +238,7 @@ class VoiceTranscriberApp:
              return
              
         logger.info("Hotkey losgelassen - Signalisiere Stop")
+        self._write_debug_entry("Hotkey losgelassen - Stoppe Aufnahme...")
         self.recording_stop_event.set()
 
         # Akustisches Feedback (kurz)
@@ -243,11 +247,15 @@ class VoiceTranscriberApp:
     def _perform_recording(self):
         """Führt die komplette Aufnahme- und Verarbeitung durch"""
         final_wav_path = None
+        self._write_debug_entry("--- Neue Aufnahme gestartet ---")
         
         try:
             # 1. Aufnahme starten
             if not self.audio_recorder.start_recording():
+                self._write_debug_entry("FEHLER: Konnte Aufnahme nicht starten (AudioRecorder Error)")
                 raise AudioRecordingError("Konnte Aufnahme nicht starten")
+
+            self._write_debug_entry("Aufnahme läuft...")
 
             # 2. Warten bis Hotkey losgelassen wird (oder Timeout)
             # wait gibt True zurück wenn Event gesetzt wurde, False bei Timeout
@@ -255,6 +263,7 @@ class VoiceTranscriberApp:
             
             if not event_is_set:
                  logger.info("Maximale Aufnahmedauer erreicht")
+                 self._write_debug_entry(f"Maximale Aufnahmedauer ({config.MAX_RECORDING_DURATION}s) erreicht")
                  self.play_beep(config.BEEP_FREQUENCY_STOP)
 
             # 3. Aufnahme stoppen
@@ -264,12 +273,16 @@ class VoiceTranscriberApp:
             self.is_recording = False
             
             if not final_wav_path or not os.path.exists(final_wav_path):
+                 self._write_debug_entry("FEHLER: Keine Audio-Datei erzeugt")
                  raise AudioRecordingError("Keine Audio-Datei erzeugt")
 
             # 4. Validierung der Dauer
             duration = self.audio_recorder.last_recording_duration
+            self._write_debug_entry(f"Aufnahme beendet. Dauer: {duration:.2f}s")
+
             if duration < 0.3: # Etwas toleranter sein
                 logger.info(f"Aufnahme zu kurz ({duration:.2f}s) - ignoriere")
+                self._write_debug_entry("ABBRUCH: Aufnahme zu kurz (< 0.3s)")
                 return
 
             # 5. Daten laden / Komprimieren
@@ -283,10 +296,12 @@ class VoiceTranscriberApp:
 
                 if PYDUB_AVAILABLE and config.AUDIO_COMPRESSION_ENABLED:
                     logger.info("Komprimiere Audio...")
+                    self._write_debug_entry("Komprimiere Audio...")
                     compressed_data = self.audio_recorder.compress_audio(final_wav_path)
                     
                     if not compressed_data:
                         logger.warning("Komprimierung lieferte leere Daten - Fallback auf WAV")
+                        self._write_debug_entry("WARNUNG: Komprimierung fehlgeschlagen, verwende WAV")
                         compressed_data = None
                 
                 # Fallback: WAV lesen wenn keine Komprimierung oder fehlgeschlagen
@@ -296,6 +311,7 @@ class VoiceTranscriberApp:
 
             except Exception as e:
                 logger.error(f"Fehler bei Audio-Verarbeitung: {e}")
+                self._write_debug_entry(f"FEHLER bei Audio-Verarbeitung: {e}")
                 # Versuch WAV direkt zu lesen als letzter Rettungsanker
                 try:
                     with open(final_wav_path, 'rb') as f:
@@ -305,9 +321,11 @@ class VoiceTranscriberApp:
 
             # 6. Transkription
             if not self._transcription_service_instance:
+                self._write_debug_entry("FEHLER: Transkriptions-Service nicht bereit")
                 raise TranscriptionError("TranscriptionService nicht bereit")
 
             logger.info(f"Sende Audio zur Transkription ({len(compressed_data)} bytes)...")
+            self._write_debug_entry(f"Starte Transkription ({len(compressed_data)} bytes)...")
             
             # Bestimme Dateinamen für API (wichtig für Whisper Verarbeitungshinweise)
             filename = "audio.mp3" if (PYDUB_AVAILABLE and config.AUDIO_COMPRESSION_ENABLED) else "audio.wav"
@@ -318,21 +336,26 @@ class VoiceTranscriberApp:
 
             if not raw_text:
                 logger.info("Kein Text erkannt")
+                self._write_debug_entry("ERGEBNIS: Kein Text erkannt (Stille oder Fehler)")
                 return
 
             logger.info(f"Erkannt: {raw_text[:50]}...")
+            self._write_debug_entry(f"ERGEBNIS: {raw_text}")
             
             # 7. Text verarbeiten & Einfügen
             self._process_and_inject_text(raw_text)
 
         except AudioRecordingError as e:
             logger.error(f"Aufnahme-Fehler: {e}")
+            self._write_debug_entry(f"EXCEPTION (Aufnahme): {e}")
             notification_service.notify_warning(str(e), title="Aufnahme")
         except TranscriptionError as e:
             logger.error(f"Transkriptions-Fehler: {e}")
+            self._write_debug_entry(f"EXCEPTION (Transkription): {e}")
             notification_service.notify_error(str(e), title="Transkription")
         except Exception as e:
             logger.error(f"Unerwarteter Fehler: {e}", exc_info=True)
+            self._write_debug_entry(f"CRITICAL EXCEPTION: {e}")
             notification_service.notify_error("Systemfehler aufgetreten", title="Fehler")
         finally:
             # Aufräumen
@@ -354,6 +377,9 @@ class VoiceTranscriberApp:
                 logger.warning(f"Text-Korrektur fehlgeschlagen: {e}")
 
             self._write_debug_entry(f"Transkript: {corrected_text}")
+            
+            # In History schreiben
+            self._write_history_entry(raw_text, corrected_text)
 
             # Text einfügen
             success = self.clipboard_injector.inject_text(corrected_text)
@@ -373,9 +399,12 @@ class VoiceTranscriberApp:
     def play_beep(self, frequency: int):
         """Spielt einen Beep-Ton"""
         try:
+            # logger.debug(f"Spiele Beep: {frequency}Hz, {config.BEEP_DURATION}ms")
+            import winsound
             winsound.Beep(frequency, config.BEEP_DURATION)
         except Exception as e:
             logger.warning(f"Beep konnte nicht abgespielt werden: {e}")
+            logger.debug(traceback.format_exc())
 
     def show_settings(self, icon=None, item=None):
         """Zeigt Einstellungen"""
@@ -442,25 +471,74 @@ class VoiceTranscriberApp:
     def _init_debug_file(self):
         """Initialisiert die Debug-Datei für Transkriptionsergebnisse"""
         try:
-            import os
-            from pathlib import Path
-
-            # Erstelle Debug-Datei im AppData-Verzeichnis (konsistent mit Logs)
-            from .user_config import user_config
-            user_dir = user_config.get_appdata_dir()
-            user_dir.mkdir(parents=True, exist_ok=True)
-            self.debug_file_path = user_dir / "voice_transcriber_debug.txt"
+            # Debug-Datei Pfad aus Config (bereits zentralisiert)
+            self.debug_file_path = config.DEBUG_FILE_PATH
+            
+            # Stelle sicher, dass Verzeichnis existiert
+            debug_dir = os.path.dirname(self.debug_file_path)
+            os.makedirs(debug_dir, exist_ok=True)
 
             # Erstelle/überschreibe Datei mit Header
             with open(self.debug_file_path, 'w', encoding='utf-8-sig') as f:
                 f.write("Voice Transcriber Debug Log\n")
                 f.write("=" * 50 + "\n")
-                f.write(f"Gestartet: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+                f.write(f"Gestartet: {time.strftime('%Y-%m-%d %H:%M:%S')}\nmachine: {os.environ.get('COMPUTERNAME', 'unknown')}\n\n")
 
             logger.info(f"Debug-Datei initialisiert: {self.debug_file_path}")
 
         except Exception as e:
             logger.error(f"Fehler beim Initialisieren der Debug-Datei: {e}")
+
+    def _init_history_logger(self):
+        """Initialisiert den History-Logger mit Rotation"""
+        try:
+            history_path = config.HISTORY_FILE_PATH
+            
+            # Erstelle eigenen Logger für History
+            self.history_logger = logging.getLogger('transcription_history')
+            self.history_logger.setLevel(logging.INFO)
+            self.history_logger.propagate = False # Nicht an root logger weiterleiten
+            
+            # Rotation Handler: Max 1MB, 5 Backups
+            handler = logging.handlers.RotatingFileHandler(
+                history_path,
+                maxBytes=1*1024*1024, # 1MB
+                backupCount=5,
+                encoding='utf-8-sig'
+            )
+            
+            # Format: [Zeitstempel] Nachricht
+            formatter = logging.Formatter('%(asctime)s %(message)s', datefmt='[%Y-%m-%d %H:%M:%S]')
+            handler.setFormatter(formatter)
+            
+            # Alte Handler entfernen um Duplikate zu vermeiden
+            if self.history_logger.handlers:
+                self.history_logger.handlers.clear()
+                
+            self.history_logger.addHandler(handler)
+            logger.info(f"History-Logger initialisiert: {history_path}")
+            self._write_debug_entry(f"History-Log initialisiert: {history_path}")
+            
+        except Exception as e:
+            logger.error(f"Fehler beim Initialisieren des History-Loggers: {e}")
+            self._write_debug_entry(f"FEHLER bei History-Init: {e}")
+            self.history_logger = None
+
+    def _write_history_entry(self, original: str, modified: str = None):
+        """Schreibt einen Eintrag in das History-Log"""
+        if self.history_logger:
+            try:
+                if modified and modified != original:
+                    entry = f"Original: \"{original}\" | Final: \"{modified}\""
+                else:
+                    entry = f"Text: \"{original}\""
+                
+                self.history_logger.info(entry)
+            except Exception as e:
+                logger.error(f"Fehler beim Schreiben in History: {e}")
+                self._write_debug_entry(f"FEHLER beim Schreiben in History: {e}")
+        else:
+            self._write_debug_entry("WARNUNG: History-Logger nicht initialisiert - Eintrag nicht gespeichert")
 
     def _write_debug_entry(self, text: str):
         """Schreibt einen Eintrag in die Debug-Datei"""

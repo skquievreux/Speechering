@@ -5,12 +5,31 @@ Zeigt App-Info und ermöglicht Hotkey-Auswahl
 
 import logging
 import sys
+import os
 import tkinter as tk
+from pathlib import Path
 from tkinter import messagebox, ttk
 
 import pyaudio
 
 from src.config import config
+
+import traceback
+
+try:
+    from src.user_config import user_config
+    from src.model_manager import get_model_path, download_whisper_model
+    from src.audio_recorder import AudioRecorder
+except ImportError:
+    try:
+        from user_config import user_config
+        from model_manager import get_model_path, download_whisper_model
+        from audio_recorder import AudioRecorder
+    except ImportError:
+        user_config = None
+        get_model_path = None
+        download_whisper_model = None
+        AudioRecorder = None
 
 logger = logging.getLogger(__name__)
 
@@ -72,12 +91,11 @@ class SettingsGUI:
         self.last_save_time = 0
         self.save_cooldown = 1.0  # 1 Sekunde Cooldown
 
-        # Lade Transkriptions-Einstellungen aus user_config für Konsistenz
-        try:
-            from src.user_config import user_config
+        # Lade Transkriptions-Einstellungen
+        if user_config:
             use_local = user_config.get('transcription.use_local', False)
             model_size = user_config.get('transcription.whisper_model_size', 'small')
-        except:
+        else:
             use_local = getattr(config, 'USE_LOCAL_TRANSCRIPTION', False)
             model_size = getattr(config, 'WHISPER_MODEL_SIZE', 'small')
 
@@ -141,6 +159,22 @@ class SettingsGUI:
         )
         clear_debug_btn.pack(side='left', padx=5)
         Tooltip(clear_debug_btn, "Löscht die Debug-Datei vollständig.\nDie Datei wird bei der nächsten Aufnahme neu erstellt.")
+
+        open_log_btn = ttk.Button(
+            debug_frame,
+            text="📂 Log-Datei öffnen",
+            command=self._open_log_file
+        )
+        open_log_btn.pack(side='left', padx=5)
+        Tooltip(open_log_btn, "Öffnet die technische Log-Datei der Anwendung.\nHier finden Sie detaillierte Fehlermeldungen.")
+
+        open_history_btn = ttk.Button(
+            debug_frame,
+            text="📜 Verlauf öffnen",
+            command=self._open_history_file
+        )
+        open_history_btn.pack(side='left', padx=5)
+        Tooltip(open_history_btn, "Öffnet den Transkriptions-Verlauf.\nHier sehen Sie alle erkannten Texte mit Zeitstempel.")
 
         self.notebook = ttk.Notebook(self.window)
         # Mehr Abstand nach oben für bessere Sichtbarkeit der Reiter
@@ -449,10 +483,76 @@ class SettingsGUI:
 
         ttk.Label(info_frame, text=info_text, foreground="blue", justify="left").pack(anchor='w')
         
+    def _open_debug_file(self):
+        """Öffnet die Debug-Datei"""
+        try:
+            if not user_config:
+                messagebox.showerror("Fehler", "Konfiguration konnte nicht geladen werden.")
+                return
+                
+            user_dir = user_config.get_appdata_dir()
+            debug_file = user_dir / "voice_transcriber_debug.txt"
+            
+            if not debug_file.exists():
+                messagebox.showinfo("Info", "Noch keine Debug-Datei vorhanden.")
+                return
+                
+            os.startfile(debug_file)
+        except Exception as e:
+            logger.error(f"Fehler beim Öffnen der Debug-Datei: {e}")
+            logger.error(traceback.format_exc())
+            messagebox.showerror("Fehler", f"Konnte Datei nicht öffnen: {e}")
+
+    def _clear_debug_file(self):
+        """Löscht die Debug-Datei"""
+        try:
+            if not user_config:
+                return
+
+            user_dir = user_config.get_appdata_dir()
+            debug_file = user_dir / "voice_transcriber_debug.txt"
+            
+            if debug_file.exists():
+                debug_file.unlink()
+                messagebox.showinfo("Info", "Debug-Datei gelöscht.")
+            else:
+                messagebox.showinfo("Info", "Keine Debug-Datei vorhanden.")
+        except Exception as e:
+            logger.error(f"Fehler beim Löschen der Debug-Datei: {e}")
+            messagebox.showerror("Fehler", f"Konnte Datei nicht löschen: {e}")
+
+    def _open_log_file(self):
+        """Öffnet die Log-Datei"""
+        try:
+            log_file = Path(config.LOG_FILE)
+            if not log_file.exists():
+                messagebox.showinfo("Info", "Noch keine Log-Datei vorhanden.")
+                return
+                
+            os.startfile(log_file)
+        except Exception as e:
+            logger.error(f"Fehler beim Öffnen der Log-Datei: {e}")
+            messagebox.showerror("Fehler", f"Konnte Datei nicht öffnen: {e}")
+
+    def _open_history_file(self):
+        """Öffnet die Verlaufs-Datei"""
+        try:
+            history_file = Path(config.HISTORY_FILE_PATH)
+            if not history_file.exists():
+                messagebox.showinfo("Info", "Noch kein Verlauf vorhanden.")
+                return
+                
+            os.startfile(history_file)
+        except Exception as e:
+            logger.error(f"Fehler beim Öffnen der Verlaufs-Datei: {e}")
+            messagebox.showerror("Fehler", f"Konnte Datei nicht öffnen: {e}")
+
     def _update_model_status(self):
         """Aktualisiert den Status des aktuell ausgewählten Modells"""
         try:
-            from src.model_manager import get_model_path
+            if not get_model_path:
+                return
+
             model_size = self.model_size_var.get()
             path = get_model_path(model_size)
             
@@ -480,7 +580,9 @@ class SettingsGUI:
         
         def download_thread():
             try:
-                from src.model_manager import download_whisper_model
+                if not download_whisper_model:
+                    raise ImportError("Model Manager nicht verfügbar")
+                    
                 success = download_whisper_model(model_size)
                 
                 if success:
@@ -722,7 +824,76 @@ class SettingsGUI:
 
     def _test_microphone(self):
         """Testet das Mikrofon"""
-        messagebox.showinfo("Mikrofon-Test", "Mikrofon-Test wird implementiert...")
+        try:
+            import threading
+            import winsound
+            import time
+            
+            if not AudioRecorder:
+                messagebox.showerror("Fehler", "AudioRecorder nicht verfügbar")
+                return
+
+            # Deaktiviere Button während Test
+            # Wir müssen den Button finden (etwas hacky da keine Referenz gespeichert, 
+            # aber wir suchen im audio_frame)
+            # Einfacher: Status-Modal
+            
+            status_window = tk.Toplevel(self.window)
+            status_window.title("Mikrofon-Test")
+            status_window.geometry("300x150")
+            status_window.transient(self.window)
+            status_window.grab_set()
+            
+            lbl = ttk.Label(status_window, text="Initialisiere...", font=("TkDefaultFont", 10))
+            lbl.pack(pady=20)
+            
+            progress = ttk.Progressbar(status_window, mode='indeterminate')
+            progress.pack(fill='x', padx=20, pady=10)
+            progress.start()
+            
+            def run_test():
+                recorder = None
+                wav_path = None
+                try:
+                    # 1. Aufnahme starten
+                    lbl.config(text="🔴 Aufnahme läuft (3s)... \nBitte sprechen Sie etwas!")
+                    
+                    recorder = AudioRecorder()
+                    wav_path = recorder.start_recording()
+                    
+                    if not wav_path:
+                        raise Exception("Konnte Aufnahme nicht starten")
+                        
+                    time.sleep(3)
+                    
+                    # 2. Stoppen
+                    recorder.stop_recording()
+                    lbl.config(text="▶️ Spiele Aufnahme ab...")
+                    
+                    # 3. Abspielen
+                    winsound.PlaySound(wav_path, winsound.SND_FILENAME)
+                    
+                    lbl.config(text="✅ Test erfolgreich!")
+                    messagebox.showinfo("Erfolg", "Test abgeschlossen. Haben Sie sich gehört?", parent=status_window)
+                    
+                except Exception as e:
+                    logger.error(f"Mikrofon-Test fehlgeschlagen: {e}")
+                    messagebox.showerror("Fehler", f"Test fehlgeschlagen: {e}\n\nPrüfen Sie die Log-Datei für Details.", parent=status_window)
+                    
+                finally:
+                    if recorder:
+                        recorder.cleanup()
+                    if wav_path and os.path.exists(wav_path):
+                        try:
+                            os.remove(wav_path)
+                        except:
+                            pass
+                    status_window.destroy()
+
+            threading.Thread(target=run_test, daemon=True).start()
+            
+        except Exception as e:
+            messagebox.showerror("Fehler", f"Konnte Test nicht starten: {e}")
 
     def _load_current_settings(self):
         """Lädt aktuelle Einstellungen"""
@@ -855,23 +1026,11 @@ class SettingsGUI:
             import os
             import subprocess
             from pathlib import Path
+            from src.config import config
 
-            # Versuche verschiedene mögliche Pfade
-            from .user_config import user_config
-            possible_paths = [
-                user_config.get_appdata_dir() / "voice_transcriber_debug.txt",  # AppData (priorisiert)
-                Path.home() / "voice_transcriber_debug.txt",  # Home-Verzeichnis (Legacy)
-                Path.cwd() / "voice_transcriber_debug.txt",   # Arbeitsverzeichnis
-                Path.home() / "AppData" / "Roaming" / "VoiceTranscriber" / "voice_transcriber_debug.txt",  # Windows AppData explizit
-            ]
-
-            debug_file = None
-            for path in possible_paths:
-                if path.exists():
-                    debug_file = path
-                    break
-
-            if debug_file and debug_file.exists():
+            debug_file = Path(config.DEBUG_FILE_PATH)
+            
+            if debug_file.exists():
                 logger.info(f"Öffne Debug-Datei: {debug_file}")
                 # Öffne mit Standard-Editor
                 if os.name == 'nt':  # Windows
@@ -879,27 +1038,9 @@ class SettingsGUI:
                 else:  # Linux/macOS
                     subprocess.run(['xdg-open', str(debug_file)], check=True)
 
-                messagebox.showinfo("Debug-Datei", f"Debug-Datei geöffnet:\n{debug_file}")
+                # messagebox.showinfo("Debug-Datei", f"Debug-Datei geöffnet:\n{debug_file}")
             else:
-                # Erstelle eine Beispiel-Datei zur Demonstration
-                example_file = Path.home() / "voice_transcriber_debug.txt"
-                try:
-                    example_content = """Voice Transcriber - Debug-Datei
-
-Diese Datei wird während der Aufnahme erstellt und enthält:
-- Aufnahme-Details (Dauer, Format, Größe)
-- Transkriptions-Ergebnisse
-- Fehler-Logs und Warnungen
-- Performance-Messungen
-
-Die Datei wird automatisch erstellt, wenn Sie eine Aufnahme machen.
-"""
-                    example_file.parent.mkdir(parents=True, exist_ok=True)
-                    example_file.write_text(example_content, encoding='utf-8')
-                    messagebox.showinfo("Debug-Datei", f"Beispiel-Debug-Datei erstellt:\n{example_file}\n\nMachen Sie eine Aufnahme, um echte Debug-Daten zu sehen.")
-                except Exception as create_error:
-                    logger.error(f"Fehler beim Erstellen der Beispiel-Datei: {create_error}")
-                    messagebox.showinfo("Debug-Datei", "Debug-Datei existiert noch nicht.\nMachen Sie eine Aufnahme, um sie zu erstellen.")
+                messagebox.showinfo("Debug-Datei", f"Debug-Datei existiert noch nicht:\n{debug_file}\n\nMachen Sie eine Aufnahme, um sie zu erstellen.")
 
         except Exception as e:
             if "subprocess" in str(type(e)).lower():
@@ -907,13 +1048,17 @@ Die Datei wird automatisch erstellt, wenn Sie eine Aufnahme machen.
                 messagebox.showerror("Fehler", f"Editor konnte Datei nicht öffnen: {e}")
             else:
                 logger.error(f"Fehler beim Öffnen der Debug-Datei: {e}")
+                logger.error(traceback.format_exc())
                 messagebox.showerror("Fehler", f"Debug-Datei konnte nicht geöffnet werden: {e}")
 
     def _clear_debug_file(self):
         """Löscht die Debug-Datei"""
         try:
             from pathlib import Path
-            debug_file = Path.home() / "voice_transcriber_debug.txt"
+            from src.config import config
+            
+            debug_file = Path(config.DEBUG_FILE_PATH)
+            
             if debug_file.exists():
                 debug_file.unlink()
                 messagebox.showinfo("Debug-Datei", "Debug-Datei wurde gelöscht.")
