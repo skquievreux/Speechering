@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/skquievreux/Speechering/compare/v2.0.0...v2.0.1) (2026-02-01)
+
+
+### Bug Fixes
+
+* **transcription:** clarify paths and icons in frozen build ([14b8002](https://github.com/skquievreux/Speechering/commit/14b8002cd8f14b50a4ef1c44200ed7d58caac660))
+
 # [2.0.0](https://github.com/skquievreux/Speechering/compare/v1.9.6...v2.0.0) (2026-02-01)
 
 
