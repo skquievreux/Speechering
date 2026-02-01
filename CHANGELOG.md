@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/skquievreux/Speechering/compare/v2.0.2...v2.0.3) (2026-02-01)
+
+
+### Bug Fixes
+
+* **build:** resolve remaining NameError bugs ([bd06e9b](https://github.com/skquievreux/Speechering/commit/bd06e9bed2853ce44f1e262f3e222e0736bb664e))
+
 ## [2.0.2](https://github.com/skquievreux/Speechering/compare/v2.0.1...v2.0.2) (2026-02-01)
 
 
