@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/skquievreux/Speechering/compare/v2.0.1...v2.0.2) (2026-02-01)
+
+
+### Bug Fixes
+
+* **build:** resolve sys NameError and NSIS encoding issues ([59e9d49](https://github.com/skquievreux/Speechering/commit/59e9d49957b4e517524db8c4f1066eac0c2240c5))
+
 ## [2.0.1](https://github.com/skquievreux/Speechering/compare/v2.0.0...v2.0.1) (2026-02-01)
 
 
