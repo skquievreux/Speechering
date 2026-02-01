@@ -9,6 +9,11 @@ import os
 from enum import Enum
 from typing import Optional
 
+try:
+    from .resources import get_resource_path
+except ImportError:
+    from resources import get_resource_path
+
 # Versuche win10toast zu importieren, aber falle weich, falls es nicht da ist
 try:
     from win10toast import ToastNotifier
@@ -68,9 +73,9 @@ class NotificationService:
         """Interne Methode zum sicheren Anzeigen des Toasts"""
         with self._lock:
             try:
-                # Icon basierend auf Typ wählen (optional, standardmäßig das App-Icon oder Python-Icon)
-                icon_path = "assets/icon.ico"
-                if not os.path.exists(icon_path):
+                # Icon basierend auf Typ wählen
+                icon_path = get_resource_path("assets/icon.ico")
+                if not icon_path.exists():
                     icon_path = None
                 
                 # Immer eine NEUE Instanz erstellen, da win10toast oft Probleme mit Wiederverwendung hat
@@ -127,8 +132,8 @@ class NotificationService:
                         import os
                         from win10toast import ToastNotifier
                         toaster = ToastNotifier()
-                        icon_path = "assets/icon.ico"
-                        if not os.path.exists(icon_path):
+                        icon_path = get_resource_path("assets/icon.ico")
+                        if not icon_path.exists():
                             icon_path = None
                             
                         toaster.show_toast(

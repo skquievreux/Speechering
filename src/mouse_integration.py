@@ -10,6 +10,11 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+try:
+    from .resources import get_resource_path
+except ImportError:
+    from resources import get_resource_path
+
 logger = logging.getLogger(__name__)
 
 class MouseWheelIntegration:
@@ -21,19 +26,7 @@ class MouseWheelIntegration:
 
     def _get_ahk_script_path(self) -> Path:
         """Gibt den Pfad zum AHK-Skript zurück"""
-        # Versuche zuerst im Projektverzeichnis
-        project_script = Path(__file__).parent.parent / 'scripts' / 'mouse_toggle.ahk'
-        if project_script.exists():
-            return project_script
-
-        # Fallback: Im selben Verzeichnis wie die EXE
-        if getattr(sys, 'frozen', False):
-            exe_dir = Path(sys.executable).parent
-            exe_script = exe_dir / 'mouse_toggle.ahk'
-            if exe_script.exists():
-                return exe_script
-
-        return project_script  # Rückgabe des Projektpfads als Fallback
+        return get_resource_path('scripts/mouse_toggle.ahk')
 
     def is_ahk_available(self) -> bool:
         """Prüft ob AutoHotkey verfügbar ist"""

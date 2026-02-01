@@ -8,9 +8,10 @@ import time
 from pathlib import Path
 from typing import Optional
 
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
 
 from src.config import config
+from src.exceptions import TranscriptionError
 from src.local_transcription import LocalTranscriptionService
 
 logger = logging.getLogger(__name__)
@@ -105,13 +106,16 @@ class TranscriptionService:
                     logger.warning("Transkript ist leer oder ungültig")
                     return None
 
+            except AuthenticationError as e:
+                logger.error(f"OpenAI Authentifizierungsfehler: {e}")
+                raise TranscriptionError(f"API-Key ungültig oder abgelaufen: {e}")
             except Exception as e:
                 logger.error(f"Fehler bei API-Transkription (Versuch {attempt + 1}): {e}")
                 if attempt < self.max_retries - 1:
                     time.sleep(self.retry_delay * (2 ** attempt))  # Exponential backoff
                 else:
                     logger.error("Maximale Anzahl von Versuchen erreicht")
-                    return None
+                    raise TranscriptionError(f"API-Transkription nach {self.max_retries} Versuchen fehlgeschlagen: {e}")
 
         return None
 

@@ -120,6 +120,10 @@ class LocalTranscriptionService:
 
         try:
             logger.info(f"Starte lokale Transkription mit Modell '{self.model_size}'")
+            logger.debug(f"Audio-Pfad: {Path(audio_path).absolute()}")
+            
+            if not Path(audio_path).exists():
+                raise FileNotFoundError(f"Audio-Datei nicht gefunden: {audio_path}")
 
             start_time = time.time()
 
@@ -127,6 +131,7 @@ class LocalTranscriptionService:
             vocabulary = config.get_vocabulary()
 
             # Transkription durchführen
+            # segments ist ein Iterator, die actual work passiert beim Iterieren
             segments, info = self.model.transcribe(
                 audio_path,
                 language="de",  # Deutsche Sprache priorisieren
@@ -137,22 +142,24 @@ class LocalTranscriptionService:
                 vad_parameters=dict(threshold=0.5, min_speech_duration_ms=250)
             )
 
-            # Segmente zu Text kombinieren
-            transcript = " ".join([segment.text for segment in segments])
+            # Segmente zu Text kombinieren (hier passiert die Transkription)
+            segment_list = list(segments)
+            transcript = " ".join([segment.text for segment in segment_list])
 
             duration = time.time() - start_time
-            logger.info(f"Transkription abgeschlossen in {duration:.2f}s")
+            logger.info(f"Transkription abgeschlossen in {duration:.2f}s ({len(segment_list)} Segmente)")
 
             # Validiere Ergebnis
             if self._validate_transcript(transcript):
                 return transcript.strip()
             else:
-                logger.warning("Transkript ist leer oder ungültig")
+                logger.warning("Transkript ist leer oder ungültig (mögliche Stille)")
                 return None
 
         except Exception as e:
-            logger.error(f"Fehler bei lokaler Transkription: {e}")
-            return None
+            logger.error(f"Fehler bei lokaler Transkription: {e}", exc_info=True)
+            from src.exceptions import TranscriptionError
+            raise TranscriptionError(f"Lokale Transkription fehlgeschlagen: {e}")
 
     def transcribe_audio_data(self, audio_data: bytes, filename: str = "audio.mp3") -> Optional[str]:
         """Transkribiert komprimierte Audio-Daten zu Text"""

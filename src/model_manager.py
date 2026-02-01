@@ -8,6 +8,11 @@ from pathlib import Path
 from typing import Optional, List
 import shutil
 
+try:
+    from .resources import get_resource_path
+except ImportError:
+    from resources import get_resource_path
+
 # Configure logging
 logger = logging.getLogger(__name__)
 
@@ -32,25 +37,22 @@ def get_model_path(model_name: str = "base", search_dir: Optional[Path] = None) 
         # a. Check AppData (User downloaded)
         search_paths.append(get_models_dir())
         
-        # b. Check Application Directory (Bundled with EXE or in Dev-Root)
-        import sys
+        # b. Check Bundled models (using resources helper)
+        search_paths.append(get_resource_path("models"))
+        
+        # c. Fallback - Check next to EXE (portable/onedir)
         if getattr(sys, 'frozen', False):
-            # PyInstaller temp path (_MEIPASS)
-            if hasattr(sys, '_MEIPASS'):
-                search_paths.append(Path(sys._MEIPASS) / "models")
-            # Also check next to EXE (portable/onedir)
             search_paths.append(Path(sys.executable).parent / "models")
-        else:
-            # Dev path: project_root/models
-            search_paths.append(Path(__file__).parent.parent / "models")
 
     for models_dir in search_paths:
+        logger.debug(f"Searching for models in: {models_dir.absolute()}")
         if not models_dir.exists():
             continue
             
         # 1. Check direct directory (e.g. models/base)
         direct_path = models_dir / model_name
         if direct_path.exists() and (direct_path / "model.bin").exists():
+            logger.info(f"Model '{model_name}' found at: {direct_path.absolute()}")
             return direct_path
             
         # 2. Check huggingface cache format (e.g. models/models--Systran--faster-whisper-base)
@@ -62,12 +64,15 @@ def get_model_path(model_name: str = "base", search_dir: Optional[Path] = None) 
             if snapshots_dir.exists():
                 snapshots = list(snapshots_dir.iterdir())
                 if snapshots:
+                    logger.info(f"Model '{model_name}' (HF-format) found at: {snapshots[0].absolute()}")
                     return snapshots[0]
                     
         # 3. Fallback: Check if model.bin is directly in the search_dir (legacy/direct structure)
         if (models_dir / "model.bin").exists() and model_name == "base":
+             logger.info(f"Model 'base' (direct) found at: {models_dir.absolute()}")
              return models_dir
 
+    logger.warning(f"Model '{model_name}' not found in any search path.")
     return None
 
 def download_whisper_model(model_name: str = "base") -> bool:
