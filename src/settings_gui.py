@@ -591,8 +591,9 @@ class SettingsGUI:
                     self.window.after(0, lambda: messagebox.showerror("Download fehlgeschlagen",
                                                                      "Der Download ist fehlgeschlagen. Bitte prüfen Sie Ihre Verbindung."))
             except Exception as e:
-                logger.error(f"Download-Fehler: {e}")
-                self.window.after(0, lambda: messagebox.showerror("Fehler", f"Unerwarteter Fehler: {e}"))
+                logger.error(f"Download-Fehler: {e}", exc_info=True)
+                error_msg = str(e)
+                self.window.after(0, lambda msg=error_msg: messagebox.showerror("Fehler", f"Unerwarteter Fehler: {msg}"))
             finally:
                 self.window.after(0, self._update_model_status)
                 self.window.after(0, lambda: self.download_btn.config(state="normal"))
