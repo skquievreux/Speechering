@@ -3,9 +3,8 @@ Resource management for Voice Transcriber.
 Handles path resolution for bundled assets and files.
 """
 
-import sys
-import os
 import logging
+import sys
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -27,14 +26,14 @@ def get_resource_path(relative_path: str) -> Path:
             base_path = Path(__file__).parent.parent
 
         resolved_path = base_path / relative_path
-        
+
         # Verbose logging for debugging path issues in production
         if getattr(sys, 'frozen', False):
             if resolved_path.exists():
                 logger.debug(f"Resource found: {relative_path} -> {resolved_path}")
             else:
                 logger.warning(f"Resource NOT found: {relative_path} -> {resolved_path}")
-        
+
         return resolved_path
     except Exception as e:
         logger.error(f"Error resolving resource path for {relative_path}: {e}")

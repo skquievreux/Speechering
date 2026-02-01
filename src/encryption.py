@@ -6,9 +6,7 @@ Verwendet Fernet (AES-256) mit PBKDF2-generiertem Schlüssel.
 import base64
 import hashlib
 import logging
-import os
 import platform
-from typing import Optional
 
 try:
     from cryptography.fernet import Fernet
@@ -25,7 +23,7 @@ class SecureStorage:
     """Sichere Speicherung sensibler Daten mit Verschlüsselung"""
 
     def __init__(self):
-        self._fernet: Optional[Fernet] = None
+        self._fernet: Fernet | None = None
         self._salt = self._get_machine_salt()
 
         if CRYPTOGRAPHY_AVAILABLE:

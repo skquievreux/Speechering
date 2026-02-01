@@ -5,7 +5,6 @@ Fügt Text direkt an Cursor-Position ein oder verwendet Zwischenablage.
 
 import logging
 import time
-from typing import Optional
 
 import pyautogui
 import pyperclip
@@ -116,7 +115,7 @@ class ClipboardInjector:
         except Exception as e:
             logger.warning(f"Fehler beim Wiederherstellen des Clipboards: {e}")
 
-    def get_clipboard_content(self) -> Optional[str]:
+    def get_clipboard_content(self) -> str | None:
         """Gibt aktuellen Clipboard-Inhalt zurück"""
         try:
             return pyperclip.paste()

@@ -5,7 +5,6 @@ Korrigiert und verbessert transkribierten Text mittels GPT-4.
 
 import logging
 import time
-from typing import Optional
 
 from openai import OpenAI
 
@@ -21,7 +20,7 @@ class TextProcessor:
         self.max_retries = 3
         self.retry_delay = 1.0
 
-    def process_text(self, raw_text: str) -> Optional[str]:
+    def process_text(self, raw_text: str) -> str | None:
         """Verarbeitet und korrigiert den transkribierten Text"""
         # API-Key Validierung vorab - prüfe ob Key im OpenAI-Format ist
         if not config.OPENAI_API_KEY or not config.OPENAI_API_KEY.startswith("sk-"):

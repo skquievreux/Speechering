@@ -7,7 +7,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 try:
     from .encryption import secure_storage
@@ -41,7 +41,7 @@ class UserConfig:
     }
 
     def __init__(self):
-        self._config: Dict[str, Any] = {}
+        self._config: dict[str, Any] = {}
         self._config_file: Path = self.get_config_file()
         self._loaded = False
 
@@ -71,7 +71,7 @@ class UserConfig:
             self._config_file.parent.mkdir(parents=True, exist_ok=True)
 
             if self._config_file.exists():
-                with open(self._config_file, 'r', encoding='utf-8') as f:
+                with open(self._config_file, encoding='utf-8') as f:
                     loaded_config = json.load(f)
 
                 # Merge mit Defaults (behalte neue Defaults)
@@ -185,7 +185,7 @@ class UserConfig:
         """Gibt die Eingabemethode zurück"""
         return self.get('input_method', 'hotkey')
 
-    def _merge_configs(self, defaults: Dict, user_config: Dict) -> Dict:
+    def _merge_configs(self, defaults: dict, user_config: dict) -> dict:
         """Merged Defaults mit User-Konfiguration"""
         result = defaults.copy()
 
@@ -230,7 +230,7 @@ class UserConfig:
     def import_config(self, filepath: Path) -> bool:
         """Importiert eine Konfiguration aus einer Datei"""
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, encoding='utf-8') as f:
                 imported_config = json.load(f)
 
             # Validiere grundlegende Struktur

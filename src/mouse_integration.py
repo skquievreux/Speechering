@@ -6,9 +6,7 @@ Verwaltet AutoHotkey-Skript für mausbasierte Eingabe.
 import logging
 import os
 import subprocess
-import sys
 from pathlib import Path
-from typing import Optional
 
 try:
     from .resources import get_resource_path
@@ -21,7 +19,7 @@ class MouseWheelIntegration:
     """Verwaltet die Integration des mittleren Mausrads über AutoHotkey"""
 
     def __init__(self):
-        self.ahk_process: Optional[subprocess.Popen] = None
+        self.ahk_process: subprocess.Popen | None = None
         self.ahk_script_path: Path = self._get_ahk_script_path()
 
     def _get_ahk_script_path(self) -> Path:

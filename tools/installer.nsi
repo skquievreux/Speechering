@@ -112,27 +112,27 @@ Section "Voice Transcriber" SecApp
     DetailPrint "Erstelle Desktop-Verknüpfung..."
     CreateShortCut "$DESKTOP\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber - Sprachtranskription"
 
-    ; Startmenü-Verknüpfungen mit vollständigen Icons und Beschreibungen
-    DetailPrint "Erstelle Startmenü-Einträge..."
+    ; Startmen$\u00FC-Verkn$\u00FCpfungen mit vollst$\u00E4ndigen Icons und Beschreibungen
+    DetailPrint "Erstelle Startmen$\u00FC-Eintr$\u00E4ge..."
     CreateDirectory "$SMPROGRAMS\Voice Transcriber"
 
     ; Prüfe ob Startmenü-Verzeichnis erstellt wurde
     IfFileExists "$SMPROGRAMS\Voice Transcriber" startmenu_ok startmenu_failed
     startmenu_ok:
-        DetailPrint "✅ Startmenü-Verzeichnis erstellt"
+        DetailPrint "$\u2705 Startmen$\u00FC-Verzeichnis erstellt"
         CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber starten"
         CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber deinstallieren"
-        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\MOUSE_WHEEL_README.md" "" "%SystemRoot%\system32\SHELL32.dll" 70 SW_SHOWNORMAL "" "Dokumentation öffnen"
-        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Versionshinweise.lnk" "$INSTDIR\CHANGELOG.md" "" "%SystemRoot%\system32\SHELL32.dll" 70 SW_SHOWNORMAL "" "Versionshinweise öffnen"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\MOUSE_WHEEL_README.md" "" "%SystemRoot%\system32\SHELL32.dll" 70 SW_SHOWNORMAL "" "Dokumentation $\u00F6ffnen"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Versionshinweise.lnk" "$INSTDIR\CHANGELOG.md" "" "%SystemRoot%\system32\SHELL32.dll" 70 SW_SHOWNORMAL "" "Versionshinweise $\u00F6ffnen"
 
-        ; Verifiziere dass Verknüpfungen erstellt wurden
+        ; Verifiziere dass Verkn$\u00FCpfungen erstellt wurden
         IfFileExists "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" 0 +2
-            DetailPrint "✅ Startmenü-Verknüpfungen erfolgreich erstellt"
+            DetailPrint "$\u2705 Startmen$\u00FC-Verkn$\u00FCpfungen erfolgreich erstellt"
         Goto startmenu_done
 
     startmenu_failed:
-        DetailPrint "⚠️ Startmenü-Verzeichnis konnte nicht erstellt werden"
-        MessageBox MB_ICONEXCLAMATION|MB_OK "Das Startmenü-Verzeichnis konnte nicht erstellt werden.$\n$\nPfad: $SMPROGRAMS\Voice Transcriber"
+        DetailPrint "$\u26A0 Startmen$\u00FC-Verzeichnis konnte nicht erstellt werden"
+        MessageBox MB_ICONEXCLAMATION|MB_OK "Das Startmen$\u00FC-Verzeichnis konnte nicht erstellt werden.$\n$\nPfad: $SMPROGRAMS\Voice Transcriber"
 
     startmenu_done:
 
@@ -157,7 +157,7 @@ Section "Uninstall"
     DetailPrint "Beende AutoHotkey-Skript..."
     ExecWait 'taskkill /f /im AutoHotkey.exe /fi "WINDOWTITLE eq Voice Transcriber*"'
 
-    ; Verzeichnis rekursiv entfernen (für --onedir Modus)
+    ; Verzeichnis rekursiv entfernen (f$\u00FCr --onedir Modus)
     DetailPrint "Entferne Installationsverzeichnis..."
     RMDir /r "$INSTDIR"
 
@@ -172,7 +172,7 @@ Section "Uninstall"
     RMDir /r "$SMPROGRAMS\Voice Transcriber"
 
     ; Benutzerdaten fragen (optional)
-    MessageBox MB_YESNO "Möchten Sie auch die benutzerspezifischen Einstellungen entfernen?" IDNO skip_user_data
+    MessageBox MB_YESNO "M$\u00F6chten Sie auch die benutzerspezifischen Einstellungen entfernen?" IDNO skip_user_data
     RMDir /r "$APPDATA\VoiceTranscriber"
     skip_user_data:
 
@@ -180,15 +180,15 @@ SectionEnd
 
 ; Funktionen
 Function CheckAndInstallAHK
-    ; Prüfe ob AutoHotkey installiert ist
+    ; Pr$\u00FCfe ob AutoHotkey installiert ist
     ReadRegStr $0 HKLM "SOFTWARE\AutoHotkey" ""
     ${If} $0 != ""
-        DetailPrint "AutoHotkey ist bereits installiert"
+        DetailPrint "AutoHotkey ist ber$\u00E4its installiert"
         Return
     ${EndIf}
 
     ; AHK nicht gefunden - nachfragen
-    MessageBox MB_YESNO "AutoHotkey ist nicht installiert. Es wird für die Mausfunktionen benötigt. Soll es automatisch installiert werden?" IDNO skip_ahk_install
+    MessageBox MB_YESNO "AutoHotkey ist nicht installiert. Es wird f$\u00FCr die Mausfunktionen ben$\u00F6tigt. Soll es automatisch installiert werden?" IDNO skip_ahk_install
 
     DetailPrint "Lade AutoHotkey herunter..."
     ; AHK Installer herunterladen

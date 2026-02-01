@@ -18,7 +18,6 @@ try:
     from .user_config import user_config
 except ImportError:
     # Fallback für direkte Ausführung oder PyInstaller
-    from encryption import secure_storage
     from user_config import user_config
 
 # Lade .env Datei
@@ -37,7 +36,7 @@ class Config:
         # Cloudflare R2 Storage (aus sicherer User-Konfiguration oder .env Fallback)
         default_r2_url = 'https://pub-fce2dd545d3648c38571dc323c7b403d.r2.dev'
         self.R2_BASE_URL: str = user_config.get_decrypted('r2.base_url', os.getenv('R2_BASE_URL', default_r2_url))
-        
+
         # Aggressive Sanity Check:
         # 1. Muss mit http starten
         # 2. Darf NICHT mit dem Fernet-Header 'gAAAAA' starten (das wäre verschlüsselter Müll)
@@ -75,7 +74,7 @@ class Config:
         os.makedirs(appdata, exist_ok=True)
         self.DEBUG_FILE_PATH = os.path.join(appdata, 'voice_transcriber_debug.txt')
         self.HISTORY_FILE_PATH = os.path.join(appdata, 'transcription_history.txt')
-        
+
         # Logging für Debug-Pfad
         # logger.info(f"Debug-Datei Pfad: {self.DEBUG_FILE_PATH}")
 
@@ -118,11 +117,11 @@ class Config:
 
         # Local Transcription (benutzerspezifisch konfigurierbar)
         self.WHISPER_MODEL_SIZE: str = user_config.get('transcription.whisper_model_size', 'base') if self.user_config_loaded else os.getenv('WHISPER_MODEL_SIZE', 'base')
-        
+
         # Smart Default: Wenn Modell vorhanden, lokal bevorzugen
         from .model_manager import get_model_path
         model_exists = get_model_path(self.WHISPER_MODEL_SIZE) is not None
-        
+
         if self.user_config_loaded:
             # Falls in Config noch nichts steht, aber Modell da ist -> Einschalten
             if user_config.get('transcription.use_local') is None and model_exists:
@@ -177,7 +176,7 @@ class Config:
                 user_config.set_encrypted('r2.access_token', r2_token)
                 logger.info("R2 Access Token erfolgreich migriert und verschlüsselt")
 
-        # R2_BASE_URL Migration entfernt, da es eine öffentliche URL ist. 
+        # R2_BASE_URL Migration entfernt, da es eine öffentliche URL ist.
         # Verschlüsselung führt bei Key-Wechsel zu Installationsproblemen.
 
         # Speichere migrierte Werte

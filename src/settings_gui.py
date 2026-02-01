@@ -4,9 +4,10 @@ Zeigt App-Info und ermöglicht Hotkey-Auswahl
 """
 
 import logging
-import sys
 import os
+import sys
 import tkinter as tk
+import traceback
 from pathlib import Path
 from tkinter import messagebox, ttk
 
@@ -14,17 +15,15 @@ import pyaudio
 
 from src.config import config
 
-import traceback
-
 try:
-    from src.user_config import user_config
-    from src.model_manager import get_model_path, download_whisper_model
     from src.audio_recorder import AudioRecorder
+    from src.model_manager import download_whisper_model, get_model_path
+    from src.user_config import user_config
 except ImportError:
     try:
-        from user_config import user_config
-        from model_manager import get_model_path, download_whisper_model
         from audio_recorder import AudioRecorder
+        from model_manager import download_whisper_model, get_model_path
+        from user_config import user_config
     except ImportError:
         user_config = None
         get_model_path = None
@@ -112,13 +111,13 @@ class SettingsGUI:
         style = ttk.Style()
         style.configure("TButton", padding=6)
         style.configure("TLabel", padding=2)
-        
+
         # Tab-Style optimieren
         style.configure("TNotebook", padding=5)
-        style.configure("TNotebook.Tab", 
-                       padding=[12, 4], 
+        style.configure("TNotebook.Tab",
+                       padding=[12, 4],
                        font=("TkDefaultFont", 10))
-        
+
         # Aktiven Tab hervorheben (Fett + Dunklerer Hintergrund simulieren durch Map)
         style.map("TNotebook.Tab",
                  background=[("selected", "#0078D7")], # Windows Blau für aktiv
@@ -194,32 +193,32 @@ class SettingsGUI:
             # Erstelle Tab-Frame mit Canvas für Scrolling
             tab_outer_frame = ttk.Frame(self.notebook)
             self.notebook.add(tab_outer_frame, text=name)
-            
+
             # Canvas + Scrollbar (deutlichere Darstellung)
             canvas = tk.Canvas(tab_outer_frame, highlightthickness=0, bg='SystemButtonFace')
             # Verwende tk.Scrollbar für bessere Sichtbarkeit und Breite
             scrollbar = tk.Scrollbar(tab_outer_frame, orient="vertical", command=canvas.yview, width=16)
             scrollable_frame = ttk.Frame(canvas, padding=15)
-            
+
             scrollable_frame.bind(
                 "<Configure>",
                 lambda e, c=canvas: c.configure(scrollregion=c.bbox("all"))
             )
-            
+
             canvas.create_window((0, 0), window=scrollable_frame, anchor="nw", width=canvas.winfo_reqwidth())
             canvas.configure(yscrollcommand=scrollbar.set)
-            
+
             # Mausrad-Unterstützung
             def _on_mousewheel(event, c=canvas):
                 c.yview_scroll(int(-1*(event.delta/120)), "units")
             canvas.bind_all("<MouseWheel>", _on_mousewheel)
-            
+
             # Pack canvas and scrollbar
             canvas.pack(side="left", fill="both", expand=True)
             scrollbar.pack(side="right", fill="y")
-            
+
             self.tabs[name] = scrollable_frame
-            
+
             try:
                 creator(scrollable_frame)
             except Exception as e:
@@ -461,17 +460,17 @@ class SettingsGUI:
         # Status und Download Button
         status_frame = ttk.Frame(model_frame)
         status_frame.pack(fill='x', pady=10)
-        
+
         self.model_status_label = ttk.Label(status_frame, text="Status: Prüfe...")
         self.model_status_label.pack(side='left', padx=(0, 10))
-        
+
         self.download_btn = ttk.Button(status_frame, text="Modell herunterladen", command=self._download_model_gui)
         self.download_btn.pack(side='left')
         Tooltip(self.download_btn, "Lädt das ausgewählte Whisper-Modell herunter.\nDies kann je nach Größe einige Minuten dauern.")
-        
+
         # Initialen Status prüfen
         self.window.after(500, self._update_model_status)
-        
+
         # Info-Text
         info_frame = ttk.Frame(transcription_frame)
         info_frame.pack(fill='x', pady=10)
@@ -482,21 +481,21 @@ class SettingsGUI:
 • Bei Problemen mit lokalem Modell wechselt die App automatisch zur API"""
 
         ttk.Label(info_frame, text=info_text, foreground="blue", justify="left").pack(anchor='w')
-        
+
     def _open_debug_file(self):
         """Öffnet die Debug-Datei"""
         try:
             if not user_config:
                 messagebox.showerror("Fehler", "Konfiguration konnte nicht geladen werden.")
                 return
-                
+
             user_dir = user_config.get_appdata_dir()
             debug_file = user_dir / "voice_transcriber_debug.txt"
-            
+
             if not debug_file.exists():
                 messagebox.showinfo("Info", "Noch keine Debug-Datei vorhanden.")
                 return
-                
+
             os.startfile(debug_file)
         except Exception as e:
             logger.error(f"Fehler beim Öffnen der Debug-Datei: {e}")
@@ -511,7 +510,7 @@ class SettingsGUI:
 
             user_dir = user_config.get_appdata_dir()
             debug_file = user_dir / "voice_transcriber_debug.txt"
-            
+
             if debug_file.exists():
                 debug_file.unlink()
                 messagebox.showinfo("Info", "Debug-Datei gelöscht.")
@@ -528,7 +527,7 @@ class SettingsGUI:
             if not log_file.exists():
                 messagebox.showinfo("Info", "Noch keine Log-Datei vorhanden.")
                 return
-                
+
             os.startfile(log_file)
         except Exception as e:
             logger.error(f"Fehler beim Öffnen der Log-Datei: {e}")
@@ -541,7 +540,7 @@ class SettingsGUI:
             if not history_file.exists():
                 messagebox.showinfo("Info", "Noch kein Verlauf vorhanden.")
                 return
-                
+
             os.startfile(history_file)
         except Exception as e:
             logger.error(f"Fehler beim Öffnen der Verlaufs-Datei: {e}")
@@ -555,12 +554,12 @@ class SettingsGUI:
 
             model_size = self.model_size_var.get()
             path = get_model_path(model_size)
-            
+
             if path:
-                self.model_status_label.config(text=f"Status: ✅ Installiert", foreground="green")
+                self.model_status_label.config(text="Status: ✅ Installiert", foreground="green")
                 self.download_btn.config(text="Erneut herunterladen")
             else:
-                self.model_status_label.config(text=f"Status: ❌ Nicht installiert", foreground="red")
+                self.model_status_label.config(text="Status: ❌ Nicht installiert", foreground="red")
                 self.download_btn.config(text="Modell herunterladen")
         except Exception as e:
             logger.error(f"Fehler beim Modell-Status-Update: {e}")
@@ -569,27 +568,27 @@ class SettingsGUI:
         """Startet den Model-Download aus der GUI"""
         import threading
         model_size = self.model_size_var.get()
-        
-        if not messagebox.askyesno("Download bestätigen", 
+
+        if not messagebox.askyesno("Download bestätigen",
                                   f"Möchten Sie das Whisper-Modell '{model_size}' herunterladen?\n\n"
                                   "Dies kann einige Zeit in Anspruch nehmen."):
             return
-            
+
         self.download_btn.config(state="disabled", text="Lädt herunter...")
         self.model_status_label.config(text="Status: ⏳ Download läuft...", foreground="orange")
-        
+
         def download_thread():
             try:
                 if not download_whisper_model:
                     raise ImportError("Model Manager nicht verfügbar")
-                    
+
                 success = download_whisper_model(model_size)
-                
+
                 if success:
-                    self.window.after(0, lambda: messagebox.showinfo("Download erfolgreich", 
+                    self.window.after(0, lambda: messagebox.showinfo("Download erfolgreich",
                                                                     f"Das Modell '{model_size}' wurde erfolgreich installiert."))
                 else:
-                    self.window.after(0, lambda: messagebox.showerror("Download fehlgeschlagen", 
+                    self.window.after(0, lambda: messagebox.showerror("Download fehlgeschlagen",
                                                                      "Der Download ist fehlgeschlagen. Bitte prüfen Sie Ihre Verbindung."))
             except Exception as e:
                 logger.error(f"Download-Fehler: {e}")
@@ -603,22 +602,22 @@ class SettingsGUI:
     def _create_vocabulary_tab(self, parent):
         """Erstellt den Vokabular-Tab für AI-Prompts"""
         ttk.Label(parent, text="VOKABULAR & KONTEXT", font=("TkDefaultFont", 10, "bold")).pack(anchor='w', pady=(0, 10))
-        
+
         vocab_frame = ttk.LabelFrame(parent, text="Individuelles AI-Vokabular", padding=10)
         vocab_frame.pack(fill='both', expand=True, pady=5)
-        
+
         info_label = ttk.Label(vocab_frame, text="Hier kannst du Fachbegriffe, Eigennamen oder Abkürzungen hinterlegen,\ndie das KI-Modell besser erkennen soll (Prompting).", justify="left")
         info_label.pack(anchor='w', pady=(0, 10))
-        
+
         # Textfeld für Vokabular
         self.vocab_text = tk.Text(vocab_frame, height=10, width=40, font=("TkDefaultFont", 9))
         self.vocab_text.pack(fill='both', expand=True, pady=5)
-        
+
         # Scrollbar für Textfeld
         vocab_scroll = tk.Scrollbar(self.vocab_text, orient="vertical", command=self.vocab_text.yview, width=16)
         vocab_scroll.pack(side='right', fill='y')
         self.vocab_text.configure(yscrollcommand=vocab_scroll.set)
-        
+
         # Beispiel laden
         example_text = "Tipp: Trenne Begriffe einfach durch Kommata oder Leerzeichen.\nBeispiel: Speechering, Quievreux, Python, API, JSON"
         Tooltip(self.vocab_text, example_text)
@@ -826,60 +825,60 @@ class SettingsGUI:
         """Testet das Mikrofon"""
         try:
             import threading
-            import winsound
             import time
-            
+            import winsound
+
             if not AudioRecorder:
                 messagebox.showerror("Fehler", "AudioRecorder nicht verfügbar")
                 return
 
             # Deaktiviere Button während Test
-            # Wir müssen den Button finden (etwas hacky da keine Referenz gespeichert, 
+            # Wir müssen den Button finden (etwas hacky da keine Referenz gespeichert,
             # aber wir suchen im audio_frame)
             # Einfacher: Status-Modal
-            
+
             status_window = tk.Toplevel(self.window)
             status_window.title("Mikrofon-Test")
             status_window.geometry("300x150")
             status_window.transient(self.window)
             status_window.grab_set()
-            
+
             lbl = ttk.Label(status_window, text="Initialisiere...", font=("TkDefaultFont", 10))
             lbl.pack(pady=20)
-            
+
             progress = ttk.Progressbar(status_window, mode='indeterminate')
             progress.pack(fill='x', padx=20, pady=10)
             progress.start()
-            
+
             def run_test():
                 recorder = None
                 wav_path = None
                 try:
                     # 1. Aufnahme starten
                     lbl.config(text="🔴 Aufnahme läuft (3s)... \nBitte sprechen Sie etwas!")
-                    
+
                     recorder = AudioRecorder()
                     wav_path = recorder.start_recording()
-                    
+
                     if not wav_path:
                         raise Exception("Konnte Aufnahme nicht starten")
-                        
+
                     time.sleep(3)
-                    
+
                     # 2. Stoppen
                     recorder.stop_recording()
                     lbl.config(text="▶️ Spiele Aufnahme ab...")
-                    
+
                     # 3. Abspielen
                     winsound.PlaySound(wav_path, winsound.SND_FILENAME)
-                    
+
                     lbl.config(text="✅ Test erfolgreich!")
                     messagebox.showinfo("Erfolg", "Test abgeschlossen. Haben Sie sich gehört?", parent=status_window)
-                    
+
                 except Exception as e:
                     logger.error(f"Mikrofon-Test fehlgeschlagen: {e}")
                     messagebox.showerror("Fehler", f"Test fehlgeschlagen: {e}\n\nPrüfen Sie die Log-Datei für Details.", parent=status_window)
-                    
+
                 finally:
                     if recorder:
                         recorder.cleanup()
@@ -891,7 +890,7 @@ class SettingsGUI:
                     status_window.destroy()
 
             threading.Thread(target=run_test, daemon=True).start()
-            
+
         except Exception as e:
             messagebox.showerror("Fehler", f"Konnte Test nicht starten: {e}")
 
@@ -920,7 +919,7 @@ class SettingsGUI:
 
             model_size = user_config.get('transcription.whisper_model_size', 'small')
             self.model_size_var.set(model_size)
-            
+
             # Trace hinzufügen für Modell-Wechsel
             self.model_size_var.trace_add("write", lambda *args: self._update_model_status())
 
@@ -948,7 +947,7 @@ class SettingsGUI:
             # API-Key Validierung (nur wenn geändert und nicht Platzhalter)
             api_key = self.api_key_var.get().strip()
             placeholder = "*** API-Key ist gesetzt ***"
-            
+
             if api_key and api_key != placeholder:
                 if not api_key.startswith('sk-'):
                     messagebox.showerror("Fehler", "Ungültiger API-Key Format. Muss mit 'sk-' beginnen.")
@@ -958,7 +957,7 @@ class SettingsGUI:
                     return
                 user_config.set_encrypted('api.openai_key', api_key)
                 logger.info("API-Key erfolgreich verschlüsselt gespeichert")
-                
+
                 # API-Key aus RAM löschen für Sicherheit
                 self.api_key_var.set(placeholder)
                 self.api_key_validation_label.config(text="", foreground="red")
@@ -1026,10 +1025,11 @@ class SettingsGUI:
             import os
             import subprocess
             from pathlib import Path
+
             from src.config import config
 
             debug_file = Path(config.DEBUG_FILE_PATH)
-            
+
             if debug_file.exists():
                 logger.info(f"Öffne Debug-Datei: {debug_file}")
                 # Öffne mit Standard-Editor
@@ -1055,10 +1055,11 @@ class SettingsGUI:
         """Löscht die Debug-Datei"""
         try:
             from pathlib import Path
+
             from src.config import config
-            
+
             debug_file = Path(config.DEBUG_FILE_PATH)
-            
+
             if debug_file.exists():
                 debug_file.unlink()
                 messagebox.showinfo("Debug-Datei", "Debug-Datei wurde gelöscht.")
@@ -1072,10 +1073,10 @@ class SettingsGUI:
     def _export_settings(self):
         """Exportiert Einstellungen in eine Datei"""
         try:
-            from tkinter import filedialog
-            from pathlib import Path
             import json
             from datetime import datetime
+            from pathlib import Path
+            from tkinter import filedialog
 
             # Datei-Dialog für Export
             file_path = filedialog.asksaveasfilename(
@@ -1110,15 +1111,15 @@ class SettingsGUI:
             import os
             import subprocess
             temp_dir = config.get_temp_dir()
-            
+
             if not temp_dir.exists():
                 temp_dir.mkdir(parents=True)
-                
+
             if os.name == 'nt':
                 os.startfile(temp_dir)
             else:
                 subprocess.run(['xdg-open', str(temp_dir)])
-                
+
         except Exception as e:
             logger.error(f"Fehler beim Öffnen des Temp-Verzeichnisses: {e}")
             messagebox.showerror("Fehler", f"Konnte Temp-Verzeichnis nicht öffnen: {e}")
@@ -1127,12 +1128,12 @@ class SettingsGUI:
         """Bereinigt temporäre Dateien"""
         if not messagebox.askyesno("Bereinigen", "Möchten Sie wirklich alle temporären WAV-Dateien löschen?"):
             return
-            
+
         try:
             temp_dir = config.get_temp_dir()
             count = 0
             size_bytes = 0
-            
+
             for wav_file in temp_dir.glob("recording_*.wav"):
                 try:
                     size_bytes += wav_file.stat().st_size
@@ -1140,10 +1141,10 @@ class SettingsGUI:
                     count += 1
                 except Exception:
                     pass
-            
+
             size_mb = size_bytes / (1024 * 1024)
             messagebox.showinfo("Bereinigung", f"Es wurden {count} Dateien gelöscht ({size_mb:.1f} MB freigegeben).")
-            
+
         except Exception as e:
             logger.error(f"Fehler beim Bereinigen: {e}")
             messagebox.showerror("Fehler", f"Fehler beim Bereinigen: {e}")
@@ -1151,9 +1152,9 @@ class SettingsGUI:
     def _import_settings(self):
         """Importiert Einstellungen aus einer Datei"""
         try:
-            from tkinter import filedialog
-            from pathlib import Path
             import json
+            from pathlib import Path
+            from tkinter import filedialog
 
             # Datei-Dialog für Import
             file_path = filedialog.askopenfilename(
@@ -1253,15 +1254,15 @@ class SettingsGUI:
         icon_label.pack(pady=(20, 10))
 
         # App Name
-        ttk.Label(parent, text="Voice Transcriber", 
+        ttk.Label(parent, text="Voice Transcriber",
                  font=("TkDefaultFont", 16, "bold")).pack()
 
         # Version
-        ttk.Label(parent, text=f"Version {config.APP_VERSION}", 
+        ttk.Label(parent, text=f"Version {config.APP_VERSION}",
                  font=("TkDefaultFont", 10)).pack(pady=5)
 
         # Beschreibung
-        ttk.Label(parent, text="Push-to-Talk Sprach-zu-Text Transkription", 
+        ttk.Label(parent, text="Push-to-Talk Sprach-zu-Text Transkription",
                  font=("TkDefaultFont", 9)).pack(pady=10)
 
         # Technologien
@@ -1296,5 +1297,5 @@ class SettingsGUI:
             ttk.Label(features_frame, text=feature, font=("TkDefaultFont", 9)).pack(anchor='w', pady=2)
 
         # Copyright
-        ttk.Label(parent, text="© 2026 Quievreux", 
+        ttk.Label(parent, text="© 2026 Quievreux",
                  font=("TkDefaultFont", 8)).pack(pady=(20, 10))

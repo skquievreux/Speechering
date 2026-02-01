@@ -6,11 +6,10 @@ Transkribiert Audio-Dateien lokal mittels faster-whisper Modell.
 import logging
 import time
 from pathlib import Path
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 # Lazy imports - nur laden wenn tatsächlich verwendet
 if TYPE_CHECKING:
-    import torch
     from faster_whisper import WhisperModel
 
 from src.config import config
@@ -19,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # Globales Singleton für das lokale Transkriptionsservice
 _instance: Optional['LocalTranscriptionService'] = None
-_instance_model_size: Optional[str] = None
+_instance_model_size: str | None = None
 
 class LocalTranscriptionService:
     """Service für lokale Audio-zu-Text Transkription mit faster-whisper"""
@@ -48,7 +47,7 @@ class LocalTranscriptionService:
         if hasattr(self, '_initialized'):
             return
 
-        self.model: Optional[WhisperModel] = None
+        self.model: WhisperModel | None = None
         self.model_size = config.WHISPER_MODEL_SIZE
         self._initialized = True
         self._load_model()
@@ -59,10 +58,11 @@ class LocalTranscriptionService:
             # Lazy imports - nur hier laden wenn tatsächlich benötigt
             import torch
             from faster_whisper import WhisperModel
-            from src.model_manager import get_model_path, get_models_dir
-            
+
+            from src.model_manager import get_model_path
+
             logger.info(f"Prüfe lokales Whisper-Modell: '{self.model_size}'")
-            
+
             # Prüfe ob Modell vorhanden ist
             model_path = get_model_path(self.model_size)
             if not model_path:
@@ -99,7 +99,7 @@ class LocalTranscriptionService:
             # Wir werfen hier keinen Fehler mehr, damit die App nicht abstürzt wenn Modelle fehlen
             # raise RuntimeError(f"Whisper-Modell konnte nicht geladen werden: {e}")
 
-    def transcribe(self, audio_path: str) -> Optional[str]:
+    def transcribe(self, audio_path: str) -> str | None:
         """Transkribiert Audio-Datei zu Text"""
         if not self._validate_audio_file(audio_path):
             return None
@@ -107,12 +107,12 @@ class LocalTranscriptionService:
         if not self.model:
             logger.info("Modell nicht geladen - versuche Re-Inizialisierung...")
             self._load_model()
-            
+
             if not self.model:
                 logger.error("Lokale Transkription nicht möglich: Whisper-Modell nicht geladen.")
                 from src.notification import notification_service
                 notification_service.show_notification(
-                    "Lokale Transkription", 
+                    "Lokale Transkription",
                     f"Das Modell '{self.model_size}' muss erst heruntergeladen werden.",
                     duration=5
                 )
@@ -121,9 +121,9 @@ class LocalTranscriptionService:
         try:
             logger.info(f"Starte lokale Transkription mit Modell '{self.model_size}'")
             logger.debug(f"Audio-Pfad: {Path(audio_path).absolute()}")
-            
+
             if not Path(audio_path).exists():
-                raise FileNotFoundError(f"Audio-Datei nicht gefunden: {audio_path}")
+                raise FileNotFoundError(f"Audio-Datei nicht gefunden: {audio_path}") from None
 
             start_time = time.time()
 
@@ -159,11 +159,10 @@ class LocalTranscriptionService:
         except Exception as e:
             logger.error(f"Fehler bei lokaler Transkription: {e}", exc_info=True)
             from src.exceptions import TranscriptionError
-            raise TranscriptionError(f"Lokale Transkription fehlgeschlagen: {e}")
+            raise TranscriptionError(f"Lokale Transkription fehlgeschlagen: {e}") from e
 
-    def transcribe_audio_data(self, audio_data: bytes, filename: str = "audio.mp3") -> Optional[str]:
+    def transcribe_audio_data(self, audio_data: bytes, filename: str = "audio.mp3") -> str | None:
         """Transkribiert komprimierte Audio-Daten zu Text"""
-        import io
         import tempfile
 
         try:

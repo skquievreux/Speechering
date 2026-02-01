@@ -6,9 +6,8 @@ Transkribiert Audio-Dateien zu Text mittels OpenAI Whisper API.
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
-from openai import OpenAI, AuthenticationError
+from openai import AuthenticationError, OpenAI
 
 from src.config import config
 from src.exceptions import TranscriptionError
@@ -17,8 +16,8 @@ from src.local_transcription import LocalTranscriptionService
 logger = logging.getLogger(__name__)
 
 # Globales Singleton für lokalen Transkriptionsservice
-_global_local_service: Optional[LocalTranscriptionService] = None
-_global_local_service_model_size: Optional[str] = None
+_global_local_service: LocalTranscriptionService | None = None
+_global_local_service_model_size: str | None = None
 
 class TranscriptionService:
     """Service für Audio-zu-Text Transkription"""
@@ -28,7 +27,7 @@ class TranscriptionService:
         self.max_retries = 3
         self.retry_delay = 1.0  # Sekunden
 
-    def _get_local_transcription_service(self) -> Optional[LocalTranscriptionService]:
+    def _get_local_transcription_service(self) -> LocalTranscriptionService | None:
         """Lokalen Transkriptionsservice abrufen (Singleton)"""
         global _global_local_service, _global_local_service_model_size
 
@@ -55,7 +54,7 @@ class TranscriptionService:
 
         return _global_local_service
 
-    def transcribe(self, audio_path: str) -> Optional[str]:
+    def transcribe(self, audio_path: str) -> str | None:
         """Transkribiert Audio-Datei zu Text"""
         if not self._validate_audio_file(audio_path):
             return None
@@ -76,7 +75,7 @@ class TranscriptionService:
         # Fallback auf API-Transkription
         return self._transcribe_with_api(audio_path)
 
-    def _transcribe_with_api(self, audio_path: str) -> Optional[str]:
+    def _transcribe_with_api(self, audio_path: str) -> str | None:
         """Transkribiert Audio-Datei mit OpenAI API"""
         for attempt in range(self.max_retries):
             try:
@@ -86,7 +85,7 @@ class TranscriptionService:
 
                 # Vokabular (Prompt) laden
                 vocabulary = config.get_vocabulary()
-                
+
                 with open(audio_path, 'rb') as audio_file:
                     transcript = self.client.audio.transcriptions.create(
                         model="whisper-1",
@@ -108,18 +107,20 @@ class TranscriptionService:
 
             except AuthenticationError as e:
                 logger.error(f"OpenAI Authentifizierungsfehler: {e}")
-                raise TranscriptionError(f"API-Key ungültig oder abgelaufen: {e}")
+                raise TranscriptionError(f"API-Key ungültig oder abgelaufen: {e}") from e
             except Exception as e:
                 logger.error(f"Fehler bei API-Transkription (Versuch {attempt + 1}): {e}")
                 if attempt < self.max_retries - 1:
                     time.sleep(self.retry_delay * (2 ** attempt))  # Exponential backoff
                 else:
                     logger.error("Maximale Anzahl von Versuchen erreicht")
-                    raise TranscriptionError(f"API-Transkription nach {self.max_retries} Versuchen fehlgeschlagen: {e}")
+                    raise TranscriptionError(
+                        f"API-Transkription nach {self.max_retries} Versuchen fehlgeschlagen: {e}"
+                    ) from e
 
         return None
 
-    def transcribe_audio_data(self, audio_data: bytes, filename: str = "audio.mp3") -> Optional[str]:
+    def transcribe_audio_data(self, audio_data: bytes, filename: str = "audio.mp3") -> str | None:
         """Transkribiert komprimierte Audio-Daten zu Text"""
         # Versuche lokale Transkription zuerst, falls aktiviert
         if config.USE_LOCAL_TRANSCRIPTION:
@@ -135,7 +136,7 @@ class TranscriptionService:
         # Fallback auf API-Transkription
         return self._transcribe_audio_data_with_api(audio_data, filename)
 
-    def _transcribe_audio_data_with_api(self, audio_data: bytes, filename: str = "audio.mp3") -> Optional[str]:
+    def _transcribe_audio_data_with_api(self, audio_data: bytes, filename: str = "audio.mp3") -> str | None:
         """Transkribiert Audio-Daten mit OpenAI API"""
         import io
 
@@ -181,9 +182,8 @@ class TranscriptionService:
         try:
             path = Path(audio_path)
 
-            if not path.exists():
-                logger.error(f"Audio-Datei existiert nicht: {audio_path}")
-                return False
+            if not path.exists(): # Changed to use 'path' directly
+                raise FileNotFoundError(f"Audio-Datei nicht gefunden: {audio_path}") from None
 
             if not path.is_file():
                 logger.error(f"Pfad ist keine Datei: {audio_path}")
@@ -202,8 +202,11 @@ class TranscriptionService:
             logger.info(f"Audio-Datei validiert: {path.name} ({size_mb:.1f}MB)")
             return True
 
-        except Exception as e:
+        except FileNotFoundError as e: # Catch specific error
             logger.error(f"Fehler bei Audio-Datei-Validierung: {e}")
+            return False
+        except Exception as e:
+            logger.error(f"Unerwarteter Fehler bei Audio-Datei-Validierung: {e}", exc_info=True)
             return False
 
     def _validate_transcript(self, transcript: str) -> bool:

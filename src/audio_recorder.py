@@ -9,7 +9,6 @@ import threading
 import time
 import wave
 from pathlib import Path
-from typing import Optional
 
 import pyaudio
 
@@ -34,12 +33,12 @@ class AudioRecorder:
     """Verwaltet Audio-Aufnahme vom Mikrofon"""
 
     def __init__(self):
-        self.audio: Optional[pyaudio.PyAudio] = None
-        self.stream: Optional[pyaudio.Stream] = None
+        self.audio: pyaudio.PyAudio | None = None
+        self.stream: pyaudio.Stream | None = None
         self.frames = []
         self.is_recording = False
-        self.recording_thread: Optional[threading.Thread] = None
-        self.temp_file: Optional[Path] = None
+        self.recording_thread: threading.Thread | None = None
+        self.temp_file: Path | None = None
         self.last_recording_duration = 0.0  # Dauer der letzten Aufnahme in Sekunden
 
         self._init_audio()
@@ -64,7 +63,7 @@ class AudioRecorder:
             logger.error(f"Fehler bei PyAudio-Initialisierung: {e}")
             raise
 
-    def start_recording(self) -> Optional[str]:
+    def start_recording(self) -> str | None:
         """Startet die Audio-Aufnahme und gibt den Dateipfad zurück"""
         if self.is_recording:
             logger.warning("Aufnahme läuft bereits")
@@ -77,13 +76,13 @@ class AudioRecorder:
             # Stream öffnen
             # Input Device auswählen
             input_device_index = None
-            
+
             # 1. Versuche über Namen zu finden (zuverlässiger bei USB-Geräten)
             if config.AUDIO_DEVICE_NAME and config.AUDIO_DEVICE_NAME != "Standard (automatisch)":
                 input_device_index = self._get_device_index_by_name(config.AUDIO_DEVICE_NAME)
                 if input_device_index is not None:
                      logger.info(f"Verwende Audio-Gerät nach Name: {config.AUDIO_DEVICE_NAME} (Index: {input_device_index})")
-            
+
             # 2. Fallback auf Index (Legacy)
             if input_device_index is None and config.AUDIO_DEVICE_INDEX >= 0:
                 input_device_index = config.AUDIO_DEVICE_INDEX
@@ -117,7 +116,7 @@ class AudioRecorder:
             self._cleanup_stream()
             return None
 
-    def stop_recording(self) -> Optional[str]:
+    def stop_recording(self) -> str | None:
         """Stoppt die Aufnahme und speichert die Datei"""
         if not self.is_recording:
             logger.warning("Keine Aufnahme läuft")
@@ -150,7 +149,7 @@ class AudioRecorder:
             logger.error(f"Fehler beim Stoppen der Aufnahme: {e}")
             return None
 
-    def record_audio(self) -> Optional[str]:
+    def record_audio(self) -> str | None:
         """Führt komplette Audio-Aufnahme durch (start + stop)"""
         wav_path = self.start_recording()
         if not wav_path:
@@ -204,8 +203,8 @@ class AudioRecorder:
             logger.error(f"Fehler beim Speichern der WAV-Datei: {e}")
             raise
 
-    def compress_audio(self, wav_path: str, output_format: Optional[str] = None,
-                      bitrate: Optional[str] = None) -> bytes:
+    def compress_audio(self, wav_path: str, output_format: str | None = None,
+                      bitrate: str | None = None) -> bytes:
         """Komprimiert WAV-Datei in effizienteres Format"""
         if not PYDUB_AVAILABLE:
             logger.warning("pydub nicht verfügbar - verwende Original-WAV")
@@ -240,7 +239,7 @@ class AudioRecorder:
             with open(wav_path, 'rb') as f:
                 return f.read()
 
-    def record_and_compress(self) -> Optional[bytes]:
+    def record_and_compress(self) -> bytes | None:
         """Vollständiger Workflow: Aufnahme + Komprimierung (wartet auf Hotkey-Release)"""
         if not config.AUDIO_COMPRESSION_ENABLED:
             logger.info("Audio-Komprimierung deaktiviert, verwende Standard-Aufnahme")
@@ -297,39 +296,39 @@ class AudioRecorder:
                 logger.error(f"Fallback fehlgeschlagen: {fallback_e}")
             return None
 
-    def _get_device_index_by_name(self, target_name: str) -> Optional[int]:
+    def _get_device_index_by_name(self, target_name: str) -> int | None:
         """Findet den Index eines Audio-Geräts anhand des Namens"""
         try:
             count = self.audio.get_device_count()
             for i in range(count):
                 device_info = self.audio.get_device_info_by_index(i)
                 max_channels = device_info.get('maxInputChannels')
-                
+
                 if max_channels is not None and max_channels > 0:
                     device_name = device_info.get('name')
-                    
+
                     # Gleiche Bereinigungs-Logik wie in settings_gui.py anwenden
                     try:
                         if not isinstance(device_name, str):
                             device_name = str(device_name)
                         if isinstance(device_name, bytes):
                             device_name = device_name.decode('utf-8', errors='replace')
-                        
+
                         import unicodedata
                         device_name = unicodedata.normalize('NFKD', device_name).encode('ascii', 'ignore').decode('ascii')
                         device_name = ''.join(c for c in device_name if ord(c) >= 32 or c in '\t\n\r')
                         device_name = device_name.strip()
-                        
+
                         if not device_name:
                             device_name = f"Audio Device {i}"
-                            
+
                     except Exception:
                         pass
-                    
+
                     if device_name == target_name:
                         return i
             return None
-            
+
         except Exception as e:
             logger.warning(f"Fehler bei Gerätesuche nach Name: {e}")
             return None

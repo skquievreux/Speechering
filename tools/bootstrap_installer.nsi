@@ -84,9 +84,9 @@ Section "Voice Transcriber Bootstrap" SecApp
     ${If} $0 == 0
         DetailPrint "✅ Download erfolgreich!"
     ${Else}
-        DetailPrint "❌ Download fehlgeschlagen (Exit-Code: $0)"
-        MessageBox MB_ICONEXCLAMATION|MB_OK "Der Download von VoiceTranscriber.exe ist fehlgeschlagen.$\n$\nBitte überprüfen Sie Ihre Internetverbindung und führen Sie die Installation erneut aus.$\n$\nSie können den Download später über '$INSTDIR\BootstrapInstaller.exe' wiederholen."
-        ; Setze Flag für Fehler, aber Installation fortsetzen
+        DetailPrint "$\u274C Download fehlgeschlagen (Exit-Code: $0)"
+        MessageBox MB_ICONEXCLAMATION|MB_OK "Der Download von VoiceTranscriber.exe ist fehlgeschlagen.$\n$\nBitte $\u00FCberpr$\u00FCfen Sie Ihre Internetverbindung und f$\u00FChren Sie die Installation erneut aus.$\n$\nSie k$\u00F6nnen den Download sp$\u00E4ter $\u00FCber '$INSTDIR\BootstrapInstaller.exe' wiederholen."
+        ; Setze Flag f$\u00FCr Fehler, aber Installation fortsetzen
         WriteRegStr HKLM "Software\VoiceTranscriber" "DownloadFailed" "1"
     ${EndIf}
 
@@ -99,7 +99,7 @@ Section "Voice Transcriber Bootstrap" SecApp
         Goto after_download_check
 
     download_failed:
-        DetailPrint "⚠️ VoiceTranscriber.exe wurde nicht heruntergeladen"
+        DetailPrint "$\u26A0 VoiceTranscriber.exe wurde nicht heruntergeladen"
         WriteRegStr HKLM "Software\VoiceTranscriber" "DownloadSuccess" "0"
 
     after_download_check:
@@ -123,7 +123,7 @@ Section "Voice Transcriber Bootstrap" SecApp
     WriteUninstaller "$INSTDIR\uninstall.exe"
 
     ; ====================================================================
-    ; Desktop & Startmenü-Verknüpfungen auf VoiceTranscriber.exe
+    ; Desktop & Startmen$\u00FC-Verkn$\u00FCpfungen auf VoiceTranscriber.exe
     ; (NICHT auf Bootstrap-Installer!)
     ; ====================================================================
 
@@ -134,58 +134,58 @@ Section "Voice Transcriber Bootstrap" SecApp
         DetailPrint "Erstelle Desktop-Verknüpfung für Voice Transcriber..."
         CreateShortCut "$DESKTOP\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber - Sprachtranskription"
 
-        ; Prüfe ob Desktop-Verknüpfung erstellt wurde
+        ; Pr$\u00FCfe ob Desktop-Verkn$\u00FCpfung erstellt wurde
         IfFileExists "$DESKTOP\Voice Transcriber.lnk" desktop_ok desktop_failed
         desktop_ok:
-            DetailPrint "✅ Desktop-Verknüpfung erfolgreich erstellt"
+            DetailPrint "$\u2705 Desktop-Verkn$\u00FCpfung erfolgreich erstellt"
             Goto desktop_done
         desktop_failed:
-            DetailPrint "⚠️ Desktop-Verknüpfung konnte nicht erstellt werden"
+            DetailPrint "$\u26A0 Desktop-Verkn$\u00FCpfung konnte nicht erstellt werden"
         desktop_done:
 
-        ; Startmenü-Verknüpfungen
-        DetailPrint "Erstelle Startmenü-Einträge..."
+        ; Startmen$\u00FC-Verkn$\u00FCpfungen
+        DetailPrint "Erstelle Startmen$\u00FC-Eintr$\u00E4ge..."
         CreateDirectory "$SMPROGRAMS\Voice Transcriber"
 
-        ; Prüfe ob Verzeichnis erstellt wurde
+        ; Pr$\u00FCfe ob Verzeichnis erstellt wurde
         IfFileExists "$SMPROGRAMS\Voice Transcriber" startmenu_dir_ok startmenu_dir_failed
         startmenu_dir_ok:
-            DetailPrint "✅ Startmenü-Verzeichnis erstellt: $SMPROGRAMS\Voice Transcriber"
+            DetailPrint "$\u2705 Startmen$\u00FC-Verzeichnis erstellt: $SMPROGRAMS\Voice Transcriber"
 
             ; Hauptverknüpfung mit Icon
             CreateShortCut "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" "$INSTDIR\VoiceTranscriber.exe" "" "$INSTDIR\VoiceTranscriber.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber starten"
             DetailPrint "Erstelle Verknüpfung: Voice Transcriber.lnk"
 
-            ; Bootstrap-Verknüpfung
-            CreateShortCut "$SMPROGRAMS\Voice Transcriber\Installation erneut durchführen.lnk" "$INSTDIR\BootstrapInstaller.exe" "" "$INSTDIR\BootstrapInstaller.exe" 0 SW_SHOWNORMAL "" "Installation erneut durchführen"
-            DetailPrint "Erstelle Verknüpfung: Installation erneut durchführen.lnk"
+            ; Bootstrap-Verkn$\u00FCpfung
+            CreateShortCut "$SMPROGRAMS\Voice Transcriber\Installation erneut durchf$\u00FChren.lnk" "$INSTDIR\BootstrapInstaller.exe" "" "$INSTDIR\BootstrapInstaller.exe" 0 SW_SHOWNORMAL "" "Installation erneut durchf$\u00FChren"
+            DetailPrint "Erstelle Verkn$\u00FCpfung: Installation erneut durchf$\u00FChren.lnk"
 
-            ; Deinstaller-Verknüpfung
+            ; Deinstaller-Verkn$\u00FCpfung
             CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0 SW_SHOWNORMAL "" "Voice Transcriber deinstallieren"
-            DetailPrint "Erstelle Verknüpfung: Deinstallieren.lnk"
+            DetailPrint "Erstelle Verkn$\u00FCpfung: Deinstallieren.lnk"
 
             ; Dokumentation-Verknüpfung
             CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\README.md" "" "%SystemRoot%\system32\SHELL32.dll" 70 SW_SHOWNORMAL "" "Dokumentation öffnen"
             DetailPrint "Erstelle Verknüpfung: Dokumentation.lnk"
 
-            ; Verifiziere Verknüpfungen
+            ; Verifiziere Verkn$\u00FCpfungen
             IfFileExists "$SMPROGRAMS\Voice Transcriber\Voice Transcriber.lnk" 0 +2
-                DetailPrint "✅ Startmenü-Verknüpfungen erfolgreich erstellt"
+                DetailPrint "$\u2705 Startmen$\u00FC-Verkn$\u00FCpfungen erfolgreich erstellt"
 
             Goto shortcuts_done
 
         startmenu_dir_failed:
-            DetailPrint "⚠️ Startmenü-Verzeichnis konnte nicht erstellt werden"
-            MessageBox MB_ICONEXCLAMATION|MB_OK "Das Startmenü-Verzeichnis konnte nicht erstellt werden.$\n$\nPfad: $SMPROGRAMS\Voice Transcriber$\n$\nBitte überprüfen Sie die Berechtigungen."
+            DetailPrint "$\u26A0 Startmen$\u00FC-Verzeichnis konnte nicht erstellt werden"
+            MessageBox MB_ICONEXCLAMATION|MB_OK "Das Startmen$\u00FC-Verzeichnis konnte nicht erstellt werden.$\n$\nPfad: $SMPROGRAMS\Voice Transcriber$\n$\nBitte $\u00FCberpr$\u00FCfen Sie die Berechtigungen."
 
     create_shortcuts_bootstrap:
-        ; Fallback: Wenn Download fehlgeschlagen, Verknüpfung auf Bootstrap erstellen
-        DetailPrint "Download fehlgeschlagen - erstelle Verknüpfung auf Bootstrap-Installer..."
-        CreateShortCut "$DESKTOP\Voice Transcriber - Installation durchführen.lnk" "$INSTDIR\BootstrapInstaller.exe" "" "$INSTDIR\BootstrapInstaller.exe" 0
+        ; Fallback: Wenn Download fehlgeschlagen, Verkn$\u00FCpfung auf Bootstrap erstellen
+        DetailPrint "Download fehlgeschlagen - erstelle Verkn$\u00FCpfung auf Bootstrap-Installer..."
+        CreateShortCut "$DESKTOP\Voice Transcriber - Installation durchf$\u00FChren.lnk" "$INSTDIR\BootstrapInstaller.exe" "" "$INSTDIR\BootstrapInstaller.exe" 0
 
         ; Startmenü
         CreateDirectory "$SMPROGRAMS\Voice Transcriber"
-        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Installation durchführen.lnk" "$INSTDIR\BootstrapInstaller.exe"
+        CreateShortCut "$SMPROGRAMS\Voice Transcriber\Installation durchf$\u00FChren.lnk" "$INSTDIR\BootstrapInstaller.exe"
         CreateShortCut "$SMPROGRAMS\Voice Transcriber\Deinstallieren.lnk" "$INSTDIR\uninstall.exe"
         CreateShortCut "$SMPROGRAMS\Voice Transcriber\Dokumentation.lnk" "$INSTDIR\README.md"
 
@@ -245,7 +245,7 @@ Section "Uninstall"
     RMDir /r "$SMPROGRAMS\Voice Transcriber"
 
     ; Benutzerdaten fragen (optional)
-    MessageBox MB_YESNO "Möchten Sie auch die benutzerspezifischen Einstellungen entfernen?" IDNO skip_user_data
+    MessageBox MB_YESNO "M$\u00F6chten Sie auch die benutzerspezifischen Einstellungen entfernen?" IDNO skip_user_data
     RMDir /r "$APPDATA\VoiceTranscriber"
     skip_user_data:
 

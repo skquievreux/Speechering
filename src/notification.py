@@ -5,9 +5,7 @@ Zeigt dem User freundliche Fehler- und Status-Meldungen.
 
 import logging
 import threading
-import os
 from enum import Enum
-from typing import Optional
 
 try:
     from .resources import get_resource_path
@@ -40,7 +38,7 @@ class NotificationService:
         self.enabled = True
         self._notification_history = []
         self._lock = threading.Lock()
-        
+
     def show_notification(self, title: str, message: str, type: NotificationType = NotificationType.INFO, duration: int = 5):
         """Zeigt eine System-Benachrichtigung an (Thread-Safe)"""
         if not self.enabled:
@@ -77,10 +75,10 @@ class NotificationService:
                 icon_path = get_resource_path("assets/icon.ico")
                 if not icon_path.exists():
                     icon_path = None
-                
+
                 # Immer eine NEUE Instanz erstellen, da win10toast oft Probleme mit Wiederverwendung hat
                 toaster = ToastNotifier()
-                
+
                 toaster.show_toast(
                     title=title,
                     msg=message,
@@ -123,19 +121,19 @@ class NotificationService:
 
             # Windows Toast Notification (optional)
             try:
-                from win10toast import ToastNotifier
                 import threading
-                
+
+                from win10toast import ToastNotifier
+
                 # Toaster in gewissem Rahmen thread-sicherer machen
                 def _show_toast_safe():
                     try:
-                        import os
                         from win10toast import ToastNotifier
                         toaster = ToastNotifier()
                         icon_path = get_resource_path("assets/icon.ico")
                         if not icon_path.exists():
                             icon_path = None
-                            
+
                         toaster.show_toast(
                             title=title,
                             msg=message,
@@ -147,7 +145,6 @@ class NotificationService:
                         logger.warning(f"Interner Toast-Fehler: {toast_e}")
 
                 # Toast in separatem Thread starten um Haupt-Thread nicht zu blockieren
-                import threading
                 toast_thread = threading.Thread(target=_show_toast_safe, daemon=True)
                 toast_thread.start()
                 return True

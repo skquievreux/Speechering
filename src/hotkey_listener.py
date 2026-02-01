@@ -5,7 +5,7 @@ Erkennt konfigurierbare Hotkeys für Push-to-Talk Funktionalität.
 
 import logging
 import time
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import keyboard
 
@@ -15,8 +15,8 @@ class HotkeyListener:
     """Verwaltet globale Hotkey-Erkennung mit konfigurierbaren Hotkeys"""
 
     def __init__(self):
-        self.on_press_callback: Optional[Callable] = None
-        self.on_release_callback: Optional[Callable] = None
+        self.on_press_callback: Callable | None = None
+        self.on_release_callback: Callable | None = None
         self.hotkey_registered = False
         self.registered_hotkeys = []
 

@@ -4,11 +4,9 @@ R2 Storage Downloader - Lädt Dateien von Cloudflare R2 Storage
 
 import hashlib
 import logging
-import os
 import sys
 import time
 from pathlib import Path
-from typing import Optional
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -24,7 +22,7 @@ logger = logging.getLogger(__name__)
 class R2Downloader:
     """Downloader für Cloudflare R2 Storage Dateien"""
 
-    def __init__(self, base_url: Optional[str] = None, access_token: Optional[str] = None):
+    def __init__(self, base_url: str | None = None, access_token: str | None = None):
         # Verwende benutzerdefinierte URL oder Standard
         if base_url:
             self.base_url = base_url.rstrip('/')
@@ -36,7 +34,7 @@ class R2Downloader:
         self.max_retries = 3
         self.retry_delay = 2  # Sekunden
 
-    def download_file(self, remote_path: str, local_path: str, expected_size: Optional[int] = None, raise_on_error: bool = False) -> bool:
+    def download_file(self, remote_path: str, local_path: str, expected_size: int | None = None, raise_on_error: bool = False) -> bool:
         """Lädt eine Datei von R2 Storage herunter"""
         remote_url = f"{self.base_url}/{remote_path.lstrip('/')}"
 
@@ -99,7 +97,7 @@ class R2Downloader:
 
         return False  # Fallback für unerwartete Fälle
 
-    def get_file_size(self, remote_path: str) -> Optional[int]:
+    def get_file_size(self, remote_path: str) -> int | None:
         """Ermittelt die Größe einer Remote-Datei"""
         remote_url = f"{self.base_url}/{remote_path.lstrip('/')}"
 
@@ -122,7 +120,7 @@ class R2Downloader:
 
         return None
 
-    def calculate_checksum(self, file_path: str) -> Optional[str]:
+    def calculate_checksum(self, file_path: str) -> str | None:
         """Berechnet SHA256-Checksumme einer Datei"""
         try:
             hash_sha256 = hashlib.sha256()
@@ -134,7 +132,7 @@ class R2Downloader:
             logger.warning(f"Fehler beim Berechnen der Checksumme: {e}")
             return None
 
-    def verify_file(self, file_path: str, expected_size: Optional[int] = None, expected_checksum: Optional[str] = None) -> bool:
+    def verify_file(self, file_path: str, expected_size: int | None = None, expected_checksum: str | None = None) -> bool:
         """Verifiziert eine heruntergeladene Datei"""
         try:
             if not Path(file_path).exists():
@@ -172,7 +170,7 @@ class R2Downloader:
             logger.error(f"Fehler bei Dateiverifikation: {e}")
             return False
 
-def download_voice_transcriber(target_dir: Optional[str] = None, version: str = "latest", raise_on_error: bool = False) -> bool:
+def download_voice_transcriber(target_dir: str | None = None, version: str = "latest", raise_on_error: bool = False) -> bool:
     """Lädt die VoiceTranscriber EXE von R2 Storage"""
     if target_dir is None:
         # Standard-Installationsverzeichnis
@@ -232,7 +230,7 @@ def download_voice_transcriber(target_dir: Optional[str] = None, version: str = 
             if backup_path and backup_path.exists():
                 backup_path.replace(local_path)
                 logger.info("Backup wiederhergestellt")
-            
+
             if raise_on_error:
                 raise Exception(msg)
             return False
@@ -241,7 +239,7 @@ def download_voice_transcriber(target_dir: Optional[str] = None, version: str = 
         # raise_on_error wird bereits in download_file behandelt
         return False
 
-def download_update_package(target_dir: Optional[str] = None, version: str = "latest") -> bool:
+def download_update_package(target_dir: str | None = None, version: str = "latest") -> bool:
     """Lädt ein komplettes Update-Paket von R2 Storage"""
     if target_dir is None:
         # Standard-Update-Verzeichnis
