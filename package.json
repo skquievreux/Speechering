@@ -1,6 +1,6 @@
 {
     "name": "speechering",
-    "version": "1.9.6",
+    "version": "2.0.0",
     "description": "Professional Windows Desktop Voice-to-Text Transcription",
     "private": true,
     "repository": {

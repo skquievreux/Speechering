@@ -1,3 +1,22 @@
+# [2.0.0](https://github.com/skquievreux/Speechering/compare/v1.9.6...v2.0.0) (2026-02-01)
+
+
+### Bug Fixes
+
+* **core:** stability improvements and bug fixes ([a533084](https://github.com/skquievreux/Speechering/commit/a533084e558c0699506ddd505a46658a82a8cb90))
+* **merge:** resolve conflicts in main.py and settings_gui.py ([d0098e1](https://github.com/skquievreux/Speechering/commit/d0098e123e3b57458cc9f34ba963ac4957ebcdf5))
+* restore AI modules (torch) and set version to 1.9.4 for functional release ([914976d](https://github.com/skquievreux/Speechering/commit/914976d1cea4fb0a39ba5f0031e040afd7411dab))
+
+
+### Features
+
+* implement transcription history log and fix debug logging ([4977d07](https://github.com/skquievreux/Speechering/commit/4977d0789e213291e05e370fd5b335b1050ad87d))
+
+
+### BREAKING CHANGES
+
+* Debug logs now reside in %APPDATA%/VoiceTranscriber/
+
 ## [1.9.6](https://github.com/skquievreux/Speechering/compare/v1.9.5...v1.9.6) (2026-01-24)
 
 
