@@ -17,8 +17,9 @@ from src.config import config
 logger = logging.getLogger(__name__)
 
 # Globales Singleton für das lokale Transkriptionsservice
-_instance: Optional['LocalTranscriptionService'] = None
+_instance: Optional["LocalTranscriptionService"] = None
 _instance_model_size: str | None = None
+
 
 class LocalTranscriptionService:
     """Service für lokale Audio-zu-Text Transkription mit faster-whisper"""
@@ -30,21 +31,24 @@ class LocalTranscriptionService:
         current_model_size = config.WHISPER_MODEL_SIZE
 
         # Prüfe ob Modellgröße sich geändert hat
-        if (_instance is not None and
-            _instance_model_size != current_model_size):
-            logger.info(f"Modellgröße geändert von {_instance_model_size} zu {current_model_size} - Service neu initialisieren")
+        if _instance is not None and _instance_model_size != current_model_size:
+            logger.info(
+                f"Modellgröße geändert von {_instance_model_size} zu {current_model_size} - Service neu initialisieren"
+            )
             _instance = None
 
         if _instance is None:
             _instance = super().__new__(cls)
             _instance_model_size = current_model_size
-            logger.info(f"Neue LocalTranscriptionService Instanz erstellt (Modell: {current_model_size})")
+            logger.info(
+                f"Neue LocalTranscriptionService Instanz erstellt (Modell: {current_model_size})"
+            )
 
         return _instance
 
     def __init__(self):
         # __init__ wird bei jedem Aufruf von __new__ aufgerufen, aber wir wollen nur einmal initialisieren
-        if hasattr(self, '_initialized'):
+        if hasattr(self, "_initialized"):
             return
 
         self.model: WhisperModel | None = None
@@ -55,9 +59,24 @@ class LocalTranscriptionService:
     def _load_model(self):
         """Lädt das Whisper-Modell"""
         try:
-            # Lazy imports - nur hier laden wenn tatsächlich benötigt
-            import torch
-            from faster_whisper import WhisperModel
+            # Frühe Dependency-Prüfung
+            try:
+                import torch
+            except ImportError as e:
+                logger.error("PyTorch nicht installiert - lokale Transkription nicht verfügbar")
+                raise RuntimeError(
+                    "Lokale Transkription erfordert PyTorch. "
+                    "Installieren Sie es mit: poetry install --extras ai"
+                ) from e
+
+            try:
+                from faster_whisper import WhisperModel
+            except ImportError as e:
+                logger.error("faster-whisper nicht installiert")
+                raise RuntimeError(
+                    "Lokale Transkription erfordert faster-whisper. "
+                    "Installieren Sie es mit: poetry install --extras ai"
+                ) from e
 
             from src.model_manager import get_model_path
 
@@ -66,38 +85,50 @@ class LocalTranscriptionService:
             # Prüfe ob Modell vorhanden ist
             model_path = get_model_path(self.model_size)
             if not model_path:
-                logger.warning(f"Whisper-Modell '{self.model_size}' nicht lokal gefunden. Muss heruntergeladen werden.")
-                # Wir laden das Modell hier nicht automatisch herunter, sondern setzen model auf None
-                # Der Aufruf von transcribe() sollte dies abfangen oder eine Benachrichtigung zeigen.
-                self.model = None
-                return
+                logger.warning(
+                    f"Whisper-Modell '{self.model_size}' nicht lokal gefunden. Muss heruntergeladen werden."
+                )
+                raise RuntimeError(
+                    f"Whisper-Modell '{self.model_size}' nicht gefunden. "
+                    "Bitte laden Sie es über die Einstellungen herunter."
+                )
 
             # Prüfe GPU-Verfügbarkeit
             device = "cuda" if torch.cuda.is_available() else "cpu"
             compute_type = "float16" if device == "cuda" else "int8"
 
-            logger.info(f"Verwende Device: {device}, Compute Type: {compute_type} (Pfad: {model_path})")
+            logger.info(
+                f"Verwende Device: {device}, Compute Type: {compute_type} (Pfad: {model_path})"
+            )
 
             # Unterdrücke huggingface_hub Warnungen über fehlende hf_xet
             import warnings
+
             with warnings.catch_warnings():
-                warnings.filterwarnings("ignore", message=".*Xet Storage is enabled.*", category=UserWarning)
+                warnings.filterwarnings(
+                    "ignore", message=".*Xet Storage is enabled.*", category=UserWarning
+                )
 
                 # Nutze den Pfad vom Model-Manager
                 self.model = WhisperModel(
-                    str(model_path), # Expliziter Pfad zum lokalen Modell
+                    str(model_path),  # Expliziter Pfad zum lokalen Modell
                     device=device,
                     compute_type=compute_type,
-                    local_files_only=True # Erzwinge lokale Dateien
+                    local_files_only=True,  # Erzwinge lokale Dateien
                 )
 
-            logger.info(f"✓ Whisper-Modell '{self.model_size}' erfolgreich geladen (Device: {device}, App v{config.APP_VERSION})")
+            logger.info(
+                f"✓ Whisper-Modell '{self.model_size}' erfolgreich geladen (Device: {device}, App v{config.APP_VERSION})"
+            )
 
-        except Exception as e:
-            logger.error(f"Fehler beim Laden des Whisper-Modells: {e}")
+        except RuntimeError:
+            # RuntimeError direkt durchreichen (unsere eigenen Fehler)
             self.model = None
-            # Wir werfen hier keinen Fehler mehr, damit die App nicht abstürzt wenn Modelle fehlen
-            # raise RuntimeError(f"Whisper-Modell konnte nicht geladen werden: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Unerwarteter Fehler beim Laden des Whisper-Modells: {e}")
+            self.model = None
+            raise RuntimeError(f"Whisper-Modell konnte nicht geladen werden: {e}") from e
 
     def transcribe(self, audio_path: str) -> str | None:
         """Transkribiert Audio-Datei zu Text"""
@@ -111,10 +142,11 @@ class LocalTranscriptionService:
             if not self.model:
                 logger.error("Lokale Transkription nicht möglich: Whisper-Modell nicht geladen.")
                 from src.notification import notification_service
+
                 notification_service.show_notification(
                     "Lokale Transkription",
                     f"Das Modell '{self.model_size}' muss erst heruntergeladen werden.",
-                    duration=5
+                    duration=5,
                 )
                 return None
 
@@ -139,7 +171,7 @@ class LocalTranscriptionService:
                 patience=1.0,
                 initial_prompt=vocabulary if vocabulary else None,
                 vad_filter=True,  # Voice Activity Detection
-                vad_parameters=dict(threshold=0.5, min_speech_duration_ms=250)
+                vad_parameters={"threshold": 0.5, "min_speech_duration_ms": 250},
             )
 
             # Segmente zu Text kombinieren (hier passiert die Transkription)
@@ -147,7 +179,9 @@ class LocalTranscriptionService:
             transcript = " ".join([segment.text for segment in segment_list])
 
             duration = time.time() - start_time
-            logger.info(f"Transkription abgeschlossen in {duration:.2f}s ({len(segment_list)} Segmente)")
+            logger.info(
+                f"Transkription abgeschlossen in {duration:.2f}s ({len(segment_list)} Segmente)"
+            )
 
             # Validiere Ergebnis
             if self._validate_transcript(transcript):
@@ -159,6 +193,7 @@ class LocalTranscriptionService:
         except Exception as e:
             logger.error(f"Fehler bei lokaler Transkription: {e}", exc_info=True)
             from src.exceptions import TranscriptionError
+
             raise TranscriptionError(f"Lokale Transkription fehlgeschlagen: {e}") from e
 
     def transcribe_audio_data(self, audio_data: bytes, filename: str = "audio.mp3") -> str | None:
@@ -167,7 +202,9 @@ class LocalTranscriptionService:
 
         try:
             # Temporäre Datei erstellen
-            with tempfile.NamedTemporaryFile(suffix=Path(filename).suffix, delete=False) as temp_file:
+            with tempfile.NamedTemporaryFile(
+                suffix=Path(filename).suffix, delete=False
+            ) as temp_file:
                 temp_file.write(audio_data)
                 temp_path = temp_file.name
 
@@ -203,7 +240,7 @@ class LocalTranscriptionService:
                 return False
 
             # Prüfe Dateiendung
-            if path.suffix.lower() not in ['.wav', '.mp3', '.m4a', '.flac', '.ogg']:
+            if path.suffix.lower() not in [".wav", ".mp3", ".m4a", ".flac", ".ogg"]:
                 logger.warning(f"Ungewöhnliche Dateiendung: {path.suffix}")
 
             logger.info(f"Audio-Datei validiert: {path.name} ({size_mb:.1f}MB)")
@@ -224,7 +261,7 @@ class LocalTranscriptionService:
 
     def get_supported_formats(self) -> list:
         """Gibt unterstützte Audio-Formate zurück"""
-        return ['wav', 'mp3', 'm4a', 'flac', 'ogg']
+        return ["wav", "mp3", "m4a", "flac", "ogg"]
 
     def is_available(self) -> bool:
         """Prüft, ob der lokale Service verfügbar ist"""
@@ -237,6 +274,7 @@ class LocalTranscriptionService:
 
         try:
             import torch
+
             device = "cuda" if torch.cuda.is_available() else "cpu"
             compute_type = "float16" if device == "cuda" else "int8"
         except ImportError:
@@ -247,5 +285,5 @@ class LocalTranscriptionService:
             "available": True,
             "model_size": self.model_size,
             "device": device,
-            "compute_type": compute_type
+            "compute_type": compute_type,
         }
