@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 _global_local_service: LocalTranscriptionService | None = None
 _global_local_service_model_size: str | None = None
 
+
 class TranscriptionService:
     """Service für Audio-zu-Text Transkription"""
 
@@ -34,20 +35,42 @@ class TranscriptionService:
         current_model_size = config.WHISPER_MODEL_SIZE
 
         # Prüfe ob Modellgröße sich geändert hat
-        if (_global_local_service is not None and
-            _global_local_service_model_size != current_model_size):
-            logger.info(f"Modellgröße geändert von {_global_local_service_model_size} zu {current_model_size} - Service neu initialisieren")
+        if (
+            _global_local_service is not None
+            and _global_local_service_model_size != current_model_size
+        ):
+            logger.info(
+                f"Modellgröße geändert von {_global_local_service_model_size} zu {current_model_size} - Service neu initialisieren"
+            )
             _global_local_service = None
 
         if _global_local_service is None and config.USE_LOCAL_TRANSCRIPTION:
             try:
                 _global_local_service = LocalTranscriptionService()
                 _global_local_service_model_size = current_model_size
-                logger.info(f"Lokaler Transkriptionsservice initialisiert (Modell: {current_model_size})")
+                logger.info(
+                    f"Lokaler Transkriptionsservice initialisiert (Modell: {current_model_size})"
+                )
+            except RuntimeError as e:
+                logger.error(f"Lokaler Service nicht verfügbar: {e}")
+
+                # Prüfe ob API-Fallback möglich ist
+                if not config.OPENAI_API_KEY or config.OPENAI_API_KEY == "your-api-key-here":
+                    logger.critical("Weder lokales Modell noch API-Key verfügbar!")
+                    raise TranscriptionError(
+                        "Transkription nicht möglich:\n"
+                        f"- Lokales Modell: {e}\n"
+                        "- API-Key: Nicht konfiguriert\n\n"
+                        "Bitte installieren Sie PyTorch (poetry install --extras ai) "
+                        "oder konfigurieren Sie einen OpenAI API-Key."
+                    ) from e
+
+                logger.warning("Fallback auf API-Transkription")
+                config.USE_LOCAL_TRANSCRIPTION = False
+                _global_local_service = None
+                _global_local_service_model_size = None
             except Exception as e:
-                logger.error(f"Fehler beim Initialisieren des lokalen Services: {e}")
-                logger.info("Lokale Transkription wird deaktiviert - verwende API-Transkription")
-                # Deaktiviere lokale Transkription bei Fehlern
+                logger.error(f"Unerwarteter Fehler beim Initialisieren des lokalen Services: {e}")
                 config.USE_LOCAL_TRANSCRIPTION = False
                 _global_local_service = None
                 _global_local_service_model_size = None
@@ -77,6 +100,14 @@ class TranscriptionService:
 
     def _transcribe_with_api(self, audio_path: str) -> str | None:
         """Transkribiert Audio-Datei mit OpenAI API"""
+        # Prüfe API-Key vor Aufruf
+        if not config.OPENAI_API_KEY or config.OPENAI_API_KEY == "your-api-key-here":
+            logger.error("API-Transkription nicht möglich: Kein API-Key konfiguriert")
+            raise TranscriptionError(
+                "OpenAI API-Key nicht konfiguriert.\n"
+                "Bitte konfigurieren Sie einen API-Key in den Einstellungen."
+            )
+
         for attempt in range(self.max_retries):
             try:
                 logger.info(f"Starte API-Transkription (Versuch {attempt + 1}/{self.max_retries})")
@@ -86,13 +117,13 @@ class TranscriptionService:
                 # Vokabular (Prompt) laden
                 vocabulary = config.get_vocabulary()
 
-                with open(audio_path, 'rb') as audio_file:
+                with open(audio_path, "rb") as audio_file:
                     transcript = self.client.audio.transcriptions.create(
                         model="whisper-1",
                         file=audio_file,
                         language="de",  # Deutsche Sprache priorisieren
                         response_format="text",
-                        prompt=vocabulary if vocabulary else None
+                        prompt=vocabulary if vocabulary else None,
                     )
 
                 duration = time.time() - start_time
@@ -111,7 +142,7 @@ class TranscriptionService:
             except Exception as e:
                 logger.error(f"Fehler bei API-Transkription (Versuch {attempt + 1}): {e}")
                 if attempt < self.max_retries - 1:
-                    time.sleep(self.retry_delay * (2 ** attempt))  # Exponential backoff
+                    time.sleep(self.retry_delay * (2**attempt))  # Exponential backoff
                 else:
                     logger.error("Maximale Anzahl von Versuchen erreicht")
                     raise TranscriptionError(
@@ -131,18 +162,32 @@ class TranscriptionService:
                 if result:
                     return result
                 else:
-                    logger.warning("Lokale Transkription von Audio-Daten fehlgeschlagen, wechsle zu API")
+                    logger.warning(
+                        "Lokale Transkription von Audio-Daten fehlgeschlagen, wechsle zu API"
+                    )
 
         # Fallback auf API-Transkription
         return self._transcribe_audio_data_with_api(audio_data, filename)
 
-    def _transcribe_audio_data_with_api(self, audio_data: bytes, filename: str = "audio.mp3") -> str | None:
+    def _transcribe_audio_data_with_api(
+        self, audio_data: bytes, filename: str = "audio.mp3"
+    ) -> str | None:
         """Transkribiert Audio-Daten mit OpenAI API"""
         import io
 
+        # Prüfe API-Key vor Aufruf
+        if not config.OPENAI_API_KEY or config.OPENAI_API_KEY == "your-api-key-here":
+            logger.error("API-Transkription nicht möglich: Kein API-Key konfiguriert")
+            raise TranscriptionError(
+                "OpenAI API-Key nicht konfiguriert.\n"
+                "Bitte konfigurieren Sie einen API-Key in den Einstellungen."
+            )
+
         for attempt in range(self.max_retries):
             try:
-                logger.info(f"Starte API-Transkription von Audio-Daten (Versuch {attempt + 1}/{self.max_retries})")
+                logger.info(
+                    f"Starte API-Transkription von Audio-Daten (Versuch {attempt + 1}/{self.max_retries})"
+                )
 
                 start_time = time.time()
 
@@ -154,7 +199,7 @@ class TranscriptionService:
                     model="whisper-1",
                     file=audio_file,
                     language="de",  # Deutsche Sprache priorisieren
-                    response_format="text"
+                    response_format="text",
                 )
 
                 duration = time.time() - start_time
@@ -168,9 +213,11 @@ class TranscriptionService:
                     return None
 
             except Exception as e:
-                logger.error(f"Fehler bei API-Transkription von Audio-Daten (Versuch {attempt + 1}): {e}")
+                logger.error(
+                    f"Fehler bei API-Transkription von Audio-Daten (Versuch {attempt + 1}): {e}"
+                )
                 if attempt < self.max_retries - 1:
-                    time.sleep(self.retry_delay * (2 ** attempt))  # Exponential backoff
+                    time.sleep(self.retry_delay * (2**attempt))  # Exponential backoff
                 else:
                     logger.error("Maximale Anzahl von Versuchen erreicht")
                     return None
@@ -182,7 +229,7 @@ class TranscriptionService:
         try:
             path = Path(audio_path)
 
-            if not path.exists(): # Changed to use 'path' directly
+            if not path.exists():  # Changed to use 'path' directly
                 raise FileNotFoundError(f"Audio-Datei nicht gefunden: {audio_path}") from None
 
             if not path.is_file():
@@ -196,13 +243,13 @@ class TranscriptionService:
                 return False
 
             # Prüfe Dateiendung
-            if path.suffix.lower() not in ['.wav', '.mp3', '.m4a', '.flac', '.ogg']:
+            if path.suffix.lower() not in [".wav", ".mp3", ".m4a", ".flac", ".ogg"]:
                 logger.warning(f"Ungewöhnliche Dateiendung: {path.suffix}")
 
             logger.info(f"Audio-Datei validiert: {path.name} ({size_mb:.1f}MB)")
             return True
 
-        except FileNotFoundError as e: # Catch specific error
+        except FileNotFoundError as e:  # Catch specific error
             logger.error(f"Fehler bei Audio-Datei-Validierung: {e}")
             return False
         except Exception as e:
@@ -220,7 +267,7 @@ class TranscriptionService:
 
     def get_supported_formats(self) -> list:
         """Gibt unterstützte Audio-Formate zurück"""
-        return ['wav', 'mp3', 'm4a', 'flac', 'ogg']
+        return ["wav", "mp3", "m4a", "flac", "ogg"]
 
     def estimate_cost(self, audio_duration_seconds: float) -> float:
         """Schätzt Kosten für Transkription"""
