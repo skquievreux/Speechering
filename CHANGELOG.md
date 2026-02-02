@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/skquievreux/Speechering/compare/v2.0.3...v2.0.4) (2026-02-02)
+
+
+### Bug Fixes
+
+* **transcription:** prevent silent fallback to API when torch missing ([fc56990](https://github.com/skquievreux/Speechering/commit/fc5699071606e9c98e7a6cace01a78619db59afd))
+
 ## [2.0.3](https://github.com/skquievreux/Speechering/compare/v2.0.2...v2.0.3) (2026-02-01)
 
 
