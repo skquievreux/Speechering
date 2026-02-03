@@ -1,3 +1,10 @@
+## [2.0.5](https://github.com/skquievreux/Speechering/compare/v2.0.4...v2.0.5) (2026-02-03)
+
+
+### Bug Fixes
+
+* **build:** enable PyTorch bundling in installer ([d7e6cc3](https://github.com/skquievreux/Speechering/commit/d7e6cc38d8b95c5642c6754d4e20b2030af3371e))
+
 ## [2.0.4](https://github.com/skquievreux/Speechering/compare/v2.0.3...v2.0.4) (2026-02-02)
 
 
