@@ -116,18 +116,6 @@ files = [
 ]
 
 [[package]]
-name = "autocommand"
-version = "2.2.2"
-description = "A library to create a command-line program from a function"
-optional = false
-python-versions = ">=3.7"
-groups = ["main"]
-files = [
-    {file = "autocommand-2.2.2-py3-none-any.whl", hash = "sha256:710afe251075e038e19e815e25f8155cabe02196cfb545b2185e0d9c8b2b0459"},
-    {file = "autocommand-2.2.2.tar.gz", hash = "sha256:878de9423c5596491167225c2a455043c3130fb5b7286ac83443d45e74955f34"},
-]
-
-[[package]]
 name = "av"
 version = "16.1.0"
 description = "Pythonic bindings for FFmpeg's libraries."
@@ -411,7 +399,6 @@ files = [
     {file = "click-8.3.1-py3-none-any.whl", hash = "sha256:981153a64e25f12d547d3426c367a4857371575ee7ad18df2a6183ab0545b2a6"},
     {file = "click-8.3.1.tar.gz", hash = "sha256:12ff4785d337a1bb490bb7e9c2b1ee5da3112e94a8622f26a6c77f5d2fc6842a"},
 ]
-markers = {main = "extra == \"ai\""}
 
 [package.dependencies]
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
@@ -1066,26 +1053,30 @@ type = ["mypy (<1.19) ; platform_python_implementation == \"PyPy\"", "pytest-myp
 
 [[package]]
 name = "jaraco-text"
-version = "4.0.0"
+version = "4.2.0"
 description = "Module for text manipulation"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "jaraco.text-4.0.0-py3-none-any.whl", hash = "sha256:08de508939b5e681b14cdac2f1f73036cd97f6f8d7b25e96b8911a9a428ca0d1"},
-    {file = "jaraco_text-4.0.0.tar.gz", hash = "sha256:5b71fecea69ab6f939d4c906c04fee1eda76500d1641117df6ec45b865f10db0"},
+    {file = "jaraco_text-4.2.0-py3-none-any.whl", hash = "sha256:034408ef073f72de919124e9934a12acd50d10bd139bea47732620fa964b0144"},
+    {file = "jaraco_text-4.2.0.tar.gz", hash = "sha256:194e386aa5b15a6616019df87a6b29c00fd3c9c8b0475731b64633ca7afd495b"},
 ]
 
 [package.dependencies]
-autocommand = "*"
 "jaraco.context" = ">=4.1"
 "jaraco.functools" = "*"
-more-itertools = "*"
+more_itertools = "*"
+typer-slim = "*"
 
 [package.extras]
+check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1) ; sys_platform != \"cygwin\""]
+cover = ["pytest-cov"]
 doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
+enabler = ["pytest-enabler (>=3.4)"]
 inflect = ["inflect"]
-test = ["pathlib2 ; python_version < \"3.10\"", "pytest (>=6,!=8.1.*)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-mypy", "pytest-ruff (>=0.2.1) ; sys_platform != \"cygwin\""]
+test = ["pathlib2 ; python_version < \"3.10\"", "pytest (>=6,!=8.1.*)"]
+type = ["mypy (<1.19) ; platform_python_implementation == \"PyPy\"", "pytest-mypy (>=1.0.1)"]
 
 [[package]]
 name = "jinja2"
@@ -6512,10 +6503,9 @@ telegram = ["requests"]
 name = "typer-slim"
 version = "0.21.1"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"ai\""
 files = [
     {file = "typer_slim-0.21.1-py3-none-any.whl", hash = "sha256:6e6c31047f171ac93cc5a973c9e617dbc5ab2bddc4d0a3135dc161b4e2020e0d"},
     {file = "typer_slim-0.21.1.tar.gz", hash = "sha256:73495dd08c2d0940d611c5a8c04e91c2a0a98600cbd4ee19192255a233b6dbfd"},
@@ -6635,4 +6625,4 @@ ai = ["ctranslate2", "faster-whisper", "huggingface-hub", "numpy", "torch"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.14"
-content-hash = "1d7fd1ceb55d224859a34d309ccbd67146eb9c1da094d39aeb6be17e469572d1"
+content-hash = "29d44490584ac28863148caf2c7b2b8d0a704c2d91bd85f71ee0ad64da61510a"
