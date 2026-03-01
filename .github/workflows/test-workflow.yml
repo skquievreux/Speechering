@@ -86,7 +86,7 @@ jobs:
 
       - name: Download test artifacts
         if: ${{ !github.event.inputs.skip_build }}
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: test-artifacts-${{ needs.build.outputs.version }}
           path: artifacts/
